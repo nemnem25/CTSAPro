@@ -336,10 +336,16 @@ function fmtK(n){
   return '$'+n.toLocaleString('en',{maximumFractionDigits:0});
 }
 
+// ── PROXY ─────────────────────────────────────────────────────────────
+const PROXY = 'https://ctsapro.mahapalamultimedia.workers.dev/?url=';
+function proxyFetch(url, opts={}){
+  return fetch(PROXY + encodeURIComponent(url), opts);
+}
+
 // ── BINANCE FETCH ────────────────────────────────────────────────────
 async function fetchKlines(symbol, interval, limit=200){
   const url = `https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`;
-  const r = await fetch(url);
+  const r = await proxyFetch(url);
   if(!r.ok) throw new Error(`Binance error ${r.status}`);
   const data = await r.json();
   return data.map(k=>({
@@ -348,7 +354,7 @@ async function fetchKlines(symbol, interval, limit=200){
 }
 
 async function fetch24h(symbol){
-  const r = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${symbol}`);
+  const r = await proxyFetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${symbol}`);
   if(!r.ok) throw new Error(`Binance 24h error`);
   return r.json();
 }
@@ -356,7 +362,7 @@ async function fetch24h(symbol){
 // ── FEAR & GREED ─────────────────────────────────────────────────────
 async function fetchFG(){
   try{
-    const r = await fetch('https://api.alternative.me/fng/?limit=1');
+    const r = await proxyFetch('https://api.alternative.me/fng/?limit=1');
     const d = await r.json();
     return {val:+d.data[0].value, label:d.data[0].value_classification, src:'alt'};
   }catch(e){ return null; }
@@ -365,7 +371,7 @@ async function fetchFG(){
 async function fetchFGCmc(key){
   if(!key) return null;
   try{
-    const r = await fetch('https://pro-api.coinmarketcap.com/v3/fear-and-greed/historical?limit=1',
+    const r = await proxyFetch('https://pro-api.coinmarketcap.com/v3/fear-and-greed/historical?limit=1',
       {headers:{'X-CMC_PRO_API_KEY':key}});
     if(!r.ok) return null;
     const d = await r.json();
