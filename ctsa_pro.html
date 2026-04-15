@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CTSA Pro — Signal Dashboard</title>
+<style>
+@import url('https://fonts.cdnfonts.com/css/tt-firs-neue');
+</style>
+<style>
+:root {
+  --bg: #0a0b0d;
+  --bg2: #111318;
+  --bg3: #181c23;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --text: #e8eaf0;
+  --text2: #8b909e;
+  --text3: #555a6a;
+  --buy: #22c55e;
+  --buy-dim: rgba(34,197,94,0.12);
+  --buy-border: rgba(34,197,94,0.25);
+  --sell: #ef4444;
+  --sell-dim: rgba(239,68,68,0.12);
+  --sell-border: rgba(239,68,68,0.25);
+  --neutral: #f59e0b;
+  --neutral-dim: rgba(245,158,11,0.12);
+  --accent: #6366f1;
+  --accent-dim: rgba(99,102,241,0.15);
+  --font-head: 'Segoe UI', 'SF Pro Display', -apple-system, system-ui, sans-serif;
+  --font-body: 'Segoe UI', 'SF Pro Text', -apple-system, system-ui, sans-serif;
+  --font-mono: 'Cascadia Code', 'Consolas', 'SF Mono', 'Fira Code', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── GRID NOISE TEXTURE ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+/* ── NAV ── */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10,11,13,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+}
+
+.nav-brand {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-brand-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--buy);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50% { opacity:0.5; transform:scale(0.8); }
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.nav-time {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text2);
+}
+
+/* ── MAIN LAYOUT ── */
+main {
+  position: relative;
+  z-index: 1;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* ── COIN SELECTOR ROW ── */
+.selector-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.coin-selector {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.coin-btn {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg2);
+  color: var(--text2);
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.04em;
+}
+.coin-btn:hover { border-color: var(--border2); color: var(--text); }
+.coin-btn.active {
+  background: var(--accent-dim);
+  border-color: rgba(99,102,241,0.4);
+  color: #a5b4fc;
+}
+
+.tf-selector {
+  display: flex;
+  gap: 4px;
+}
+
+.tf-btn {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 4px 9px;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text3);
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.04em;
+}
+.tf-btn:hover { color: var(--text2); border-color: var(--border2); }
+.tf-btn.active { background: var(--bg3); border-color: var(--border2); color: var(--text); }
+
+/* ── PRICE HERO ── */
+.price-hero {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+
+.price-left {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.price-coin {
+  font-family: var(--font-head);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text2);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.price-value {
+  font-family: var(--font-head);
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--text);
+  line-height: 1;
+}
+
+.price-change {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 5px;
+}
+.price-change.up { background: var(--buy-dim); color: var(--buy); border: 1px solid var(--buy-border); }
+.price-change.dn { background: var(--sell-dim); color: var(--sell); border: 1px solid var(--sell-border); }
+
+.price-stats {
+  display: flex;
+  gap: 2rem;
+}
+
+.price-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat-lbl {
+  font-size: 10px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: var(--font-mono);
+}
+
+.stat-val {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* ── SIGNAL VERDICT ── */
+.verdict-card {
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid;
+  animation: fadeIn 0.5s ease 0.1s both;
+  position: relative;
+  overflow: hidden;
+}
+
+.verdict-card::after {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  opacity: 0.06;
+}
+
+.verdict-card.buy {
+  background: linear-gradient(135deg, rgba(34,197,94,0.08) 0%, rgba(34,197,94,0.03) 100%);
+  border-color: var(--buy-border);
+}
+.verdict-card.buy::after { background: var(--buy); }
+
+.verdict-card.sell {
+  background: linear-gradient(135deg, rgba(239,68,68,0.08) 0%, rgba(239,68,68,0.03) 100%);
+  border-color: var(--sell-border);
+}
+.verdict-card.sell::after { background: var(--sell); }
+
+.verdict-card.neutral {
+  background: linear-gradient(135deg, rgba(245,158,11,0.08) 0%, rgba(245,158,11,0.03) 100%);
+  border-color: rgba(245,158,11,0.25);
+}
+
+.verdict-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.verdict-label {
+  font-family: var(--font-head);
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+.verdict-label.buy { color: var(--buy); }
+.verdict-label.sell { color: var(--sell); }
+.verdict-label.neutral { color: var(--neutral); }
+
+.verdict-score {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.score-num {
+  font-family: var(--font-head);
+  font-size: 48px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--text);
+}
+.score-denom {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--text3);
+  align-self: flex-end;
+  padding-bottom: 6px;
+}
+
+.score-bar-wrap {
+  height: 6px;
+  background: var(--bg3);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+}
+.score-bar {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 1s cubic-bezier(0.34,1.56,0.64,1);
+}
+.score-bar.buy { background: var(--buy); }
+.score-bar.sell { background: var(--sell); }
+.score-bar.neutral { background: var(--neutral); }
+
+/* ── ENTRY GRID ── */
+.entry-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.entry-cell {
+  background: rgba(0,0,0,0.2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.entry-lbl {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text3);
+  font-family: var(--font-mono);
+  margin-bottom: 4px;
+}
+
+.entry-val {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.entry-sub {
+  font-size: 9px;
+  color: var(--text3);
+  margin-top: 2px;
+  font-family: var(--font-mono);
+}
+
+.entry-cell.sl .entry-val { color: var(--sell); }
+.entry-cell.t1 .entry-val { color: #86efac; }
+.entry-cell.t2 .entry-val { color: #4ade80; }
+.entry-cell.t3 .entry-val { color: var(--buy); }
+
+/* ── INDICATOR GRID ── */
+.section-title {
+  font-family: var(--font-head);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.75rem;
+}
+
+.ind-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 1.5rem;
+  animation: fadeIn 0.5s ease 0.2s both;
+}
+
+.ind-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  transition: border-color 0.2s;
+}
+.ind-card:hover { border-color: var(--border2); }
+
+.ind-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.ind-name {
+  font-family: var(--font-head);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text2);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.ind-badge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.ind-badge.buy { background: var(--buy-dim); color: var(--buy); border: 1px solid var(--buy-border); }
+.ind-badge.sell { background: var(--sell-dim); color: var(--sell); border: 1px solid var(--sell-border); }
+.ind-badge.neutral { background: var(--neutral-dim); color: var(--neutral); border: 1px solid rgba(245,158,11,0.25); }
+.ind-badge.wait { background: rgba(139,144,158,0.1); color: var(--text3); border: 1px solid var(--border); }
+
+.ind-value {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.ind-desc {
+  font-size: 11px;
+  color: var(--text3);
+  line-height: 1.4;
+}
+
+.ind-mini-bar {
+  height: 3px;
+  background: var(--bg3);
+  border-radius: 2px;
+  margin-top: 10px;
+  overflow: hidden;
+}
+.ind-mini-fill {
+  height: 100%;
+  border-radius: 2px;
+}
+
+/* ── TIMEFRAME TABLE ── */
+.tf-table-wrap {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  animation: fadeIn 0.5s ease 0.3s both;
+}
+
+.tf-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tf-table th {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text3);
+  padding: 10px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg3);
+  font-weight: 500;
+}
+
+.tf-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+}
+
+.tf-table tr:last-child td { border-bottom: none; }
+.tf-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+.tf-table td:first-child {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 11px;
+  color: var(--text2);
+}
+
+.pill {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.04em;
+}
+.pill.buy { background: var(--buy-dim); color: var(--buy); }
+.pill.sell { background: var(--sell-dim); color: var(--sell); }
+.pill.neutral { background: var(--neutral-dim); color: var(--neutral); }
+
+.tf-desc { color: var(--text2); font-size: 11px; }
+.tf-note { color: var(--text3); font-size: 10px; font-family: var(--font-mono); }
+
+/* ── F&G DUAL ── */
+.fg-dual {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+  animation: fadeIn 0.5s ease 0.35s both;
+}
+
+.fg-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+}
+
+.fg-source {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text3);
+  margin-bottom: 6px;
+}
+
+.fg-num {
+  font-family: var(--font-head);
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.fg-label {
+  font-size: 11px;
+  color: var(--text2);
+  margin-bottom: 8px;
+}
+
+.fg-bar {
+  height: 4px;
+  background: var(--bg3);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.fg-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 1.2s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.fg-consensus {
+  background: var(--bg3);
+  border-color: var(--border2);
+}
+
+.diverge-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: var(--neutral-dim);
+  color: var(--neutral);
+  border: 1px solid rgba(245,158,11,0.25);
+  margin-top: 6px;
+}
+
+/* ── FOOTER ── */
+footer {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--border);
+  padding: 1.25rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.footer-note {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: 0.04em;
+}
+
+.footer-sources {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text3);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .ind-grid { grid-template-columns: 1fr 1fr; }
+  .entry-grid { grid-template-columns: repeat(3,1fr); }
+  .fg-dual { grid-template-columns: 1fr 1fr; }
+  .price-stats { gap: 1rem; }
+}
+@media (max-width: 600px) {
+  main { padding: 1rem; }
+  .ind-grid { grid-template-columns: 1fr; }
+  .entry-grid { grid-template-columns: 1fr 1fr; }
+  .fg-dual { grid-template-columns: 1fr; }
+  .price-value { font-size: 28px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+      <rect width="28" height="28" rx="7" fill="#22c55e" fill-opacity="0.15"/>
+      <rect x="0.5" y="0.5" width="27" height="27" rx="6.5" stroke="#22c55e" stroke-opacity="0.4"/>
+      <polyline points="4,20 9,13 13,16 18,8 24,11" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <circle cx="24" cy="11" r="2" fill="#22c55e"/>
+      <circle cx="18" cy="8" r="1.5" fill="#22c55e" fill-opacity="0.6"/>
+      <line x1="4" y1="22" x2="24" y2="22" stroke="#22c55e" stroke-opacity="0.25" stroke-width="1"/>
+    </svg>
+    <div style="display:flex;flex-direction:column;gap:0">
+      <span style="font-weight:700;font-size:15px;letter-spacing:-0.01em;line-height:1.1">CTSA Pro</span>
+      <span style="font-family:var(--font-mono);font-size:9px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;line-height:1">Signal Dashboard</span>
+    </div>
+  </div>
+  <div class="nav-right">
+    <div style="display:flex;align-items:center;gap:6px">
+      <div class="nav-brand-dot"></div>
+      <span class="nav-tag">Live</span>
+    </div>
+    <span class="nav-time" id="clock">--:--:--</span>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main>
+
+  <!-- SELECTOR ROW -->
+  <div class="selector-row">
+    <div class="coin-selector">
+      <button class="coin-btn active">BTC</button>
+      <button class="coin-btn">ETH</button>
+      <button class="coin-btn">BNB</button>
+      <button class="coin-btn">SOL</button>
+      <button class="coin-btn">XRP</button>
+      <button class="coin-btn">ADA</button>
+      <button class="coin-btn">AVAX</button>
+      <button class="coin-btn">DOT</button>
+      <button class="coin-btn">+ 49 lainnya</button>
+    </div>
+    <div class="tf-selector">
+      <button class="tf-btn">1H</button>
+      <button class="tf-btn active">4H</button>
+      <button class="tf-btn">1D</button>
+      <button class="tf-btn">1W</button>
+    </div>
+  </div>
+
+  <!-- PRICE HERO -->
+  <div class="price-hero">
+    <div class="price-left">
+      <div>
+        <div class="price-coin">BTC / USDT</div>
+        <div style="display:flex;align-items:baseline;gap:10px;margin-top:2px">
+          <div class="price-value">$74,259</div>
+          <span class="price-change up">+4.55%</span>
+        </div>
+      </div>
+    </div>
+    <div class="price-stats">
+      <div class="price-stat">
+        <span class="stat-lbl">24H High</span>
+        <span class="stat-val">$75,100</span>
+      </div>
+      <div class="price-stat">
+        <span class="stat-lbl">24H Low</span>
+        <span class="stat-val">$71,820</span>
+      </div>
+      <div class="price-stat">
+        <span class="stat-lbl">Volume 24H</span>
+        <span class="stat-val">$38.2B</span>
+      </div>
+      <div class="price-stat">
+        <span class="stat-lbl">ATR (14)</span>
+        <span class="stat-val">$1,847</span>
+      </div>
+      <div class="price-stat">
+        <span class="stat-lbl">Terakhir Update</span>
+        <span class="stat-val" id="last-update">14 Apr 12:30</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIGNAL VERDICT -->
+  <div class="verdict-card buy">
+    <div class="verdict-top">
+      <div>
+        <div style="font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:4px">Sinyal Keseluruhan</div>
+        <div class="verdict-label buy">BELI KUAT</div>
+      </div>
+      <div class="verdict-score">
+        <div>
+          <div style="font-family:var(--font-mono);font-size:10px;color:var(--text3);text-align:right;margin-bottom:2px">Skor Konfluensi</div>
+          <div style="display:flex;align-items:baseline;gap:4px">
+            <span class="score-num">5</span>
+            <span class="score-denom">/ 6 indikator sepakat</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="score-bar-wrap">
+      <div class="score-bar buy" style="width:83%"></div>
+    </div>
+
+    <div class="entry-grid">
+      <div class="entry-cell">
+        <div class="entry-lbl">Entry</div>
+        <div class="entry-val">$74,259</div>
+        <div class="entry-sub">Konfirmasi close 4H</div>
+      </div>
+      <div class="entry-cell sl">
+        <div class="entry-lbl">Stop Loss</div>
+        <div class="entry-val">$72,412</div>
+        <div class="entry-sub">−1.0× ATR · −2.5%</div>
+      </div>
+      <div class="entry-cell t1">
+        <div class="entry-lbl">Target 1</div>
+        <div class="entry-val">$77,953</div>
+        <div class="entry-sub">+2.0× ATR · +5.0%</div>
+      </div>
+      <div class="entry-cell t2">
+        <div class="entry-lbl">Target 2</div>
+        <div class="entry-val">$81,647</div>
+        <div class="entry-sub">+4.0× ATR · +10.0%</div>
+      </div>
+      <div class="entry-cell t3">
+        <div class="entry-lbl">Target 3</div>
+        <div class="entry-val">$87,188</div>
+        <div class="entry-sub">+7.0× ATR · +17.4%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRICE CHART -->
+  <div class="section-title">Grafik Harga — BTC/USDT · 4H</div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.25rem;margin-bottom:1.5rem;animation:fadeIn 0.5s ease 0.15s both">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
+      <div style="display:flex;align-items:center;gap:1.5rem">
+        <div>
+          <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Upper BB</div>
+          <div style="font-family:var(--font-mono);font-size:12px;color:#6366f1;font-weight:500">$78,420</div>
+        </div>
+        <div>
+          <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Middle BB</div>
+          <div style="font-family:var(--font-mono);font-size:12px;color:var(--text2);font-weight:500">$76,104</div>
+        </div>
+        <div>
+          <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Lower BB</div>
+          <div style="font-family:var(--font-mono);font-size:12px;color:#22c55e;font-weight:500">$73,820</div>
+        </div>
+        <div>
+          <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">EMA 20</div>
+          <div style="font-family:var(--font-mono);font-size:12px;color:#f59e0b;font-weight:500">$75,340</div>
+        </div>
+        <div>
+          <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">EMA 50</div>
+          <div style="font-family:var(--font-mono);font-size:12px;color:#fb923c;font-weight:500">$73,120</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;font-family:var(--font-mono);font-size:10px">
+        <span style="display:flex;align-items:center;gap:4px;color:var(--text3)"><span style="display:inline-block;width:16px;height:2px;background:#6366f1;border-radius:1px"></span>Upper BB</span>
+        <span style="display:flex;align-items:center;gap:4px;color:var(--text3)"><span style="display:inline-block;width:16px;height:2px;background:#444;border-radius:1px;border:1px dashed #555"></span>Middle BB</span>
+        <span style="display:flex;align-items:center;gap:4px;color:var(--text3)"><span style="display:inline-block;width:16px;height:2px;background:#22c55e;border-radius:1px"></span>Lower BB</span>
+        <span style="display:flex;align-items:center;gap:4px;color:var(--text3)"><span style="display:inline-block;width:16px;height:2px;background:#f59e0b;border-radius:1px"></span>EMA 20</span>
+        <span style="display:flex;align-items:center;gap:4px;color:var(--text3)"><span style="display:inline-block;width:16px;height:2px;background:#fb923c;border-radius:1px"></span>EMA 50</span>
+      </div>
+    </div>
+    <div style="position:relative;height:260px">
+      <canvas id="priceChart" role="img" aria-label="Grafik harga BTC/USDT 4H dengan Bollinger Bands dan EMA">Grafik harga BTC/USDT 14 hari terakhir dengan indikator teknikal.</canvas>
+    </div>
+    <div style="margin-top:1rem;position:relative;height:80px">
+      <canvas id="macdChart" role="img" aria-label="MACD histogram">MACD histogram.</canvas>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:0.5rem">
+      <span style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em">MACD (12,26,9) — Histogram</span>
+      <span style="font-family:var(--font-mono);font-size:9px;color:var(--buy)">Cross Up Terdeteksi</span>
+    </div>
+  </div>
+
+  <!-- INDICATOR GRID -->
+  <div class="section-title">6 Indikator Inti</div>
+  <div class="ind-grid">
+
+    <!-- RSI -->
+    <div class="ind-card">
+      <div class="ind-top">
+        <span class="ind-name">RSI (14)</span>
+        <span class="ind-badge buy">Oversold</span>
+      </div>
+      <div class="ind-value">28.4</div>
+      <div class="ind-desc">Di bawah 30 — zona oversold. Divergensi bullish terdeteksi pada timeframe 4H.</div>
+      <div class="ind-mini-bar"><div class="ind-mini-fill" style="width:28%;background:var(--buy)"></div></div>
+    </div>
+
+    <!-- MACD -->
+    <div class="ind-card">
+      <div class="ind-top">
+        <span class="ind-name">MACD (12,26,9)</span>
+        <span class="ind-badge buy">Cross Up</span>
+      </div>
+      <div class="ind-value">+142</div>
+      <div class="ind-desc">MACD cross signal line dari bawah. Histogram flip positif — momentum bullish menguat.</div>
+      <div class="ind-mini-bar"><div class="ind-mini-fill" style="width:62%;background:var(--buy)"></div></div>
+    </div>
+
+    <!-- Bollinger Bands -->
+    <div class="ind-card">
+      <div class="ind-top">
+        <span class="ind-name">Bollinger Bands</span>
+        <span class="ind-badge buy">Lower Band</span>
+      </div>
+      <div class="ind-value">$73.8K</div>
+      <div class="ind-desc">Harga mendekati lower band ($73,820). BB Squeeze terdeteksi — volatilitas rendah, breakout akan datang.</div>
+      <div class="ind-mini-bar"><div class="ind-mini-fill" style="width:25%;background:var(--buy)"></div></div>
+    </div>
+
+    <!-- ADX -->
+    <div class="ind-card">
+      <div class="ind-top">
+        <span class="ind-name">ADX (14)</span>
+        <span class="ind-badge neutral">Sedang</span>
+      </div>
+      <div class="ind-value">22.1</div>
+      <div class="ind-desc">ADX 22 — trend mulai terbentuk. DI+ (18.4) mulai melampaui DI- (14.2). Trend belum cukup kuat.</div>
+      <div class="ind-mini-bar"><div class="ind-mini-fill" style="width:45%;background:var(--neutral)"></div></div>
+    </div>
+
+    <!-- OBV -->
+    <div class="ind-card">
+      <div class="ind-top">
+        <span class="ind-name">OBV</span>
+        <span class="ind-badge buy">Akumulasi</span>
+      </div>
+      <div class="ind-value">+2.1M</div>
+      <div class="ind-desc">OBV naik konsisten 3 hari terakhir meski harga sideways — tanda akumulasi institusi.</div>
+      <div class="ind-mini-bar"><div class="ind-mini-fill" style="width:72%;background:var(--buy)"></div></div>
+    </div>
+
+    <!-- Fear & Greed -->
+    <div class="ind-card">
+      <div class="ind-top">
+        <span class="ind-name">Fear & Greed</span>
+        <span class="ind-badge sell">Divergen</span>
+      </div>
+      <div class="ind-value">38</div>
+      <div class="ind-desc">Alt.me: 23 vs CMC: 53 — selisih 30 poin. Sinyal F&G tidak valid hari ini, diabaikan dari scoring.</div>
+      <div class="ind-mini-bar"><div class="ind-mini-fill" style="width:38%;background:var(--neutral)"></div></div>
+    </div>
+
+  </div>
+
+  <!-- FEAR & GREED DUAL -->
+  <div class="section-title">Fear & Greed — Dual Source</div>
+  <div class="fg-dual">
+    <div class="fg-card">
+      <div class="fg-source">Alternative.me</div>
+      <div class="fg-num" style="color:#ef4444">23</div>
+      <div class="fg-label">Extreme Fear</div>
+      <div class="fg-bar"><div class="fg-fill" style="width:23%;background:#ef4444"></div></div>
+    </div>
+    <div class="fg-card">
+      <div class="fg-source">CoinMarketCap</div>
+      <div class="fg-num" style="color:#f59e0b">53</div>
+      <div class="fg-label">Neutral</div>
+      <div class="fg-bar"><div class="fg-fill" style="width:53%;background:#f59e0b"></div></div>
+    </div>
+    <div class="fg-card fg-consensus">
+      <div class="fg-source">Konsensus</div>
+      <div class="fg-num" style="color:#8b909e">38</div>
+      <div class="fg-label">Fear</div>
+      <div class="fg-bar"><div class="fg-fill" style="width:38%;background:#6366f1"></div></div>
+      <div class="diverge-badge">Divergen 30 poin — skip scoring</div>
+    </div>
+  </div>
+
+  <!-- TIMEFRAME TABLE -->
+  <div class="section-title">Analisis Multi-Timeframe</div>
+  <div class="tf-table-wrap">
+    <table class="tf-table">
+      <thead>
+        <tr>
+          <th>TF</th>
+          <th>RSI</th>
+          <th>MACD</th>
+          <th>BB</th>
+          <th>ADX</th>
+          <th>Arah</th>
+          <th>Catatan</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1W</td>
+          <td class="tf-desc">48.2</td>
+          <td class="tf-desc">Positif lemah</td>
+          <td class="tf-desc">Middle band</td>
+          <td class="tf-desc">18.4</td>
+          <td><span class="pill neutral">Netral</span></td>
+          <td class="tf-note">Trend mingguan belum confirm</td>
+        </tr>
+        <tr>
+          <td>1D</td>
+          <td class="tf-desc">34.1</td>
+          <td class="tf-desc">Cross up</td>
+          <td class="tf-desc">Dekat lower</td>
+          <td class="tf-desc">24.7</td>
+          <td><span class="pill buy">Beli</span></td>
+          <td class="tf-note">Setup harian terbentuk</td>
+        </tr>
+        <tr>
+          <td>4H ★</td>
+          <td class="tf-desc">28.4</td>
+          <td class="tf-desc">Cross up kuat</td>
+          <td class="tf-desc">Lower band</td>
+          <td class="tf-desc">22.1</td>
+          <td><span class="pill buy">Beli Kuat</span></td>
+          <td class="tf-note">Timeframe entry utama</td>
+        </tr>
+        <tr>
+          <td>1H</td>
+          <td class="tf-desc">41.8</td>
+          <td class="tf-desc">Positif</td>
+          <td class="tf-desc">Tengah</td>
+          <td class="tf-desc">19.2</td>
+          <td><span class="pill buy">Beli</span></td>
+          <td class="tf-note">Konfirmasi entry presisi</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div style="display:flex;align-items:center;gap:8px">
+    <svg width="16" height="16" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="28" height="28" rx="7" fill="#22c55e" fill-opacity="0.15"/>
+      <polyline points="4,20 9,13 13,16 18,8 24,11" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <circle cx="24" cy="11" r="2" fill="#22c55e"/>
+    </svg>
+    <span class="footer-note" style="font-weight:500;color:var(--text2)">CTSA Pro <span id="app-version">v1.0</span></span>
+    <span class="footer-note">·</span>
+    <span class="footer-note">Data: CoinGecko API · Bukan saran investasi · DYOR</span>
+  </div>
+  <span class="footer-sources">RSI · MACD · BB · ADX · OBV · Fear&Greed · ATR</span>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const APP_VERSION = '1.0';
+document.getElementById('app-version').textContent = 'v' + APP_VERSION;
+
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent = now.toLocaleTimeString('id-ID', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+document.querySelectorAll('.coin-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.coin-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+document.querySelectorAll('.tf-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+const labels = ['1 Apr','2','3','4','5','6','7','8','9','10','11','12','13','14 Apr'];
+
+const prices = [69800,70200,71500,70800,72100,71400,73200,72600,74100,73800,72900,73500,74000,74259];
+const upperBB = [73200,73800,74900,74200,75600,74800,76700,76100,77600,77300,76400,77000,77500,78420];
+const middleBB = [71200,71800,73000,72300,73800,73100,74900,74300,75800,75500,74600,75200,75700,76104];
+const lowerBB = [69200,69800,71100,70400,72000,71400,73100,72500,74000,73700,72800,73400,73900,73820];
+const ema20 = [70100,70500,71800,71100,72400,71700,73500,72900,74400,74100,73200,73800,74300,75340];
+const ema50 = [69500,69800,70200,70000,70800,70500,71200,71000,71800,71600,71900,72400,72800,73120];
+
+const macdHist = [-120,-80,-40,-90,60,20,110,70,150,120,40,90,130,142];
+
+const priceCtx = document.getElementById('priceChart').getContext('2d');
+new Chart(priceCtx, {
+  type: 'line',
+  data: {
+    labels,
+    datasets: [
+      {
+        label: 'Harga',
+        data: prices,
+        borderColor: '#e8eaf0',
+        borderWidth: 2,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        pointHoverBackgroundColor: '#e8eaf0',
+        tension: 0.3,
+        fill: false,
+        order: 1,
+      },
+      {
+        label: 'Upper BB',
+        data: upperBB,
+        borderColor: '#6366f1',
+        borderWidth: 1,
+        pointRadius: 0,
+        tension: 0.3,
+        fill: false,
+        borderDash: [],
+        order: 2,
+      },
+      {
+        label: 'Middle BB',
+        data: middleBB,
+        borderColor: 'rgba(139,144,158,0.4)',
+        borderWidth: 1,
+        pointRadius: 0,
+        tension: 0.3,
+        fill: false,
+        borderDash: [4,3],
+        order: 3,
+      },
+      {
+        label: 'Lower BB',
+        data: lowerBB,
+        borderColor: '#22c55e',
+        borderWidth: 1,
+        pointRadius: 0,
+        tension: 0.3,
+        backgroundColor: 'rgba(99,102,241,0.04)',
+        fill: '+1',
+        order: 4,
+      },
+      {
+        label: 'EMA 20',
+        data: ema20,
+        borderColor: '#f59e0b',
+        borderWidth: 1.5,
+        pointRadius: 0,
+        tension: 0.3,
+        fill: false,
+        borderDash: [6,3],
+        order: 5,
+      },
+      {
+        label: 'EMA 50',
+        data: ema50,
+        borderColor: '#fb923c',
+        borderWidth: 1.5,
+        pointRadius: 0,
+        tension: 0.3,
+        fill: false,
+        borderDash: [2,3],
+        order: 6,
+      },
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#181c23',
+        borderColor: 'rgba(255,255,255,0.1)',
+        borderWidth: 1,
+        titleColor: '#8b909e',
+        bodyColor: '#e8eaf0',
+        titleFont: { family: 'Consolas, monospace', size: 10 },
+        bodyFont: { family: 'Consolas, monospace', size: 11 },
+        callbacks: {
+          label: ctx => `${ctx.dataset.label}: $${ctx.parsed.y.toLocaleString()}`
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
+        ticks: { color: '#555a6a', font: { family: 'Consolas, monospace', size: 9 }, maxRotation: 0 }
+      },
+      y: {
+        position: 'right',
+        grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
+        ticks: {
+          color: '#555a6a',
+          font: { family: 'Consolas, monospace', size: 9 },
+          callback: v => '$' + (v/1000).toFixed(0) + 'K'
+        }
+      }
+    }
+  }
+});
+
+const macdCtx = document.getElementById('macdChart').getContext('2d');
+new Chart(macdCtx, {
+  type: 'bar',
+  data: {
+    labels,
+    datasets: [{
+      label: 'MACD Histogram',
+      data: macdHist,
+      backgroundColor: macdHist.map(v => v >= 0 ? 'rgba(34,197,94,0.6)' : 'rgba(239,68,68,0.6)'),
+      borderColor: macdHist.map(v => v >= 0 ? '#22c55e' : '#ef4444'),
+      borderWidth: 1,
+      borderRadius: 2,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#181c23',
+        borderColor: 'rgba(255,255,255,0.1)',
+        borderWidth: 1,
+        titleColor: '#8b909e',
+        bodyColor: '#e8eaf0',
+        titleFont: { family: 'Consolas, monospace', size: 10 },
+        bodyFont: { family: 'Consolas, monospace', size: 11 },
+      }
+    },
+    scales: {
+      x: {
+        grid: { display: false },
+        ticks: { color: '#555a6a', font: { family: 'Consolas, monospace', size: 9 }, maxRotation: 0 }
+      },
+      y: {
+        position: 'right',
+        grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
+        ticks: { color: '#555a6a', font: { family: 'Consolas, monospace', size: 9 } }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>
