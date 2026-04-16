@@ -87,6 +87,7 @@ main{max-width:1320px;margin:0 auto;padding:2rem}
 .ind-badge.wait{background:rgba(139,144,158,.1);color:var(--text3);border:1px solid var(--border)}
 .ind-value{font-family:var(--font-mono);font-size:22px;font-weight:500;color:var(--text);letter-spacing:-.02em;line-height:1;margin-bottom:4px}
 .ind-desc{font-size:11px;color:var(--text3);line-height:1.4}
+.ind-note{font-size:10px;font-family:var(--font-mono);color:var(--text3);background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.18);border-radius:5px;padding:4px 8px;margin-top:8px;line-height:1.4}
 .ind-mini-bar{height:3px;background:var(--bg3);border-radius:2px;margin-top:10px;overflow:hidden}
 .ind-mini-fill{height:100%;border-radius:2px;transition:width .8s ease}
 .chart-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.25rem;margin-bottom:1.5rem;animation:fadeIn .5s ease .15s both}
@@ -234,7 +235,7 @@ footer{border-top:1px solid var(--border);padding:1.25rem 2rem;display:flex;alig
     <div class="ind-card"><div class="ind-top"><span class="ind-name">Bollinger Bands</span><span class="ind-badge wait" id="b-bb">--</span></div><div class="ind-value" id="v-bb">--</div><div class="ind-desc" id="d-bb">Menghitung...</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-bb" style="width:0%;background:var(--buy)"></div></div></div>
     <div class="ind-card"><div class="ind-top"><span class="ind-name">ADX (14)</span><span class="ind-badge wait" id="b-adx">--</span></div><div class="ind-value" id="v-adx">--</div><div class="ind-desc" id="d-adx">Menghitung...</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-adx" style="width:0%;background:var(--neutral)"></div></div></div>
     <div class="ind-card"><div class="ind-top"><span class="ind-name">OBV</span><span class="ind-badge wait" id="b-obv">--</span></div><div class="ind-value" id="v-obv">--</div><div class="ind-desc" id="d-obv">Menghitung...</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-obv" style="width:0%;background:var(--buy)"></div></div></div>
-    <div class="ind-card"><div class="ind-top"><span class="ind-name">Fear & Greed</span><span class="ind-badge wait" id="b-fg">--</span></div><div class="ind-value" id="v-fg">--</div><div class="ind-desc" id="d-fg">Memuat sentimen...</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-fg" style="width:0%;background:var(--neutral)"></div></div></div>
+    <div class="ind-card"><div class="ind-top"><span class="ind-name">Fear & Greed</span><span class="ind-badge wait" id="b-fg">--</span></div><div class="ind-value" id="v-fg">--</div><div class="ind-desc" id="d-fg">Memuat sentimen...</div><div class="ind-note" id="fg-global-note"></div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-fg" style="width:0%;background:var(--neutral)"></div></div></div>
   </div>
 
   <div class="section-title">Fear & Greed — Dual Source</div>
@@ -744,7 +745,7 @@ function updateUI(sig, fg, ticker){
   document.getElementById('bar-bb').style.width = Math.min(sig.bb.pos,100)+'%';
   document.getElementById('bar-bb').style.background = sig.bb.badge==='buy'?'var(--buy)':sig.bb.badge==='sell'?'var(--sell)':'var(--neutral)';
 
-  setBadge('b-adx',sig.adx.badge, sig.adx.val>25?(sig.adx.dip>sig.adx.din?'Trend Bull':'Trend Bear'):'Sideways');
+  setBadge('b-adx',sig.adx.badge, sig.adx.val>30?(sig.adx.dip>sig.adx.din?'Trend Bull':'Trend Bear'):sig.adx.val>=20?'Lemah':'Sideways');
   document.getElementById('v-adx').textContent = sig.adx.val.toFixed(1);
   document.getElementById('d-adx').textContent = sig.adx.desc;
   document.getElementById('bar-adx').style.width = Math.min(sig.adx.val*2,100)+'%';
@@ -765,6 +766,7 @@ function updateUI(sig, fg, ticker){
     document.getElementById('bar-fg').style.width = (fg.alt?.val??50)+'%';
     document.getElementById('bar-fg').style.background = sig.fg.badge==='buy'?'var(--buy)':sig.fg.badge==='sell'?'var(--sell)':'var(--neutral)';
     updateFGDual(fg);
+    document.getElementById('fg-global-note').textContent = `⚠ Sentimen global pasar crypto — bukan spesifik ${activeCoin.sym}`;
   }
 
   // Chart title
