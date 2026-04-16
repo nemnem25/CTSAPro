@@ -1,9 +1,9 @@
 # CTSA Pro — Crypto Technical Signal Dashboard
 
-![Version](https://img.shields.io/badge/version-1.0-22c55e?style=flat-square)
+![Version](https://img.shields.io/badge/version-1.3-22c55e?style=flat-square)
 ![Status](https://img.shields.io/badge/status-live-22c55e?style=flat-square)
 ![License](https://img.shields.io/badge/license-MIT-6366f1?style=flat-square)
-![Data](https://img.shields.io/badge/data-CoinGecko%20API-orange?style=flat-square)
+![Data](https://img.shields.io/badge/data-Binance%20API-orange?style=flat-square)
 
 **CTSA Pro** adalah web app analisis teknikal kripto yang menghasilkan sinyal trading BELI / JUAL berdasarkan **6 indikator teknikal terpilih** — semua terbukti secara akademis dalam penelitian peer-reviewed dan digunakan secara luas oleh trader profesional di seluruh dunia.
 
@@ -81,7 +81,7 @@ Terdiri dari tiga garis: SMA 20 sebagai middle band, dan dua band atas/bawah yan
 ### 4. ADX — Average Directional Index (14)
 **Kategori:** Kekuatan Trend
 
-Mengukur **kekuatan** trend, bukan arahnya. ADX di atas 25 mengkonfirmasi trend yang kuat (layak diikuti). ADX di bawah 20 mengindikasikan pasar sideways — sinyal trend-following sebaiknya diabaikan. Digunakan bersama DI+ dan DI- untuk menentukan arah. Dikembangkan oleh J. Welles Wilder pada 1978.
+Mengukur **kekuatan** trend, bukan arahnya. ADX di atas 30 mengkonfirmasi trend yang kuat (layak diikuti). ADX 20–30 menandakan trend mulai terbentuk (zona lemah). ADX di bawah 20 mengindikasikan pasar sideways — sinyal trend-following sebaiknya diabaikan. Digunakan bersama DI+ dan DI- untuk menentukan arah. Dikembangkan oleh J. Welles Wilder pada 1978.
 
 **Bukti akademis:**
 - Wilder, J.W. (1978). *New Concepts in Technical Trading Systems*. Trend Research.
@@ -115,7 +115,7 @@ Mengakumulasi volume berdasarkan arah pergerakan harga. OBV naik saat harga naik
 ### 6. Fear & Greed Index — Dual Source
 **Kategori:** Sentimen Pasar
 
-Mengukur sentimen pasar kripto secara agregat dari berbagai sumber data. CTSA Pro menggunakan **dua sumber sekaligus** — Alternative.me dan CoinMarketCap — untuk validasi silang. Jika selisih kedua sumber ≥ 20 poin (divergen), sinyal F&G diabaikan dari scoring untuk menghindari false signal. Extreme Fear (<25) secara historis adalah zona akumulasi; Extreme Greed (>75) adalah zona distribusi.
+Mengukur sentimen pasar kripto secara agregat dari berbagai sumber data. CTSA Pro menggunakan **dua sumber sekaligus** — Alternative.me dan CoinMarketCap — untuk validasi silang. Jika selisih kedua sumber ≥ 20 poin (divergen), sinyal F&G diabaikan dari scoring untuk menghindari false signal. Extreme Fear (≤25) secara historis adalah zona akumulasi; Extreme Greed (≥75) adalah zona distribusi.
 
 **Bukti akademis:**
 - Baker, M. & Wurgler, J. (2006). *Investor Sentiment and the Cross-Section of Stock Returns*. Journal of Finance, 61(4), 1645–1680. Membuktikan indeks sentimen secara signifikan memprediksi return pasar.
@@ -177,7 +177,8 @@ Sinyal valid hanya jika **minimal 2 dari 3 timeframe utama** sepakat:
 - Deteksi divergensi F&G — skip scoring otomatis
 - Grafik harga interaktif dengan Bollinger Bands + EMA
 - MACD histogram panel
-- 57+ pasangan kripto
+- 15 pasangan kripto utama
+- Data real-time via Binance API (tanpa VPN)
 - Desain responsif — desktop & mobile
 - Dark mode by default
 
@@ -189,9 +190,11 @@ Sinyal valid hanya jika **minimal 2 dari 3 timeframe utama** sepakat:
 |----------|-----------|
 | Frontend | HTML5, CSS3, Vanilla JavaScript |
 | Charts | Chart.js 4.4.1 |
-| Data | CoinGecko API (gratis) |
+| Data Harga | Binance API (via Cloudflare Worker proxy) |
 | F&G | Alternative.me API + CoinMarketCap API |
+| Proxy | Cloudflare Workers (bypass blokir ISP Indonesia) |
 | Hosting | GitHub Pages |
+| CI/CD | GitHub Actions |
 | Font | System fonts (Segoe UI / SF Pro) |
 
 ---
@@ -219,21 +222,21 @@ Sinyal valid hanya jika **minimal 2 dari 3 timeframe utama** sepakat:
 
 ---
 
+## Roadmap
+
+- [x] v1.0 — UI dashboard + arsitektur dasar
+- [x] v1.1 — Koneksi real-time Binance API
+- [x] v1.2 — Kalkulasi 6 indikator otomatis di browser
+- [x] v1.3 — ADX threshold refinement + F&G global note
+- [ ] v2.0 — On-chain data integration
+
+---
+
 ## Disclaimer
 
 > ⚠️ **CTSA Pro bukan saran investasi.**
 >
 > Semua sinyal yang dihasilkan adalah output matematis dari indikator teknikal historis. Trading kripto mengandung risiko tinggi. Selalu lakukan riset independen (DYOR — Do Your Own Research) sebelum membuat keputusan investasi. Past performance tidak menjamin hasil masa depan.
-
----
-
-## Roadmap
-
-- [x] v1.0 — UI dashboard + data statis
-- [ ] v1.1 — Koneksi real-time CoinGecko API
-- [ ] v1.2 — Kalkulasi indikator otomatis di browser
-- [ ] v1.3 — ML scoring (XGBoost bobot optimal)
-- [ ] v2.0 — On-chain data integration
 
 ---
 
