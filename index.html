@@ -357,9 +357,11 @@ function buildSelectors(){
 // ── PRICE FORMAT ─────────────────────────────────────────────────────
 function fmt(n){
   if(n===null||n===undefined||isNaN(n)) return '--';
-  if(n>=1000) return '$'+n.toLocaleString('en',{maximumFractionDigits:0});
-  if(n>=1)    return '$'+n.toFixed(2);
-  return '$'+n.toFixed(4);
+  if(n>=1000)   return '$'+n.toLocaleString('en',{maximumFractionDigits:0});
+  if(n>=1)      return '$'+n.toFixed(2);
+  if(n>=0.01)   return '$'+n.toFixed(4);
+  if(n>=0.0001) return '$'+n.toFixed(6);
+  return '$'+n.toFixed(8); // PEPE, BONK, FLOKI, SHIB dll
 }
 function fmtPct(n){ return (n>=0?'+':'')+n.toFixed(2)+'%'; }
 function fmtK(n){
