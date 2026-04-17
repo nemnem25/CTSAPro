@@ -632,8 +632,7 @@ function computeSignals(klines, fg, btcKlines1D){
     const btcEma50  = calcEMA(btcCloses, 50);
     const btcEma200 = calcEMA(btcCloses, 200);
     const btcPrice  = btcCloses[btcCloses.length-1];
-    btcBullish = btcPrice > btcEma50[btcEma50.length-1]
-              && btcEma50[btcEma50.length-1] > btcEma200[btcEma200.length-1];
+    btcBullish = btcPrice > btcEma50[btcEma50.length-1];
   }
 
   // Resistance zone (< 1 ATR from recent high 20 candle)
