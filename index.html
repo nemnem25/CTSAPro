@@ -287,11 +287,21 @@ document.getElementById('app-version').textContent = 'v' + APP_VERSION;
 
 // ── CONFIG ──────────────────────────────────────────────────────────
 const COINS = [
+  // Original 15
   {sym:'BTC',id:'BTCUSDT'},{sym:'ETH',id:'ETHUSDT'},{sym:'BNB',id:'BNBUSDT'},
   {sym:'SOL',id:'SOLUSDT'},{sym:'XRP',id:'XRPUSDT'},{sym:'ADA',id:'ADAUSDT'},
   {sym:'AVAX',id:'AVAXUSDT'},{sym:'DOT',id:'DOTUSDT'},{sym:'LINK',id:'LINKUSDT'},
   {sym:'DOGE',id:'DOGEUSDT'},{sym:'MATIC',id:'MATICUSDT'},{sym:'UNI',id:'UNIUSDT'},
   {sym:'ATOM',id:'ATOMUSDT'},{sym:'LTC',id:'LTCUSDT'},{sym:'NEAR',id:'NEARUSDT'},
+  // Tier 1 — Large cap
+  {sym:'SUI',id:'SUIUSDT'},{sym:'APT',id:'APTUSDT'},{sym:'OP',id:'OPUSDT'},
+  {sym:'ARB',id:'ARBUSDT'},{sym:'INJ',id:'INJUSDT'},
+  // Tier 2 — Mid cap
+  {sym:'FET',id:'FETUSDT'},{sym:'RNDR',id:'RNDRUSDT'},{sym:'TIA',id:'TIAUSDT'},
+  {sym:'SEI',id:'SEIUSDT'},{sym:'WLD',id:'WLDUSDT'},
+  // Tier 3 — High volatility
+  {sym:'PEPE',id:'PEPEUSDT'},{sym:'BONK',id:'BONKUSDT'},{sym:'WIF',id:'WIFUSDT'},
+  {sym:'FLOKI',id:'FLOKIUSDT'},
 ];
 
 const TFS = [
