@@ -184,7 +184,7 @@ footer{border-top:1px solid var(--border);padding:1.25rem 2rem;display:flex;alig
       </div>
       <div style="display:flex;align-items:baseline;gap:4px">
         <span class="score-num" id="score-num">--</span>
-        <span class="score-denom">/ 7 poin (min 5)</span>
+        <span class="score-denom">/ 8 poin (min 5)</span>
       </div>
     </div>
     <div id="market-tags" style="display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap"></div>
@@ -203,7 +203,7 @@ footer{border-top:1px solid var(--border);padding:1.25rem 2rem;display:flex;alig
     <div id="hold-section" style="display:none;text-align:center;padding:2rem">
       <div style="font-size:28px;margin-bottom:.5rem">⏳</div>
       <div style="font-weight:600;font-size:15px;color:var(--text);margin-bottom:.25rem">Tidak ada sinyal trading saat ini</div>
-      <div style="font-size:12px;color:var(--text3)">Tunggu hingga ada breakout + retest hold yang valid,<br>semua 7 hard filter lolos, dan score ≥ 5/7.</div>
+      <div style="font-size:12px;color:var(--text3)">Tunggu hingga ada breakout + retest hold yang valid,<br>semua 6 hard filter lolos, dan score ≥ 5/8.</div>
     </div>
   </div>
 
@@ -243,7 +243,6 @@ footer{border-top:1px solid var(--border);padding:1.25rem 2rem;display:flex;alig
   <div class="section-title">Hard Filter Status</div>
   <div class="ind-grid" id="filter-grid">
     <div class="ind-card"><div class="ind-top"><span class="ind-name">BTC Context</span><span class="ind-badge wait" id="b-btc">--</span></div><div class="ind-value" id="v-btc">--</div><div class="ind-desc" id="d-btc">Memuat...</div></div>
-    <div class="ind-card"><div class="ind-top"><span class="ind-name">Trend Coin</span><span class="ind-badge wait" id="b-trend">--</span></div><div class="ind-value" id="v-trend">--</div><div class="ind-desc" id="d-trend">EMA50 vs EMA200</div></div>
     <div class="ind-card"><div class="ind-top"><span class="ind-name">Price > EMA50</span><span class="ind-badge wait" id="b-price-trend">--</span></div><div class="ind-value" id="v-price-trend">--</div><div class="ind-desc" id="d-price-trend">Harga vs EMA50</div></div>
     <div class="ind-card"><div class="ind-top"><span class="ind-name">ADX > 20</span><span class="ind-badge wait" id="b-adx-filter">--</span></div><div class="ind-value" id="v-adx-filter">--</div><div class="ind-desc" id="d-adx-filter">Momentum filter</div></div>
     <div class="ind-card"><div class="ind-top"><span class="ind-name">No Conflict</span><span class="ind-badge wait" id="b-conflict">--</span></div><div class="ind-value" id="v-conflict">--</div><div class="ind-desc" id="d-conflict">SellScore = 0</div></div>
@@ -650,7 +649,6 @@ function computeSignals(klines, fg, btcKlines1D){
   // ── HARD FILTER (semua wajib pass) ──────────────────────────────────
   const hardFilters = {
     btcBullish,
-    trendCoin:    ema50Now > ema200Now,
     priceTrend:   price > ema50Now,
     momentum:     adxNow > 20,
     noConflict:   sellScore === 0,
@@ -670,6 +668,7 @@ function computeSignals(klines, fg, btcKlines1D){
   scoreDetail.volume      = volNow > volMA20 ? 1 : 0; score += scoreDetail.volume;
   scoreDetail.adx         = adxNow > 25     ? 1 : 0; score += scoreDetail.adx;
   scoreDetail.structure   = structureBullish ? 1 : 0; score += scoreDetail.structure;
+  scoreDetail.trendCoin   = ema50Now > ema200Now ? 1 : 0; score += scoreDetail.trendCoin;
 
   // ── PENALTY ──────────────────────────────────────────────────────────
   let penalty = 0;
@@ -762,7 +761,7 @@ function updateUI(sig, fg, ticker){
   vl.className = 'verdict-label '+sig.dir;
   vl.textContent = sig.verdict;
   document.getElementById('score-num').textContent = sig.finalScore;
-  const barPct = Math.max(0, sig.finalScore) / 7 * 100;
+  const barPct = Math.max(0, sig.finalScore) / 8 * 100;
   const sb = document.getElementById('score-bar');
   sb.style.width = barPct+'%';
   sb.className = 'score-bar '+sig.dir;
@@ -901,7 +900,6 @@ function updateUI(sig, fg, ticker){
     if(document.getElementById(did)) document.getElementById(did).textContent = desc;
   };
   filterPass('b-btc',        hf.btcBullish,   hf.btcBullish?'Bullish':'Bearish', sig.btcContext.desc);
-  filterPass('b-trend',      hf.trendCoin,    hf.trendCoin?'EMA50>EMA200':'EMA50<EMA200', 'Trend jangka menengah coin');
   filterPass('b-price-trend',hf.priceTrend,   hf.priceTrend?'Di atas EMA50':'Di bawah EMA50', 'Harga vs EMA50');
   filterPass('b-adx-filter', hf.momentum,     `ADX ${sig.adx.val.toFixed(1)}`, hf.momentum?'Momentum cukup':'ADX terlalu rendah');
   filterPass('b-conflict',   hf.noConflict,   hf.noConflict?'SellScore=0':`SellScore=${sig.totalSell}`, 'Tidak ada sinyal berlawanan');
@@ -936,7 +934,7 @@ function updateUI(sig, fg, ticker){
     <div><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">EMA 200</div><div style="font-family:var(--font-mono);font-size:12px;color:#fb923c;font-weight:500">${fmt(sig.ema200[sig.ema200.length-1])}</div></div>
     <div><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Upper BB</div><div style="font-family:var(--font-mono);font-size:12px;color:#6366f1;font-weight:500">${fmt(sig.bb.u)}</div></div>
     <div><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Lower BB</div><div style="font-family:var(--font-mono);font-size:12px;color:#22c55e;font-weight:500">${fmt(sig.bb.l)}</div></div>
-    <div><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Score</div><div style="font-family:var(--font-mono);font-size:12px;color:${sig.finalScore>=5?'var(--buy)':sig.finalScore>=3?'var(--neutral)':'var(--sell)'};font-weight:700">${sig.finalScore}/7</div></div>
+    <div><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Score</div><div style="font-family:var(--font-mono);font-size:12px;color:${sig.finalScore>=5?'var(--buy)':sig.finalScore>=3?'var(--neutral)':'var(--sell)'};font-weight:700">${sig.finalScore}/8</div></div>
   `;
 
   // MACD signal text
