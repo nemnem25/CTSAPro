@@ -104,11 +104,6 @@ main{max-width:1320px;margin:0 auto;padding:2rem}
 .fg-bar{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden}
 .fg-fill{height:100%;border-radius:2px;transition:width 1.2s cubic-bezier(.34,1.56,.64,1)}
 .fg-consensus{background:var(--bg3);border-color:var(--border2)}
-.cmc-key-form{display:flex;gap:6px;margin-top:8px}
-.cmc-key-input{flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:5px 8px;font-family:var(--font-mono);font-size:10px;color:var(--text);outline:none}
-.cmc-key-input:focus{border-color:var(--accent)}
-.cmc-key-btn{font-family:var(--font-mono);font-size:10px;padding:5px 10px;border-radius:6px;border:none;background:var(--accent);color:#fff;cursor:pointer;white-space:nowrap}
-.cmc-key-btn:hover{opacity:.85}
 .diverge-badge{display:inline-block;font-family:var(--font-mono);font-size:9px;padding:2px 7px;border-radius:4px;background:var(--neutral-dim);color:var(--neutral);border:1px solid rgba(245,158,11,.25);margin-top:6px}
 .tf-table-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.5rem;animation:fadeIn .5s ease .3s both}
 .tf-table{width:100%;border-collapse:collapse}
@@ -246,7 +241,7 @@ footer{border-top:1px solid var(--border);padding:1.25rem 2rem;display:flex;alig
   <div class="section-title">Fear & Greed — Dual Source</div>
   <div class="fg-dual">
     <div class="fg-card"><div class="fg-source">Alternative.me</div><div class="fg-num" id="fg-alt-num">--</div><div class="fg-label" id="fg-alt-lbl">Memuat...</div><div class="fg-bar"><div class="fg-fill" id="fg-alt-bar" style="width:0%"></div></div></div>
-    <div class="fg-card"><div class="fg-source">CoinMarketCap</div><div class="fg-num" id="fg-cmc-num">--</div><div class="fg-label" id="fg-cmc-lbl">Memuat...</div><div class="fg-bar"><div class="fg-fill" id="fg-cmc-bar" style="width:0%"></div></div><div id="fg-cmc-note" style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-top:6px"></div><div id="fg-cmc-key-form" style="display:none" class="cmc-key-form"><input class="cmc-key-input" id="cmc-key-input" type="password" placeholder="Paste CMC API key..."/><button class="cmc-key-btn" onclick="saveCmcKey()">Simpan</button></div></div>
+    <div class="fg-card"><div class="fg-source">CoinMarketCap</div><div class="fg-num" id="fg-cmc-num">--</div><div class="fg-label" id="fg-cmc-lbl">Memuat...</div><div class="fg-bar"><div class="fg-fill" id="fg-cmc-bar" style="width:0%"></div></div><div id="fg-cmc-note" style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-top:6px"></div></div>
     <div class="fg-card fg-consensus"><div class="fg-source">Konsensus</div><div class="fg-num" id="fg-con-num">--</div><div class="fg-label" id="fg-con-lbl">--</div><div class="fg-bar"><div class="fg-fill" id="fg-con-bar" style="width:0%;background:#6366f1"></div></div><div id="fg-diverge" style="margin-top:6px"></div></div>
   </div>
 
@@ -298,18 +293,6 @@ let activeCoin = COINS[0];
 let activeTF = TFS[1];
 let priceChartInst = null;
 let macdChartInst = null;
-let cmcApiKey = localStorage.getItem('ctsa_cmc_key') || '';
-
-function saveCmcKey(){
-  const input = document.getElementById('cmc-key-input');
-  const key = input.value.trim();
-  if(!key) return;
-  localStorage.setItem('ctsa_cmc_key', key);
-  cmcApiKey = key;
-  document.getElementById('fg-cmc-key-form').style.display = 'none';
-  document.getElementById('fg-cmc-lbl').textContent = 'Key tersimpan — memuat...';
-  loadAll();
-}
 
 // ── CLOCK ────────────────────────────────────────────────────────────
 function updateClock(){
@@ -395,13 +378,12 @@ async function fetchFG(){
   }catch(e){ return null; }
 }
 
-async function fetchFGCmc(key){
-  if(!key) return null;
+async function fetchFGCmc(){
   try{
-    const r = await proxyFetch('https://pro-api.coinmarketcap.com/v3/fear-and-greed/historical?limit=1',
-      {headers:{'X-CMC_PRO_API_KEY':key}});
+    const r = await proxyFetch('https://pro-api.coinmarketcap.com/v3/fear-and-greed/historical?limit=1');
     if(!r.ok) return null;
     const d = await r.json();
+    if(!d.data || !d.data[0]) return null;
     return {val:+d.data[0].value, label:d.data[0].value_classification, src:'cmc'};
   }catch(e){ return null; }
 }
@@ -829,9 +811,8 @@ function updateFGDual(fg){
     document.getElementById('fg-cmc-note').textContent = '';
   } else {
     document.getElementById('fg-cmc-num').textContent = '--';
-    document.getElementById('fg-cmc-lbl').textContent = 'Masukkan CMC API key';
+    document.getElementById('fg-cmc-lbl').textContent = 'Tidak tersedia';
     document.getElementById('fg-cmc-note').textContent = '';
-    document.getElementById('fg-cmc-key-form').style.display = 'flex';
   }
 
   if(alt && cmc){
@@ -969,7 +950,7 @@ async function loadAll(){
       fetchKlines(activeCoin.id, activeTF.interval, activeTF.limit),
       fetch24h(activeCoin.id),
       fetchFG(),
-      fetchFGCmc(cmcApiKey),
+      fetchFGCmc(),
     ]);
 
     // Determine F&G to use for scoring
