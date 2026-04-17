@@ -802,8 +802,6 @@ function updateUI(sig, fg, ticker){
   // Show/hide entry vs hold
   const entrySection = document.getElementById('entry-section');
   const holdSection = document.getElementById('hold-section');
-  const warnBox = document.getElementById('signal-warning');
-  const score = Math.max(sig.totalBuy, sig.totalSell);
 
   if(sig.dir==='neutral' || !sig.allFiltersPass){
     entrySection.style.display = 'none';
