@@ -302,7 +302,7 @@ const TFS = [
 ];
 
 let activeCoin = COINS[0];
-let activeTF = TFS[1];
+let activeTF = TFS[0]; // default 1H
 let priceChartInst = null;
 let macdChartInst = null;
 
@@ -332,7 +332,7 @@ function buildSelectors(){
   const ts = document.getElementById('tf-selector');
   TFS.forEach((t,i)=>{
     const b = document.createElement('button');
-    b.className = 'tf-btn' + (i===1?' active':'');
+    b.className = 'tf-btn' + (i===0?' active':'');
     b.textContent = t.label;
     b.onclick = ()=>{
       document.querySelectorAll('.tf-btn').forEach(x=>x.classList.remove('active'));
@@ -613,7 +613,7 @@ function computeSignals(klines, fg, btcKlines1D){
   const volNow  = vols[vols.length-1];
 
   // Breakout & Retest
-  const breakoutResult = detectBreakout(closes, highs, vols, 20, 5);
+  const breakoutResult = detectBreakout(closes, highs, vols, 20, 10);
   const breakoutFound  = breakoutResult.found;
   const breakoutLevel  = breakoutResult.level;
   const breakoutIdx    = breakoutResult.candleIdx;
@@ -651,7 +651,7 @@ function computeSignals(klines, fg, btcKlines1D){
     btcBullish,
     priceTrend:   price > ema50Now,
     momentum:     adxNow > 20,
-    noConflict:   sellScore === 0,
+    noConflict:   sellScore <= 1,
     breakout:     breakoutFound,
     retestHold,
   };
@@ -902,7 +902,7 @@ function updateUI(sig, fg, ticker){
   filterPass('b-btc',        hf.btcBullish,   hf.btcBullish?'Bullish':'Bearish', sig.btcContext.desc);
   filterPass('b-price-trend',hf.priceTrend,   hf.priceTrend?'Di atas EMA50':'Di bawah EMA50', 'Harga vs EMA50');
   filterPass('b-adx-filter', hf.momentum,     `ADX ${sig.adx.val.toFixed(1)}`, hf.momentum?'Momentum cukup':'ADX terlalu rendah');
-  filterPass('b-conflict',   hf.noConflict,   hf.noConflict?'SellScore=0':`SellScore=${sig.totalSell}`, 'Tidak ada sinyal berlawanan');
+  filterPass('b-conflict',   hf.noConflict,   hf.noConflict?'SellScore<=1':`SellScore=${sig.totalSell}`, 'Maks 1 sinyal berlawanan');
   filterPass('b-bo-filter',  hf.breakout,     hf.breakout?'Terdeteksi':'Belum ada', sig.breakout.desc);
   filterPass('b-rt-filter',  hf.retestHold,   hf.retestHold?'Valid':'Belum valid', sig.retest.desc);
 
