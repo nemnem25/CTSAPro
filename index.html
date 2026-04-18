@@ -184,26 +184,28 @@ footer{border-top:1px solid var(--border);padding:1.25rem 2rem;display:flex;alig
       </div>
       <div style="display:flex;align-items:baseline;gap:4px">
         <span class="score-num" id="score-num">--</span>
-        <span class="score-denom">/ 8 poin (min 5)</span>
+        <span class="score-denom">/ 10 poin (min 6)</span>
       </div>
     </div>
     <div id="market-tags" style="display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap"></div>
     <div class="score-bar-wrap"><div class="score-bar neutral" id="score-bar" style="width:0%"></div></div>
     <div id="entry-section">
-      <div class="entry-grid">
+      <div class="entry-grid" style="grid-template-columns:repeat(4,1fr)">
         <div class="entry-cell"><div class="entry-lbl">Entry Market</div><div class="entry-val" id="e-entry">--</div><div class="entry-sub" id="e-entry-sub">Sekarang</div></div>
         <div class="entry-cell" style="border-color:rgba(99,102,241,.3)"><div class="entry-lbl" style="color:#a5b4fc">Entry Limit</div><div class="entry-val" id="e-limit" style="color:#a5b4fc">--</div><div class="entry-sub" id="e-limit-sub">−0.5× ATR · lebih optimal</div></div>
         <div class="entry-cell sl"><div class="entry-lbl">Stop Loss</div><div class="entry-val" id="e-sl">--</div><div class="entry-sub" id="e-sl-sub">--</div></div>
         <div class="entry-cell t1"><div class="entry-lbl">Target 1</div><div class="entry-val" id="e-t1">--</div><div class="entry-sub" id="e-t1-sub">--</div></div>
         <div class="entry-cell t2"><div class="entry-lbl">Target 2</div><div class="entry-val" id="e-t2">--</div><div class="entry-sub" id="e-t2-sub">--</div></div>
         <div class="entry-cell t3"><div class="entry-lbl">Target 3</div><div class="entry-val" id="e-t3">--</div><div class="entry-sub" id="e-t3-sub">--</div></div>
+        <div class="entry-cell t3"><div class="entry-lbl">Target 4</div><div class="entry-val" id="e-t4">--</div><div class="entry-sub" id="e-t4-sub">--</div></div>
+        <div class="entry-cell t3"><div class="entry-lbl">Target 5</div><div class="entry-val" id="e-t5">--</div><div class="entry-sub" id="e-t5-sub">--</div></div>
       </div>
       <div id="signal-warning" style="display:none;margin-top:.75rem;padding:.75rem 1rem;border-radius:8px;font-size:12px"></div>
     </div>
     <div id="hold-section" style="display:none;text-align:center;padding:2rem">
       <div style="font-size:28px;margin-bottom:.5rem">⏳</div>
       <div style="font-weight:600;font-size:15px;color:var(--text);margin-bottom:.25rem">Tidak ada sinyal trading saat ini</div>
-      <div style="font-size:12px;color:var(--text3)">Tunggu hingga ada breakout + retest hold yang valid,<br>semua 6 hard filter lolos, dan score ≥ 5/8.</div>
+      <div style="font-size:12px;color:var(--text3)">Tunggu hingga ada breakout + retest hold yang valid,<br>semua 6 hard filter lolos, dan score ≥ 6/10.</div>
     </div>
   </div>
 
@@ -228,7 +230,7 @@ footer{border-top:1px solid var(--border);padding:1.25rem 2rem;display:flex;alig
     </div>
   </div>
 
-  <div class="section-title">7 Aspek Scoring</div>
+  <div class="section-title">10 Aspek Scoring</div>
   <div class="ind-grid" id="ind-grid">
     <div class="ind-card"><div class="ind-top"><span class="ind-name">RSI (14)</span><span class="ind-badge wait" id="b-rsi">--</span></div><div class="ind-value" id="v-rsi">--</div><div class="ind-desc" id="d-rsi">Menghitung...</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-rsi" style="width:0%;background:var(--buy)"></div></div></div>
     <div class="ind-card"><div class="ind-top"><span class="ind-name">MACD Cross</span><span class="ind-badge wait" id="b-macd">--</span></div><div class="ind-value" id="v-macd">--</div><div class="ind-desc" id="d-macd">Menghitung...</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-macd" style="width:0%;background:var(--buy)"></div></div></div>
@@ -237,6 +239,9 @@ footer{border-top:1px solid var(--border);padding:1.25rem 2rem;display:flex;alig
     <div class="ind-card"><div class="ind-top"><span class="ind-name">ADX (14)</span><span class="ind-badge wait" id="b-adx">--</span></div><div class="ind-value" id="v-adx">--</div><div class="ind-desc" id="d-adx">Menghitung...</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-adx" style="width:0%;background:var(--neutral)"></div></div></div>
     <div class="ind-card"><div class="ind-top"><span class="ind-name">Struktur HH/HL</span><span class="ind-badge wait" id="b-structure">--</span></div><div class="ind-value" id="v-structure">--</div><div class="ind-desc" id="d-structure">Menghitung...</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-structure" style="width:0%;background:var(--buy)"></div></div></div>
     <div class="ind-card"><div class="ind-top"><span class="ind-name">Volume vs MA</span><span class="ind-badge wait" id="b-vol">--</span></div><div class="ind-value" id="v-vol">--</div><div class="ind-desc" id="d-vol">Menghitung...</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-vol" style="width:0%;background:var(--buy)"></div></div></div>
+    <div class="ind-card"><div class="ind-top"><span class="ind-name">Trend Coin 1H</span><span class="ind-badge wait" id="b-trend-coin">--</span></div><div class="ind-value" id="v-trend-coin">--</div><div class="ind-desc" id="d-trend-coin">EMA50 vs EMA200</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-trend-coin" style="width:0%;background:var(--buy)"></div></div></div>
+    <div class="ind-card"><div class="ind-top"><span class="ind-name">4H Bullish 🆕</span><span class="ind-badge wait" id="b-tf4h">--</span></div><div class="ind-value" id="v-tf4h">--</div><div class="ind-desc" id="d-tf4h">EMA50 > EMA200 di 4H</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-tf4h" style="width:0%;background:var(--buy)"></div></div></div>
+    <div class="ind-card"><div class="ind-top"><span class="ind-name">1D Bullish 🆕</span><span class="ind-badge wait" id="b-tf1d">--</span></div><div class="ind-value" id="v-tf1d">--</div><div class="ind-desc" id="d-tf1d">EMA50 > EMA200 di 1D</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-tf1d" style="width:0%;background:var(--buy)"></div></div></div>
     <div class="ind-card"><div class="ind-top"><span class="ind-name">Fear & Greed</span><span class="ind-badge wait" id="b-fg">--</span></div><div class="ind-value" id="v-fg">--</div><div class="ind-desc" id="d-fg">Memuat sentimen...</div><div class="ind-note" id="fg-global-note"></div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-fg" style="width:0%;background:var(--neutral)"></div></div></div>
   </div>
 
@@ -575,7 +580,7 @@ function detectStructure(highs, lows, n=20) {
 }
 
 // ── MAIN COMPUTE SIGNALS v2.0 ─────────────────────────────────────────
-function computeSignals(klines, fg, btcKlines1D){
+function computeSignals(klines, fg, btcKlines1D, klines4H, klines1D){
   const closes = klines.map(k=>k.c);
   const highs   = klines.map(k=>k.h);
   const lows    = klines.map(k=>k.l);
@@ -682,6 +687,24 @@ function computeSignals(klines, fg, btcKlines1D){
   scoreDetail.structure   = structureBullish ? 1 : 0; score += scoreDetail.structure;
   scoreDetail.trendCoin   = ema50Now > ema200Now ? 1 : 0; score += scoreDetail.trendCoin;
 
+  // MTF scoring — 4H bullish
+  scoreDetail.tf4h = 0;
+  if(klines4H && klines4H.length >= 200){
+    const c4 = klines4H.map(k=>k.c);
+    const e50_4h = calcEMA(c4, 50); const e200_4h = calcEMA(c4, 200);
+    if(e50_4h[e50_4h.length-1] > e200_4h[e200_4h.length-1]) { scoreDetail.tf4h = 1; }
+  }
+  score += scoreDetail.tf4h;
+
+  // MTF scoring — 1D bullish
+  scoreDetail.tf1d = 0;
+  if(klines1D && klines1D.length >= 200){
+    const c1d = klines1D.map(k=>k.c);
+    const e50_1d = calcEMA(c1d, 50); const e200_1d = calcEMA(c1d, 200);
+    if(e50_1d[e50_1d.length-1] > e200_1d[e200_1d.length-1]) { scoreDetail.tf1d = 1; }
+  }
+  score += scoreDetail.tf1d;
+
   // ── PENALTY ──────────────────────────────────────────────────────────
   let penalty = 0;
   const penaltyDetail = {};
@@ -694,16 +717,18 @@ function computeSignals(klines, fg, btcKlines1D){
 
   // ── VERDICT ──────────────────────────────────────────────────────────
   let verdict = 'TUNGGU', dir = 'neutral';
-  if(allFiltersPass && finalScore >= 5){
-    verdict = finalScore >= 7 ? 'BELI KUAT' : finalScore >= 6 ? 'BELI' : 'BELI LEMAH';
+  if(allFiltersPass && finalScore >= 6){
+    verdict = finalScore >= 8 ? 'BELI KUAT' : finalScore >= 6 ? 'BELI' : 'BELI LEMAH';
     dir = 'buy';
   }
 
   const isBuy       = dir === 'buy';
-  const sl          = isBuy ? price - 1.0*atrNow : price + 1.0*atrNow;
-  const t1          = isBuy ? price + 2.0*atrNow : price - 2.0*atrNow;
-  const t2          = isBuy ? price + 4.0*atrNow : price - 4.0*atrNow;
-  const t3          = isBuy ? price + 7.0*atrNow : price - 7.0*atrNow;
+  const sl          = isBuy ? price - 1.5*atrNow : price + 1.5*atrNow;
+  const t1          = isBuy ? price + 3.0*atrNow : price - 3.0*atrNow;
+  const t2          = isBuy ? price + 6.0*atrNow : price - 6.0*atrNow;
+  const t3          = isBuy ? price + 9.0*atrNow : price - 9.0*atrNow;
+  const t4          = isBuy ? price + 12.0*atrNow : price - 12.0*atrNow;
+  const t5          = isBuy ? price + 15.0*atrNow : price - 15.0*atrNow;
   const rr1         = (Math.abs(t1-price)/Math.abs(sl-price)).toFixed(1);
   const entryLimit  = isBuy ? price - 0.5*atrNow : price + 0.5*atrNow;
 
@@ -734,7 +759,7 @@ function computeSignals(klines, fg, btcKlines1D){
 
     verdict, dir, isBuy,
     totalBuy: finalScore, totalSell: sellScore,
-    sl, t1, t2, t3, rr1, entryLimit,
+    sl, t1, t2, t3, t4, t5, rr1, entryLimit,
     closes, highs, lows, vols,
     bb_upper:upper, bb_middle:middle, bb_lower:lower,
     ema20: calcEMA(closes,20), ema50: ema50coin, ema200: ema200coin,
@@ -773,7 +798,7 @@ function updateUI(sig, fg, ticker){
   vl.className = 'verdict-label '+sig.dir;
   vl.textContent = sig.verdict;
   document.getElementById('score-num').textContent = sig.finalScore;
-  const barPct = Math.max(0, sig.finalScore) / 8 * 100;
+  const barPct = Math.max(0, sig.finalScore) / 10 * 100;
   const sb = document.getElementById('score-bar');
   sb.style.width = barPct+'%';
   sb.className = 'score-bar '+sig.dir;
@@ -829,13 +854,17 @@ function updateUI(sig, fg, ticker){
     document.getElementById('e-limit').textContent = fmt(sig.entryLimit);
     document.getElementById('e-limit-sub').textContent = `−0.5× ATR · ${fmtPct((sig.entryLimit-price)/price*100)} · lebih optimal`;
     document.getElementById('e-sl').textContent = fmt(sig.sl);
-    document.getElementById('e-sl-sub').textContent = `−1.0× ATR · ${fmtPct((sig.sl-price)/price*100)}`;
+    document.getElementById('e-sl-sub').textContent = `−1.5× ATR · ${fmtPct((sig.sl-price)/price*100)}`;
     document.getElementById('e-t1').textContent = fmt(sig.t1);
-    document.getElementById('e-t1-sub').textContent = `+2.0× ATR · ${fmtPct((sig.t1-price)/price*100)} · R/R ${sig.rr1}`;
+    document.getElementById('e-t1-sub').textContent = `+3.0× ATR · ${fmtPct((sig.t1-price)/price*100)} · R/R ${sig.rr1}`;
     document.getElementById('e-t2').textContent = fmt(sig.t2);
-    document.getElementById('e-t2-sub').textContent = `+4.0× ATR · ${fmtPct((sig.t2-price)/price*100)}`;
+    document.getElementById('e-t2-sub').textContent = `+6.0× ATR · ${fmtPct((sig.t2-price)/price*100)}`;
     document.getElementById('e-t3').textContent = fmt(sig.t3);
-    document.getElementById('e-t3-sub').textContent = `+7.0× ATR · ${fmtPct((sig.t3-price)/price*100)}`;
+    document.getElementById('e-t3-sub').textContent = `+9.0× ATR · ${fmtPct((sig.t3-price)/price*100)}`;
+    document.getElementById('e-t4').textContent = fmt(sig.t4);
+    document.getElementById('e-t4-sub').textContent = `+12.0× ATR · ${fmtPct((sig.t4-price)/price*100)}`;
+    document.getElementById('e-t5').textContent = fmt(sig.t5);
+    document.getElementById('e-t5-sub').textContent = `+15.0× ATR · ${fmtPct((sig.t5-price)/price*100)}`;
   }
 
   // ── SCORING INDICATORS ──────────────────────────────────────────────
@@ -892,7 +921,29 @@ function updateUI(sig, fg, ticker){
   document.getElementById('bar-vol').style.width = volOk?'100%':'30%';
   document.getElementById('bar-vol').style.background = volOk?'var(--buy)':'var(--neutral)';
 
-  // F&G — info only
+  // Trend Coin 1H
+  const tcOk = sig.scoreDetail.trendCoin > 0;
+  setBadge('b-trend-coin', tcOk?'buy':'wait', tcOk?'✅ +1':'—');
+  document.getElementById('v-trend-coin').textContent = tcOk ? 'EMA50>EMA200' : 'EMA50<EMA200';
+  document.getElementById('d-trend-coin').textContent = tcOk ? 'Trend 1H bullish' : 'Trend 1H belum bullish';
+  document.getElementById('bar-trend-coin').style.width = tcOk?'100%':'0%';
+  document.getElementById('bar-trend-coin').style.background = 'var(--buy)';
+
+  // 4H Bullish
+  const tf4hOk = sig.scoreDetail.tf4h > 0;
+  setBadge('b-tf4h', tf4hOk?'buy':'wait', tf4hOk?'✅ +1':'—');
+  document.getElementById('v-tf4h').textContent = tf4hOk ? 'Bullish' : 'Belum';
+  document.getElementById('d-tf4h').textContent = tf4hOk ? 'EMA50 > EMA200 di 4H ✅' : 'EMA50 < EMA200 di 4H';
+  document.getElementById('bar-tf4h').style.width = tf4hOk?'100%':'0%';
+  document.getElementById('bar-tf4h').style.background = 'var(--buy)';
+
+  // 1D Bullish
+  const tf1dOk = sig.scoreDetail.tf1d > 0;
+  setBadge('b-tf1d', tf1dOk?'buy':'wait', tf1dOk?'✅ +1':'—');
+  document.getElementById('v-tf1d').textContent = tf1dOk ? 'Bullish' : 'Belum';
+  document.getElementById('d-tf1d').textContent = tf1dOk ? 'EMA50 > EMA200 di 1D ✅' : 'EMA50 < EMA200 di 1D';
+  document.getElementById('bar-tf1d').style.width = tf1dOk?'100%':'0%';
+  document.getElementById('bar-tf1d').style.background = 'var(--buy)';
   setBadge('b-fg', 'neutral', 'Info');
   if(fg && fg.alt){
     document.getElementById('v-fg').textContent = fg.alt.val;
@@ -930,7 +981,7 @@ function updateUI(sig, fg, ticker){
     warnBox.style.background = 'rgba(245,158,11,.1)';
     warnBox.style.border = '1px solid rgba(245,158,11,.25)';
     warnBox.style.color = '#d97706';
-    warnBox.textContent = `⚠️ Penalti aktif: ${penalties.join(', ')} | Skor bersih: ${sig.finalScore}/8`;
+    warnBox.textContent = `⚠️ Penalti aktif: ${penalties.join(', ')} | Skor bersih: ${sig.finalScore}/10`;
   } else {
     warnBox.style.display = 'none';
   }
@@ -946,7 +997,7 @@ function updateUI(sig, fg, ticker){
     <div><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">EMA 200</div><div style="font-family:var(--font-mono);font-size:12px;color:#fb923c;font-weight:500">${fmt(sig.ema200[sig.ema200.length-1])}</div></div>
     <div><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Upper BB</div><div style="font-family:var(--font-mono);font-size:12px;color:#6366f1;font-weight:500">${fmt(sig.bb.u)}</div></div>
     <div><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Lower BB</div><div style="font-family:var(--font-mono);font-size:12px;color:#22c55e;font-weight:500">${fmt(sig.bb.l)}</div></div>
-    <div><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Score</div><div style="font-family:var(--font-mono);font-size:12px;color:${sig.finalScore>=5?'var(--buy)':sig.finalScore>=3?'var(--neutral)':'var(--sell)'};font-weight:700">${sig.finalScore}/8</div></div>
+    <div><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Score</div><div style="font-family:var(--font-mono);font-size:12px;color:${sig.finalScore>=6?'var(--buy)':sig.finalScore>=4?'var(--neutral)':'var(--sell)'};font-weight:700">${sig.finalScore}/10</div></div>
   `;
 
   // MACD signal text
@@ -1114,16 +1165,18 @@ async function loadAll(){
   document.getElementById('price-value').innerHTML = '<span class="spinner"></span>Memuat...';
 
   try{
-    const [klines, ticker, fgAlt, fgCmc, btcKlines1D] = await Promise.all([
+    const [klines, ticker, fgAlt, fgCmc, btcKlines1D, klines4H, klines1D] = await Promise.all([
       fetchKlines(activeCoin.id, activeTF.interval, activeTF.limit),
       fetch24h(activeCoin.id),
       fetchFG(),
       fetchFGCmc(),
       fetchKlines('BTCUSDT', '1d', 210),
+      fetchKlines(activeCoin.id, '4h', 210),
+      fetchKlines(activeCoin.id, '1d', 210),
     ]);
 
     // F&G — hanya untuk tampilan, tidak untuk scoring
-    const sig = computeSignals(klines, null, btcKlines1D);
+    const sig = computeSignals(klines, null, btcKlines1D, klines4H, klines1D);
     updateUI(sig, {alt:fgAlt, cmc:fgCmc}, ticker);
 
     document.getElementById('live-status').textContent = 'Live · Binance';
