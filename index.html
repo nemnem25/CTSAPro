@@ -722,7 +722,7 @@ function computeSignals(klines, fg, btcKlines1D, klines4H, klines1D){
   const breakoutLevel  = breakoutResult.level;
   const breakoutIdx    = breakoutResult.candleIdx;
   const retestHold     = breakoutFound
-    ? detectRetestHold(closes, lows, highs, breakoutIdx, breakoutLevel, 0.005, 5)
+    ? detectRetestHold(closes, lows, highs, breakoutIdx, breakoutLevel, 0.005, 10)
     : false;
 
   // Structure HH/HL
@@ -897,7 +897,7 @@ function computeSignalShort(klines, btcKlines1D, klines4H, klines1D){
   const breakdownLevel  = bdResult.level;
   const breakdownIdx    = bdResult.candleIdx || bdResult.idx;
   const retestFail      = breakdownFound
-    ? detectRetestFail(closes, highs, lows, breakdownIdx, breakdownLevel, 0.005, 5)
+    ? detectRetestFail(closes, highs, lows, breakdownIdx, breakdownLevel, 0.005, 10)
     : false;
 
   // Structure LL/LH
@@ -923,7 +923,6 @@ function computeSignalShort(klines, btcKlines1D, klines4H, klines1D){
 
   // ── HARD FILTER JUAL ─────────────────────────────────────────────────
   const hardFilters = {
-    btcBearish,
     priceBelowEMA: price < ema50Now,
     momentum:      adxNow > 20,
     noConflict:    buyScore <= 1,
@@ -932,7 +931,7 @@ function computeSignalShort(klines, btcKlines1D, klines4H, klines1D){
   };
   const allFiltersPass = Object.values(hardFilters).every(v => v === true);
 
-  // ── SCORING JUAL (max 8 base, +2 MTF) ────────────────────────────────
+  // ── SCORING JUAL (max 9 base, +2 MTF) ────────────────────────────────
   const scoreDetail = {};
   let score = 0;
 
@@ -944,6 +943,7 @@ function computeSignalShort(klines, btcKlines1D, klines4H, klines1D){
   scoreDetail.adx           = adxNow > 25               ? 1 : 0; score += scoreDetail.adx;
   scoreDetail.structure     = structureBearish           ? 1 : 0; score += scoreDetail.structure;
   scoreDetail.trendCoin     = ema50Now < ema200Now       ? 1 : 0; score += scoreDetail.trendCoin;
+  scoreDetail.btcBearish    = btcBearish                 ? 1 : 0; score += scoreDetail.btcBearish;
 
   // MTF 4H bearish
   scoreDetail.tf4h = 0;
