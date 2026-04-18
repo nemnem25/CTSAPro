@@ -209,6 +209,55 @@ footer{border-top:1px solid var(--border);padding:1.25rem 2rem;display:flex;alig
     </div>
   </div>
 
+  <!-- SELL SIGNAL CARD -->
+  <div class="verdict-card sell" id="sell-card" style="display:none">
+    <div class="verdict-top">
+      <div>
+        <div style="font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:4px">Early Warning — Harga Turun</div>
+        <div class="verdict-label sell" id="sell-verdict-label">JUAL</div>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:4px">
+        <span class="score-num" id="sell-score-num">--</span>
+        <span class="score-denom">/ 10 poin (min 6)</span>
+      </div>
+    </div>
+    <div id="sell-market-tags" style="display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap"></div>
+    <div class="score-bar-wrap"><div class="score-bar sell" id="sell-score-bar" style="width:0%"></div></div>
+    <div class="entry-grid" style="grid-template-columns:repeat(4,1fr)">
+      <div class="entry-cell" style="border-color:rgba(239,68,68,.3)">
+        <div class="entry-lbl" style="color:#f87171">Jangan beli di atas</div>
+        <div class="entry-val" id="s-breakdown" style="color:#f87171">--</div>
+        <div class="entry-sub" id="s-breakdown-sub">Breakdown level</div>
+      </div>
+      <div class="entry-cell sl">
+        <div class="entry-lbl">Invalidasi warning</div>
+        <div class="entry-val" id="s-sl">--</div>
+        <div class="entry-sub" id="s-sl-sub">--</div>
+      </div>
+      <div class="entry-cell" style="border-color:rgba(34,197,94,.3)">
+        <div class="entry-lbl" style="color:#22c55e">Zona akumulasi</div>
+        <div class="entry-val" id="s-accum" style="color:#22c55e">--</div>
+        <div class="entry-sub" id="s-accum-sub">Beli kembali nanti</div>
+      </div>
+      <div class="entry-cell">
+        <div class="entry-lbl">Potensi turun ke</div>
+        <div class="entry-val" id="s-t3">--</div>
+        <div class="entry-sub" id="s-t3-sub">--</div>
+      </div>
+    </div>
+    <div style="margin-top:.75rem">
+      <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Target penurunan</div>
+      <div class="entry-grid" style="grid-template-columns:repeat(5,1fr)">
+        <div class="entry-cell"><div class="entry-lbl">Target 1</div><div class="entry-val" id="s-t1">--</div><div class="entry-sub" id="s-t1-sub">−3× ATR</div></div>
+        <div class="entry-cell"><div class="entry-lbl">Target 2</div><div class="entry-val" id="s-t2">--</div><div class="entry-sub" id="s-t2-sub">−6× ATR</div></div>
+        <div class="entry-cell"><div class="entry-lbl">Target 3</div><div class="entry-val" id="s-t3b">--</div><div class="entry-sub" id="s-t3b-sub">−9× ATR</div></div>
+        <div class="entry-cell"><div class="entry-lbl">Target 4</div><div class="entry-val" id="s-t4">--</div><div class="entry-sub" id="s-t4-sub">−12× ATR</div></div>
+        <div class="entry-cell"><div class="entry-lbl">Target 5</div><div class="entry-val" id="s-t5">--</div><div class="entry-sub" id="s-t5-sub">−15× ATR</div></div>
+      </div>
+    </div>
+    <div id="sell-warning-box" style="margin-top:.75rem;padding:.75rem 1rem;border-radius:8px;font-size:12px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#fca5a5;display:none"></div>
+  </div>
+
   <div class="section-title" id="chart-title">Grafik Harga</div>
   <div class="chart-wrap">
     <div class="chart-meta">
@@ -579,6 +628,44 @@ function detectStructure(highs, lows, n=20) {
   return recentHigh > prevHigh && recentLow > prevLow;
 }
 
+// ── BREAKDOWN DETECTION (mirror of detectBreakout) ─────────────────────
+function detectBreakdown(closes, lows, vols, n=20, lookback=10) {
+  const volMA = vols.slice(-n).reduce((a,b)=>a+b,0)/n;
+  for(let i = closes.length - lookback; i < closes.length; i++){
+    if(i < n) continue;
+    const prevLow = Math.min(...lows.slice(i-n, i));
+    if(closes[i] < prevLow && vols[i] > volMA){
+      return { found: true, level: prevLow, candleIdx: i };
+    }
+  }
+  return { found: false, level: null, candleIdx: null };
+}
+
+// ── RETEST FAIL DETECTION ─────────────────────────────────────────────
+function detectRetestFail(closes, highs, lows, breakdownIdx, breakdownLevel, tolerance=0.005, window=5) {
+  if(breakdownIdx === null) return false;
+  const end = Math.min(breakdownIdx + window + 1, closes.length);
+  for(let i = breakdownIdx + 1; i < end; i++){
+    const lower = breakdownLevel * (1 - tolerance);
+    const upper = breakdownLevel * (1 + tolerance);
+    if(highs[i] >= lower && highs[i] <= upper){
+      // Rejection: close di bawah low candle sebelumnya (gagal naik)
+      if(i > 0 && closes[i] < lows[i-1]) return true;
+    }
+  }
+  return false;
+}
+
+// ── STRUCTURE LL/LH (Bearish) ─────────────────────────────────────────
+function detectStructureBearish(highs, lows, n=20) {
+  if(highs.length < n*2) return false;
+  const recentHigh = Math.max(...highs.slice(-n));
+  const recentLow  = Math.min(...lows.slice(-n));
+  const prevHigh   = Math.max(...highs.slice(-n*2, -n));
+  const prevLow    = Math.min(...lows.slice(-n*2, -n));
+  return recentHigh < prevHigh && recentLow < prevLow;
+}
+
 // ── MAIN COMPUTE SIGNALS v2.0 ─────────────────────────────────────────
 function computeSignals(klines, fg, btcKlines1D, klines4H, klines1D){
   const closes = klines.map(k=>k.c);
@@ -768,6 +855,162 @@ function computeSignals(klines, fg, btcKlines1D, klines4H, klines1D){
   };
 }
 
+
+// ── COMPUTE SIGNAL SHORT (JUAL) ────────────────────────────────────────
+function computeSignalShort(klines, btcKlines1D, klines4H, klines1D){
+  const closes = klines.map(k=>k.c);
+  const highs   = klines.map(k=>k.h);
+  const lows    = klines.map(k=>k.l);
+  const vols    = klines.map(k=>k.v);
+  const price   = closes[closes.length-1];
+
+  const rsi    = calcRSI(closes);
+  const rsiNow = rsi[rsi.length-1];
+
+  const {macdLine, signalLine, hist} = calcMACD(closes);
+  const macdNow  = macdLine[macdLine.length-1];
+  const sigNow   = signalLine[signalLine.length-1];
+  const histNow  = hist[hist.length-1];
+  const histPrev = hist[hist.length-2];
+  const macdCrossUp   = macdNow > sigNow && histNow > 0 && histPrev <= 0;
+  const macdCrossDown = macdNow < sigNow && histNow < 0 && histPrev >= 0;
+
+  const {adx, diP, diN} = calcADX(highs, lows, closes);
+  const adxNow = adx[adx.length-1];
+  const diPNow = diP[diP.length-1];
+  const diNNow = diN[diN.length-1];
+
+  const atr    = calcATR(highs, lows, closes);
+  const atrNow = atr[atr.length-1];
+
+  const ema50coin  = calcEMA(closes, 50);
+  const ema200coin = calcEMA(closes, 200);
+  const ema50Now   = ema50coin[ema50coin.length-1];
+  const ema200Now  = ema200coin[ema200coin.length-1];
+
+  const volMA20 = vols.slice(-20).reduce((a,b)=>a+b,0)/20;
+  const volNow  = vols[vols.length-1];
+
+  // Breakdown & Retest Fail
+  const bdResult    = detectBreakdown(closes, lows, vols, 20, 10);
+  const breakdownFound  = bdResult.found;
+  const breakdownLevel  = bdResult.level;
+  const breakdownIdx    = bdResult.candleIdx || bdResult.idx;
+  const retestFail      = breakdownFound
+    ? detectRetestFail(closes, highs, lows, breakdownIdx, breakdownLevel, 0.005, 5)
+    : false;
+
+  // Structure LL/LH
+  const structureBearish = detectStructureBearish(highs, lows, 20);
+
+  // BTC Bearish: BTC < EMA50 1D
+  let btcBearish = false;
+  if(btcKlines1D && btcKlines1D.length >= 50){
+    const bc   = btcKlines1D.map(k=>k.c);
+    const be50 = calcEMA(bc, 50);
+    btcBearish = bc[bc.length-1] < be50[be50.length-1];
+  }
+
+  // Support zone: < 1 ATR from recent low 20 candle
+  const recentLow20 = lowestLow(lows, 20);
+  const nearSupport  = (price - recentLow20) < atrNow;
+
+  // Buy score untuk conflict check
+  let buyScore = 0;
+  if(rsiNow < 30)                                              buyScore++;
+  if(macdCrossUp || (histNow > 0 && macdNow > sigNow))        buyScore++;
+  if(adxNow > 25 && diPNow > diNNow)                          buyScore++;
+
+  // ── HARD FILTER JUAL ─────────────────────────────────────────────────
+  const hardFilters = {
+    btcBearish,
+    priceBelowEMA: price < ema50Now,
+    momentum:      adxNow > 20,
+    noConflict:    buyScore <= 1,
+    breakdown:     breakdownFound,
+    retestFail,
+  };
+  const allFiltersPass = Object.values(hardFilters).every(v => v === true);
+
+  // ── SCORING JUAL (max 8 base, +2 MTF) ────────────────────────────────
+  const scoreDetail = {};
+  let score = 0;
+
+  scoreDetail.breakdown     = breakdownFound            ? 1 : 0; score += scoreDetail.breakdown;
+  scoreDetail.retestFail    = retestFail                ? 1 : 0; score += scoreDetail.retestFail;
+  scoreDetail.rsi           = (rsiNow>=32&&rsiNow<=45)  ? 1 : 0; score += scoreDetail.rsi;
+  scoreDetail.macdCross     = macdCrossDown             ? 1 : 0; score += scoreDetail.macdCross;
+  scoreDetail.volume        = volNow > volMA20           ? 1 : 0; score += scoreDetail.volume;
+  scoreDetail.adx           = adxNow > 25               ? 1 : 0; score += scoreDetail.adx;
+  scoreDetail.structure     = structureBearish           ? 1 : 0; score += scoreDetail.structure;
+  scoreDetail.trendCoin     = ema50Now < ema200Now       ? 1 : 0; score += scoreDetail.trendCoin;
+
+  // MTF 4H bearish
+  scoreDetail.tf4h = 0;
+  let tf4hBearish = false;
+  if(klines4H && klines4H.length >= 200){
+    const c4 = klines4H.map(k=>k.c);
+    const e50_4h = calcEMA(c4,50), e200_4h = calcEMA(c4,200);
+    tf4hBearish = e50_4h[e50_4h.length-1] < e200_4h[e200_4h.length-1];
+    if(tf4hBearish){ scoreDetail.tf4h = 1; }
+  }
+  score += scoreDetail.tf4h;
+
+  // MTF 1D bearish
+  scoreDetail.tf1d = 0;
+  let tf1dBearish = false;
+  if(klines1D && klines1D.length >= 200){
+    const c1d = klines1D.map(k=>k.c);
+    const e50_1d = calcEMA(c1d,50), e200_1d = calcEMA(c1d,200);
+    tf1dBearish = e50_1d[e50_1d.length-1] < e200_1d[e200_1d.length-1];
+    if(tf1dBearish){ scoreDetail.tf1d = 1; }
+  }
+  score += scoreDetail.tf1d;
+
+  // ── PENALTY JUAL ─────────────────────────────────────────────────────
+  let penalty = 0;
+  const penaltyDetail = {};
+  penaltyDetail.rsiOversold  = rsiNow < 30   ? -1 : 0; penalty += penaltyDetail.rsiOversold;
+  penaltyDetail.nearSupport  = nearSupport    ? -2 : 0; penalty += penaltyDetail.nearSupport;
+  penaltyDetail.volumeWeak   = volNow<volMA20 ? -1 : 0; penalty += penaltyDetail.volumeWeak;
+
+  const finalScore = score + penalty;
+
+  // ── VERDICT ──────────────────────────────────────────────────────────
+  let verdict = 'TUNGGU', dir = 'neutral';
+  if(allFiltersPass && finalScore >= 6){
+    verdict = finalScore >= 8 ? 'JUAL KUAT' : 'JUAL';
+    dir = 'sell';
+  }
+
+  const sl         = price + 1.5*atrNow;
+  const t1         = price - 3.0*atrNow;
+  const t2         = price - 6.0*atrNow;
+  const t3         = price - 9.0*atrNow;
+  const t4         = price - 12.0*atrNow;
+  const t5         = price - 15.0*atrNow;
+  const entryLimit = price + 0.5*atrNow;
+  const rr1        = (Math.abs(t1-price)/Math.abs(sl-price)).toFixed(1);
+  const accumHigh  = t1;
+  const accumLow   = t2;
+
+  return {
+    price, atrNow,
+    verdict, dir, isBuy: false,
+    allFiltersPass, hardFilters,
+    scoreDetail, penaltyDetail,
+    score, penalty, finalScore,
+    breakdownFound, breakdownLevel,
+    retestFail, structureBearish,
+    btcBearish, tf4hBearish, tf1dBearish,
+    sl, t1, t2, t3, t4, t5, rr1, entryLimit,
+    accumHigh, accumLow,
+    totalBuy: buyScore,
+  };
+}
+
+// helper — lowest low of last n candles
+function lowestLow(lows, n){ return Math.min(...lows.slice(-n)); }
 
 // ── UI UPDATE ─────────────────────────────────────────────────────────
 function setBadge(id, cls, txt){
@@ -1155,6 +1398,77 @@ function fillTFRow(tfLabel, s){
 }
 
 // ── MAIN LOAD ─────────────────────────────────────────────────────────
+// ── SELL CARD UI ──────────────────────────────────────────────────────
+function updateSellCard(sig){
+  const card = document.getElementById('sell-card');
+  if(!sig || sig.dir === 'neutral'){
+    card.style.display = 'none';
+    return;
+  }
+  card.style.display = 'block';
+
+  document.getElementById('sell-verdict-label').textContent = sig.verdict;
+  document.getElementById('sell-score-num').textContent = sig.finalScore;
+  const barPct = Math.max(0, sig.finalScore) / 10 * 100;
+  document.getElementById('sell-score-bar').style.width = barPct + '%';
+
+  // Tags
+  const tags = document.getElementById('sell-market-tags');
+  tags.innerHTML = '';
+  const mkTag = (txt, s) => {
+    const el = document.createElement('span');
+    el.textContent = txt;
+    el.style.cssText = `font-family:var(--font-mono);font-size:10px;font-weight:500;padding:3px 9px;border-radius:4px;letter-spacing:.04em;${s}`;
+    tags.appendChild(el);
+  };
+  mkTag('Early Warning', 'background:rgba(239,68,68,.12);color:#dc2626;border:1px solid rgba(239,68,68,.25)');
+  mkTag('Harga Turun', 'background:rgba(239,68,68,.12);color:#dc2626;border:1px solid rgba(239,68,68,.25)');
+  mkTag('Jangan Beli Dulu', 'background:rgba(245,158,11,.12);color:#d97706;border:1px solid rgba(245,158,11,.25)');
+
+  // MTF badges
+  const tf4h = sig.tf4hBearish ? '✅ 4H Bearish' : '❌ 4H Belum';
+  const tf1d = sig.tf1dBearish ? '✅ 1D Bearish' : '❌ 1D Belum';
+  mkTag(tf4h, sig.tf4hBearish
+    ? 'background:rgba(239,68,68,.08);color:#f87171;border:1px solid rgba(239,68,68,.2)'
+    : 'background:rgba(100,116,139,.08);color:#64748b;border:1px solid rgba(100,116,139,.2)');
+  mkTag(tf1d, sig.tf1dBearish
+    ? 'background:rgba(239,68,68,.08);color:#f87171;border:1px solid rgba(239,68,68,.2)'
+    : 'background:rgba(100,116,139,.08);color:#64748b;border:1px solid rgba(100,116,139,.2)');
+
+  // Levels
+  const p = sig.price;
+  document.getElementById('s-breakdown').textContent = fmt(sig.breakdownLevel);
+  document.getElementById('s-breakdown-sub').textContent = 'Breakdown level — jangan beli di atas';
+  document.getElementById('s-sl').textContent = fmt(sig.sl);
+  document.getElementById('s-sl-sub').textContent = `+1.5× ATR · ${fmtPct((sig.sl-p)/p*100)} · Invalidasi`;
+  document.getElementById('s-accum').textContent = `${fmt(sig.accumHigh)} — ${fmt(sig.accumLow)}`;
+  document.getElementById('s-accum-sub').textContent = 'Zona akumulasi (T1-T2)';
+  document.getElementById('s-t3').textContent = fmt(sig.t3);
+  document.getElementById('s-t3-sub').textContent = `−9× ATR · ${fmtPct((sig.t3-p)/p*100)}`;
+
+  // Target rows
+  document.getElementById('s-t1').textContent = fmt(sig.t1);
+  document.getElementById('s-t1-sub').textContent = `${fmtPct((sig.t1-p)/p*100)} · R/R ${sig.rr1}`;
+  document.getElementById('s-t2').textContent = fmt(sig.t2);
+  document.getElementById('s-t2-sub').textContent = fmtPct((sig.t2-p)/p*100);
+  document.getElementById('s-t3b').textContent = fmt(sig.t3);
+  document.getElementById('s-t3b-sub').textContent = fmtPct((sig.t3-p)/p*100);
+  document.getElementById('s-t4').textContent = fmt(sig.t4);
+  document.getElementById('s-t4-sub').textContent = fmtPct((sig.t4-p)/p*100);
+  document.getElementById('s-t5').textContent = fmt(sig.t5);
+  document.getElementById('s-t5-sub').textContent = fmtPct((sig.t5-p)/p*100);
+
+  // Warning box
+  const wb = document.getElementById('sell-warning-box');
+  if(sig.breakdownFound){
+    wb.style.display = 'block';
+    wb.textContent = `Harga breakdown dari ${fmt(sig.breakdownLevel)} — retest gagal. `
+      + `Tunggu stabilisasi di zona akumulasi ${fmt(sig.accumHigh)} — ${fmt(sig.accumLow)} sebelum beli kembali.`;
+  } else {
+    wb.style.display = 'none';
+  }
+}
+
 async function loadAll(){
   document.getElementById('live-status').textContent = 'Memuat...';
   document.getElementById('live-dot').style.background = '#f59e0b';
@@ -1176,8 +1490,10 @@ async function loadAll(){
     ]);
 
     // F&G — hanya untuk tampilan, tidak untuk scoring
-    const sig = computeSignals(klines, null, btcKlines1D, klines4H, klines1D);
+    const sig     = computeSignals(klines, null, btcKlines1D, klines4H, klines1D);
+    const sigSell = computeSignalShort(klines, btcKlines1D, klines4H, klines1D);
     updateUI(sig, {alt:fgAlt, cmc:fgCmc}, ticker);
+    updateSellCard(sigSell);
 
     document.getElementById('live-status').textContent = 'Live · Binance';
     document.getElementById('live-dot').style.background = 'var(--buy)';
