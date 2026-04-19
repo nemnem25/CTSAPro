@@ -1,25 +1,212 @@
 # CTSA Pro — Crypto Technical Signal Dashboard
 
-![Version](https://img.shields.io/badge/version-1.3-22c55e?style=flat-square)
+![Version](https://img.shields.io/badge/version-2.0-22c55e?style=flat-square)
 ![Status](https://img.shields.io/badge/status-live-22c55e?style=flat-square)
 ![License](https://img.shields.io/badge/license-MIT-6366f1?style=flat-square)
 ![Data](https://img.shields.io/badge/data-Binance%20API-orange?style=flat-square)
+![Scanner](https://img.shields.io/badge/scanner-Cloudflare%20Workers-F38020?style=flat-square)
+![Telegram](https://img.shields.io/badge/sinyal-@ctsaprosignals-2CA5E0?style=flat-square)
 
-**CTSA Pro** adalah web app analisis teknikal kripto yang menghasilkan sinyal trading BELI / JUAL berdasarkan **6 indikator teknikal terpilih** — semua terbukti secara akademis dalam penelitian peer-reviewed dan digunakan secara luas oleh trader profesional di seluruh dunia.
+**CTSA Pro** adalah web app analisis teknikal kripto yang menghasilkan sinyal trading **BELI** dan **JUAL (Early Warning)** secara otomatis berdasarkan sistem Hard Filter + Scoring berlapis — dilengkapi scanner otomatis yang mengirimkan sinyal ke Telegram setiap 30 menit.
 
-🌐 **Live Demo:** [https://nemnem25.github.io/CTSAPro/](https://nemnem25.github.io/CTSAPro/)
+🌐 **Live Demo:** [https://nemnem25.github.io/CTSAPro/](https://nemnem25.github.io/CTSAPro/)  
+📡 **Telegram:** [@ctsaprosignals](https://t.me/ctsaprosignals)
 
 ---
 
 ## Filosofi
 
-> *"Lebih sedikit indikator yang tepat lebih baik dari banyak indikator yang redundan."*
+> *"Lebih sedikit sinyal yang akurat lebih baik dari banyak sinyal yang noise."*
 
-CTSA Pro tidak mengejar kuantitas indikator. Setiap indikator yang digunakan dipilih berdasarkan tiga kriteria ketat:
+CTSA Pro tidak mengejar kuantitas sinyal. Sistem dirancang berlapis — hanya sinyal yang lolos semua hard filter **dan** mencapai skor minimum yang dikirimkan ke Telegram. Sinyal lemah diblokir secara otomatis.
 
-1. **Terbukti secara akademis** — ada studi peer-reviewed yang mengkonfirmasi efektivitasnya
-2. **Dipakai trader profesional** — bukan indikator eksperimental atau hasil overfitting
-3. **Tidak redundan** — setiap indikator mengukur dimensi pasar yang berbeda
+---
+
+## Arsitektur Sistem v2.0
+
+```
+Binance API
+    │
+    ▼
+Cloudflare Worker (scanner.js)
+    │── Fetch klines 1H + 4H + 1D (29 coin)
+    │── Compute BELI signal
+    │── Compute JUAL signal
+    │── Hard Filter + Scoring + Penalty
+    │── Anti-duplikat (KV Store)
+    ▼
+Telegram @ctsaprosignals          GitHub Pages (index.html)
+   🟢 BELI KUAT                      Web App — Realtime
+   🔴 JUAL KUAT                      Dashboard + Chart
+```
+
+---
+
+## Dual Signal System
+
+### Sinyal BELI
+Entry long untuk spot atau derivatif. Dikirim saat kondisi bullish terkonfirmasi.
+
+### Sinyal JUAL — Early Warning
+**Bukan short, bukan jual aset yang dipegang.** Sinyal JUAL adalah:
+- ⚠️ Early warning — pasar sedang turun, jangan beli dulu
+- 🎯 Timing akumulasi — identifikasi level beli berikutnya
+- 📉 Pelengkap sinyal BELI — konteks lengkap kondisi pasar
+
+---
+
+## Hard Filter
+
+Semua filter **wajib lolos** sebelum scoring dimulai. Satu filter gagal = sinyal tidak dikirim.
+
+### Hard Filter BELI (6 syarat)
+
+| # | Filter | Kondisi |
+|---|--------|---------|
+| 1 | BTC Context | BTC > EMA50 1D |
+| 2 | Price Trend | Harga coin > EMA50 1H |
+| 3 | Momentum | ADX > 20 |
+| 4 | No Conflict | SellScore ≤ 1 |
+| 5 | Breakout | Close > MAX high 20 candle + volume > MA |
+| 6 | Retest Hold | Bounce di breakout level (window 10 candle) |
+
+### Hard Filter JUAL (5 syarat)
+
+| # | Filter | Kondisi |
+|---|--------|---------|
+| 1 | Price Trend | Harga coin < EMA50 1H |
+| 2 | Momentum | ADX > 20 |
+| 3 | No Conflict | BuyScore ≤ 1 |
+| 4 | Breakdown | Close < MIN low 20 candle + volume > MA |
+| 5 | Retest Fail | Rejection di breakdown level (window 10 candle) |
+
+> **Catatan:** BTC bearish (BTC < EMA50 1D) tidak memblokir sinyal JUAL — tapi masuk sebagai **bonus scoring +1**.
+
+---
+
+## Scoring System
+
+### Scoring BELI (max 10 poin)
+
+| Aspek | Kondisi | Poin |
+|-------|---------|------|
+| Breakout valid | Close > MAX high 20 candle | +1 |
+| Retest Hold | Bounce di breakout level | +1 |
+| RSI ideal | RSI 55–68 | +1 |
+| MACD Cross Up | Histogram cross positif | +1 |
+| Volume | Volume > MA20 | +1 |
+| ADX kuat | ADX > 25 | +1 |
+| Struktur HH/HL | Higher High + Higher Low | +1 |
+| Trend coin | EMA50 > EMA200 (1H) | +1 |
+| MTF 4H | EMA50 > EMA200 di 4H | +1 |
+| MTF 1D | EMA50 > EMA200 di 1D | +1 |
+
+**Penalty BELI:** RSI > 70 (−1), Dekat resistance < 1 ATR (−2), Volume lemah (−1)
+
+### Scoring JUAL (max 11 poin)
+
+| Aspek | Kondisi | Poin |
+|-------|---------|------|
+| Breakdown valid | Close < MIN low 20 candle | +1 |
+| Retest Fail | Rejection di breakdown level | +1 |
+| RSI ideal | RSI 32–45 | +1 |
+| MACD Cross Down | Histogram cross negatif | +1 |
+| Volume | Volume > MA20 | +1 |
+| ADX kuat | ADX > 25 | +1 |
+| Struktur LL/LH | Lower Low + Lower High | +1 |
+| Trend coin | EMA50 < EMA200 (1H) | +1 |
+| BTC bearish | BTC < EMA50 1D | +1 |
+| MTF 4H | EMA50 < EMA200 di 4H | +1 |
+| MTF 1D | EMA50 < EMA200 di 1D | +1 |
+
+**Penalty JUAL:** RSI < 30 (−1), Dekat support < 1 ATR (−2), Volume lemah (−1)
+
+---
+
+## Verdict & Threshold
+
+| Skor | BELI | JUAL | Dikirim? |
+|------|------|------|----------|
+| ≥ 8 | 🟢 BELI KUAT | 🔴 JUAL KUAT | ✅ Ya |
+| 6–7 | 🟢 BELI | 🔴 JUAL | ✅ Ya |
+| 5 | BELI LEMAH | JUAL LEMAH | ❌ Tidak |
+| < 5 | TUNGGU | TUNGGU | ❌ Tidak |
+
+---
+
+## Level Trading
+
+### BELI
+```
+Entry Limit = Harga − 0.5× ATR   (lebih optimal)
+Stop Loss   = Harga − 1.5× ATR
+Target 1    = Harga + 3.0× ATR   R/R = 2.0
+Target 2    = Harga + 6.0× ATR
+Target 3    = Harga + 9.0× ATR
+Target 4    = Harga + 12.0× ATR
+Target 5    = Harga + 15.0× ATR
+```
+
+### JUAL (Early Warning)
+```
+Invalidasi  = Harga + 1.5× ATR   (SL jika trading short)
+Target 1    = Harga − 3.0× ATR
+Target 2    = Harga − 6.0× ATR
+Target 3    = Harga − 9.0× ATR
+Target 4    = Harga − 12.0× ATR
+Target 5    = Harga − 15.0× ATR
+Zona Akumulasi = antara Target 1 dan Target 2
+```
+
+---
+
+## Format Sinyal Telegram
+
+### 🟢 BELI
+```
+🟢 CTSA PRO SIGNAL v2.0
+
+SOL/USDT — BELI KUAT
+Skor: 8/10 (min 6) · Semua filter ✅
+📈 SPOT BELI · DERIVATIF LONG
+
+💰 Harga: $88.50
+🔓 Breakout: $85.00 ← Baru breakout
+⏳ Konfirmasi close 1H: 19 Apr, 14.00 WIB
+
+── KONFIRMASI TIMEFRAME ──
+✅ 1H: BELI KUAT (8/10)
+✅ 4H: Bullish (EMA50 > EMA200)
+❌ 1D: Belum bullish
+
+── LEVEL TRADING ──
+🎯 Entry Market: $88.50
+🎯 Entry Limit: $88.00 (lebih optimal)
+🛑 Stop Loss: $86.25 (-2.54%) · 1.5× ATR
+✅ Target 1: $93.00 (+5.08%) · R/R 2.0
+...
+```
+
+### 🔴 JUAL
+```
+🔴 CTSA PRO SIGNAL v2.0
+
+SOL/USDT — JUAL KUAT
+Skor: 8/10 (min 6) · Semua filter ✅
+📉 EARLY WARNING · HARGA TURUN
+
+💰 Harga: $88.50
+🔻 Breakdown: $90.00 ← Retest gagal
+
+── LEVEL HARGA ──
+⚠️ Jangan beli di atas: $90.00
+🛑 Invalidasi warning: $90.75 (+2.54%)
+🎯 Zona akumulasi: $81.00 — $84.75
+
+── POTENSI PENURUNAN ──
+📉 Target 1: $84.75 (-4.24%)
+...
+```
 
 ---
 
@@ -28,159 +215,56 @@ CTSA Pro tidak mengejar kuantitas indikator. Setiap indikator yang digunakan dip
 ### 1. RSI — Relative Strength Index (14)
 **Kategori:** Momentum
 
-Mengukur kecepatan dan besarnya perubahan harga. RSI di bawah 30 menandakan kondisi *oversold* (potensi beli), di atas 70 menandakan *overbought* (potensi jual). Dikembangkan oleh J. Welles Wilder dan dipublikasikan pertama kali pada 1978.
+Mengukur kecepatan dan besarnya perubahan harga. Zona ideal entry BELI: 55–68. Zona ideal early warning JUAL: 32–45.
 
 **Bukti akademis:**
 - Wilder, J.W. (1978). *New Concepts in Technical Trading Systems*. Trend Research.
-- Studi peer-reviewed PMC/NIH (2023) menemukan strategi berbasis RSI menghasilkan return **773.65%** dari 2018–2022, dibandingkan buy-and-hold **275.22%** pada periode yang sama.
-- ResearchGate (2023): RSI terbukti lebih akurat dari MACD dalam mendeteksi sinyal di 10 pasangan kripto.
-- arXiv (2024): RSI14 dan RSI30 masuk dalam **top 8 fitur** prediksi Bitcoin menggunakan XGBoost.
+- PMC/NIH (2023): Strategi berbasis RSI menghasilkan return 773.65% dari 2018–2022 vs buy-and-hold 275.22%.
+- arXiv (2024): RSI14 masuk dalam top 8 fitur prediksi Bitcoin menggunakan XGBoost.
 
-**Referensi:**
-- https://pubmed.ncbi.nlm.nih.gov/ (search: RSI cryptocurrency strategy)
-- https://www.researchgate.net/publication/377921778
-- https://arxiv.org/abs/2410.06935
-
----
-
-### 2. MACD — Moving Average Convergence Divergence (12, 26, 9)
+### 2. MACD (12, 26, 9)
 **Kategori:** Trend & Momentum
 
-Mengukur hubungan antara dua EMA untuk mendeteksi perubahan arah trend dan kekuatan momentum. Sinyal utama: crossover MACD line dengan signal line, dan pembalikan histogram. Dikembangkan oleh Gerald Appel pada 1979.
+Cross Up histogram = konfirmasi bullish. Cross Down = konfirmasi bearish.
 
 **Bukti akademis:**
-- Appel, G. (1979). *The Moving Average Convergence-Divergence Method*. Great Neck.
-- ScienceDirect (2024): Kombinasi MACD dengan LSTM/GRU menghasilkan win rate tinggi pada 18 saham dari NEPSE, BSE, dan NYSE.
-- Gate.io Research (Januari 2026): Kombinasi RSI + MACD mencapai **win rate 77%** dalam backtesting kripto.
-- MACD terbukti efektif mendeteksi *trend reversals* dan pola kelanjutan trend pada aset volatil.
+- ScienceDirect (2024): Kombinasi MACD + LSTM menghasilkan win rate tinggi pada 18 saham.
+- Gate.io Research (2026): Kombinasi RSI + MACD mencapai win rate 77% dalam backtesting kripto.
 
-**Referensi:**
-- https://www.sciencedirect.com/science/article/pii/S2199853124001926
-- https://web3.gate.com/crypto-wiki/article/how-to-use-technical-indicators-macd-rsi-and-bollinger-bands-for-crypto-trading-in-2026-20260204
-
----
-
-### 3. Bollinger Bands (20 periode, 2 standar deviasi)
+### 3. Bollinger Bands (20, 2σ)
 **Kategori:** Volatilitas
 
-Terdiri dari tiga garis: SMA 20 sebagai middle band, dan dua band atas/bawah yang berjarak 2 standar deviasi. Mengukur volatilitas secara dinamis. *BB Squeeze* (band menyempit) mengindikasikan breakout akan segera terjadi. Dikembangkan oleh John Bollinger pada 1983.
+BB Squeeze mengindikasikan breakout akan segera terjadi. Posisi harga dalam band menentukan kondisi overbought/oversold.
 
-**Bukti akademis:**
-- Bollinger, J. (2001). *Bollinger on Bollinger Bands*. McGraw-Hill.
-- Journal of Marketing & Social Research (2025): Bollinger Bands dan MACD menunjukkan **kemampuan prediktif signifikan** di pasar volatil, khususnya trading minyak dan emas 2018–2023.
-- Tandfonline (2026): BB masuk dalam 13 indikator terpilih untuk prediksi harga aset dalam studi SVR hybrid.
-- Kraken Research: Kombinasi BB + RSI meningkatkan akurasi identifikasi peluang reversal secara substansial.
-
-**Referensi:**
-- https://jmsr-online.com/article/technical-analysis-vs-fundamental-analysis-a-comparative-study-of-bollinger-bands-rsi-and-macd-against-fundamental-factors-in-commodity-trading-82/
-- https://www.tandfonline.com/doi/full/10.1080/08839514.2026.2612793
-- https://www.kraken.com/learn/crypto-technical-indicators
-
----
-
-### 4. ADX — Average Directional Index (14)
+### 4. ADX (14)
 **Kategori:** Kekuatan Trend
 
-Mengukur **kekuatan** trend, bukan arahnya. ADX di atas 30 mengkonfirmasi trend yang kuat (layak diikuti). ADX 20–30 menandakan trend mulai terbentuk (zona lemah). ADX di bawah 20 mengindikasikan pasar sideways — sinyal trend-following sebaiknya diabaikan. Digunakan bersama DI+ dan DI- untuk menentukan arah. Dikembangkan oleh J. Welles Wilder pada 1978.
+ADX > 20 = trend ada (syarat hard filter). ADX > 25 = trend kuat (scoring +1). ADX < 20 = sideways, sinyal diblokir.
 
 **Bukti akademis:**
-- Wilder, J.W. (1978). *New Concepts in Technical Trading Systems*. Trend Research.
-- Taylor, M.P. & Allen, H. (2012): Penelitian menemukan **73% professional forex traders** secara rutin menggunakan ADX dalam pengambilan keputusan trading.
-- arXiv (2024): ADX masuk dalam fitur penting prediksi Bitcoin pada studi XGBoost dengan akurasi tinggi.
-- ADX terbukti sebagai filter efektif untuk menghindari sinyal palsu di kondisi market sideways.
-
-**Referensi:**
-- https://arxiv.org/abs/2410.06935
-- https://www.sciencedirect.com/science/article/pii/S2666827025000143
-
----
+- 73% professional forex traders menggunakan ADX (Taylor & Allen, 2012).
+- arXiv (2024): ADX masuk fitur penting prediksi Bitcoin pada studi XGBoost.
 
 ### 5. OBV — On-Balance Volume
 **Kategori:** Volume
 
-Mengakumulasi volume berdasarkan arah pergerakan harga. OBV naik saat harga naik mengkonfirmasi kekuatan trend. Divergensi OBV terhadap harga adalah sinyal peringatan reversal yang kuat — sering mendahului pergerakan harga aktual. Dikembangkan oleh Joseph Granville pada 1963.
-
-**Bukti akademis:**
-- Granville, J. (1963). *Granville's New Key to Stock Market Profits*. Prentice-Hall.
-- Murphy, J.J. (1999). *Technical Analysis of the Financial Markets*. New York Institute of Finance.
-- arXiv (2024): OBV dan sinyal volume masuk dalam fitur penting prediksi Bitcoin dalam studi XGBoost.
-- Patel et al. (2015): Volume termasuk dalam 10 parameter ML terbaik, dengan Random Forest superior menangani indikator kontinu termasuk OBV.
-
-**Referensi:**
-- https://arxiv.org/abs/2410.06935
-- https://www.ajer.org/papers/v5(12)/Z05120207212.pdf
-
----
+Divergensi OBV terhadap harga adalah sinyal peringatan reversal yang kuat — sering mendahului pergerakan harga aktual.
 
 ### 6. Fear & Greed Index — Dual Source
 **Kategori:** Sentimen Pasar
 
-Mengukur sentimen pasar kripto secara agregat dari berbagai sumber data. CTSA Pro menggunakan **dua sumber sekaligus** — Alternative.me dan CoinMarketCap — untuk validasi silang. Jika selisih kedua sumber ≥ 20 poin (divergen), sinyal F&G diabaikan dari scoring untuk menghindari false signal. Extreme Fear (≤25) secara historis adalah zona akumulasi; Extreme Greed (≥75) adalah zona distribusi.
-
-**Bukti akademis:**
-- Baker, M. & Wurgler, J. (2006). *Investor Sentiment and the Cross-Section of Stock Returns*. Journal of Finance, 61(4), 1645–1680. Membuktikan indeks sentimen secara signifikan memprediksi return pasar.
-- PMC/NIH (2023): Sentimen pasar dikombinasikan dengan RSI meningkatkan akurasi sinyal secara keseluruhan.
-- Behavioral Finance literature mendukung penggunaan sentimen sebagai indikator kontradiktif — ketakutan ekstrem pasar sering bertepatan dengan titik balik harga.
-
-**Referensi:**
-- https://alternative.me/crypto/fear-and-greed-index/
-- https://coinmarketcap.com/charts/fear-and-greed-index/
-- https://doi.org/10.1111/j.1540-6261.2006.00885.x (Baker & Wurgler 2006)
+Dua sumber: Alternative.me + CoinMarketCap. Jika selisih ≥ 20 poin (divergen), F&G diabaikan dari scoring. Tidak masuk scoring — hanya konteks informasi.
 
 ---
 
-## Logika Scoring & Sinyal
+## 29 Coin yang Di-scan
 
-### Sistem Konfluensi
-
-CTSA Pro tidak mengandalkan satu indikator. Sinyal dihasilkan dari **konfluensi** — semakin banyak indikator yang sepakat, semakin tinggi probabilitas sinyal benar.
-
-| Skor Konfluensi | Label | Probabilitas |
-|-----------------|-------|-------------|
-| 6 / 6 indikator | BELI / JUAL SANGAT KUAT | ~85% |
-| 5 / 6 indikator | BELI / JUAL KUAT | ~75% |
-| 4 / 6 indikator | BELI / JUAL MODERAT | ~65% |
-| 3 / 6 indikator | SINYAL LEMAH — tunggu | ~50% |
-| < 3 / 6 indikator | TIDAK ADA SINYAL | — |
-
-### Kalkulasi Stop Loss & Target
-
-Semua level harga dihitung berbasis **ATR (Average True Range)** — metode standar industri yang diakui secara akademis (Wilder 1978; Petukhina & Petukhov 2020; Brown & Jennings 2004).
-
-```
-Stop Loss  = Entry ± 1.0 × ATR(14)
-Target 1   = Entry ± 2.0 × ATR(14)  → R/R minimum 2:1
-Target 2   = Entry ± 4.0 × ATR(14)
-Target 3   = Entry ± 7.0 × ATR(14)
-```
-
-Sinyal hanya dieksekusi jika **R/R ratio ≥ 2:1** pada Target 1.
-
-### Aturan Multi-Timeframe
-
-Sinyal valid hanya jika **minimal 2 dari 3 timeframe utama** sepakat:
-
-| Kombinasi | Kekuatan | Timeframe Entry |
-|-----------|----------|-----------------|
-| 1W + 1D sepakat | Sangat Kuat | 4H |
-| 1D + 4H sepakat | Kuat | 1H |
-| Hanya 4H | Lemah — skip | — |
-
----
-
-## Fitur
-
-- Sinyal BELI / JUAL otomatis dengan skor konfluensi
-- Entry, Stop Loss, Target 1–3 berbasis ATR
-- Analisis multi-timeframe (1H, 4H, 1D, 1W)
-- Dual Fear & Greed Index (Alternative.me + CoinMarketCap)
-- Deteksi divergensi F&G — skip scoring otomatis
-- Grafik harga interaktif dengan Bollinger Bands + EMA
-- MACD histogram panel
-- 15 pasangan kripto utama
-- Data real-time via Binance API (tanpa VPN)
-- Desain responsif — desktop & mobile
-- Dark mode by default
+| Tier | Coin |
+|------|------|
+| Original | BTC, ETH, BNB, SOL, XRP, ADA, AVAX, DOT, LINK, DOGE, MATIC, UNI, ATOM, LTC, NEAR |
+| Tier 1 | SUI, APT, OP, ARB, INJ |
+| Tier 2 | FET, RNDR, TIA, SEI, WLD |
+| Tier 3 | PEPE, BONK, WIF, FLOKI |
 
 ---
 
@@ -190,16 +274,32 @@ Sinyal valid hanya jika **minimal 2 dari 3 timeframe utama** sepakat:
 |----------|-----------|
 | Frontend | HTML5, CSS3, Vanilla JavaScript |
 | Charts | Chart.js 4.4.1 |
-| Data Harga | Binance API (via Cloudflare Worker proxy) |
-| F&G | Alternative.me API + CoinMarketCap API |
-| Proxy | Cloudflare Workers (bypass blokir ISP Indonesia) |
+| Data Harga | Binance API |
+| Proxy | Cloudflare Workers (bypass CORS/ISP) |
+| Scanner | Cloudflare Workers + Cron Triggers |
+| KV Storage | Cloudflare KV (anti-duplikat sinyal) |
+| Telegram | Bot API — @ctsaprosignals |
 | Hosting | GitHub Pages |
-| CI/CD | GitHub Actions |
-| Font | System fonts (Segoe UI / SF Pro) |
+| Font | System fonts |
 
 ---
 
-## Referensi Akademis Lengkap
+## Scanner Endpoints
+
+| Endpoint | Fungsi |
+|----------|--------|
+| `/scan` | Trigger scan manual semua 29 coin |
+| `/positions` | Lihat posisi aktif di KV |
+| `/log` | Log sinyal terbaru |
+| `/weekly` | Ringkasan performa mingguan |
+| `/test` | Test koneksi Telegram |
+| `/reset` | Reset semua posisi aktif |
+
+**Base URL:** `https://ctsa-scanner.mahapalamultimedia.workers.dev`
+
+---
+
+## Referensi Akademis
 
 | Penulis | Tahun | Judul | Sumber |
 |---------|-------|-------|--------|
@@ -209,15 +309,11 @@ Sinyal valid hanya jika **minimal 2 dari 3 timeframe utama** sepakat:
 | Bollinger, J. | 2001 | Bollinger on Bollinger Bands | McGraw-Hill |
 | Murphy, J.J. | 1999 | Technical Analysis of the Financial Markets | NYIF |
 | Baker & Wurgler | 2006 | Investor Sentiment and the Cross-Section of Stock Returns | Journal of Finance |
-| Patel et al. | 2015 | Predicting Stock and Stock Price Index Movement Using Trend Deterministic Data Preparation and Machine Learning | Expert Systems with Applications |
 | Taylor & Allen | 2012 | The use of technical analysis in the foreign exchange market | Journal of International Money and Finance |
-| Petukhina & Petukhov | 2020 | ATR-based risk management in trading strategies | — |
-| Brown & Jennings | 2004 | Volatility Forecasting and Market Efficiency | Journal of Financial Markets |
 | PMC/NIH | 2023 | Cryptocurrency trading strategies based on RSI | PubMed Central |
 | ScienceDirect | 2024 | Technical indicator empowered intelligent strategies (MACD+LSTM) | ScienceDirect |
-| ScienceDirect | 2025 | Key technical indicators for stock market prediction | ScienceDirect |
 | arXiv | 2024 | Predicting Bitcoin Market Trends with XGBoost | arXiv:2410.06935 |
-| JMSR | 2025 | Bollinger Bands, RSI and MACD vs Fundamental Analysis | Journal of Marketing & Social Research |
+| JMSR | 2025 | Bollinger Bands, RSI and MACD vs Fundamental Analysis | JMSR |
 | Tandfonline | 2026 | A Hybrid SVR-Based Framework for Cryptocurrency Price Forecasting | Tandfonline |
 
 ---
@@ -228,7 +324,14 @@ Sinyal valid hanya jika **minimal 2 dari 3 timeframe utama** sepakat:
 - [x] v1.1 — Koneksi real-time Binance API
 - [x] v1.2 — Kalkulasi 6 indikator otomatis di browser
 - [x] v1.3 — ADX threshold refinement + F&G global note
-- [ ] v2.0 — On-chain data integration
+- [x] v2.0 — Hard Filter system + Breakout + Retest + ATR-based SL/TP
+- [x] v2.0 — Scanner otomatis Cloudflare + Telegram @ctsaprosignals
+- [x] v2.0 — Dual Signal System (BELI + JUAL Early Warning)
+- [x] v2.0 — Multi-Timeframe scoring (1H + 4H + 1D)
+- [x] v2.0 — 29 coin (Original 15 + Tier 1/2/3)
+- [x] v2.0 — Anti-duplikat via KV + reversal detection
+- [ ] v2.1 — VPVR approximation di scanner
+- [ ] v3.0 — VPS migration + realtime websocket + lebih banyak coin
 
 ---
 
@@ -236,7 +339,7 @@ Sinyal valid hanya jika **minimal 2 dari 3 timeframe utama** sepakat:
 
 > ⚠️ **CTSA Pro bukan saran investasi.**
 >
-> Semua sinyal yang dihasilkan adalah output matematis dari indikator teknikal historis. Trading kripto mengandung risiko tinggi. Selalu lakukan riset independen (DYOR — Do Your Own Research) sebelum membuat keputusan investasi. Past performance tidak menjamin hasil masa depan.
+> Semua sinyal yang dihasilkan adalah output matematis dari indikator teknikal historis. Trading kripto mengandung risiko tinggi. Selalu lakukan riset independen (DYOR) sebelum membuat keputusan investasi. Past performance tidak menjamin hasil masa depan.
 
 ---
 
