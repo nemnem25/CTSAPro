@@ -250,7 +250,7 @@ footer{border-top:1px solid var(--border);padding:1.25rem 2rem;display:flex;alig
       <div class="entry-grid" style="grid-template-columns:repeat(5,1fr)">
         <div class="entry-cell"><div class="entry-lbl">Target 1</div><div class="entry-val" id="s-t1">--</div><div class="entry-sub" id="s-t1-sub">−3× ATR</div></div>
         <div class="entry-cell"><div class="entry-lbl">Target 2</div><div class="entry-val" id="s-t2">--</div><div class="entry-sub" id="s-t2-sub">−6× ATR</div></div>
-        <div class="entry-cell"><div class="entry-lbl">Target 3</div><div class="entry-val" id="s-t3b">--</div><div class="entry-sub" id="s-t3b-sub">−9× ATR</div></div>
+        <div class="entry-cell"><div class="entry-lbl">Target 3</div><div class="entry-val" id="s-t3-detail">--</div><div class="entry-sub" id="s-t3-detail-sub">−9× ATR</div></div>
         <div class="entry-cell"><div class="entry-lbl">Target 4</div><div class="entry-val" id="s-t4">--</div><div class="entry-sub" id="s-t4-sub">−12× ATR</div></div>
         <div class="entry-cell"><div class="entry-lbl">Target 5</div><div class="entry-val" id="s-t5">--</div><div class="entry-sub" id="s-t5-sub">−15× ATR</div></div>
       </div>
@@ -550,7 +550,7 @@ function calcADX(highs, lows, closes, period=14){
   const dx=diP.map((v,i)=>{const s=v+diN[i]; return s?100*Math.abs(v-diN[i])/s:0;});
   const adxRaw=wilder(dx,period);
   // Normalisasi: bagi period, cap 100
-  const adxNorm=adxRaw.map(v=>Math.min(v/period,100));
+  const adxNorm=adxRaw.map(v=>Math.min(v,100));
   const off=period*2-1;
   return {adx:adxNorm, diP:diP.slice(period-1), diN:diN.slice(period-1), offset:off};
 }
@@ -682,7 +682,7 @@ function computeSignals(klines, fg, btcKlines1D, klines4H, klines1D){
   const macdNow   = macdLine[macdLine.length-1];
   const sigNow    = signalLine[signalLine.length-1];
   const histNow   = hist[hist.length-1];
-  const histPrev  = hist[hist.length-2];
+  const histPrev  = hist[hist.length-2] || 0;
   const macdCrossUp   = macdNow > sigNow && histNow > 0 && histPrev <= 0;
   const macdCrossDown = macdNow < sigNow && histNow < 0 && histPrev >= 0;
 
@@ -761,7 +761,7 @@ function computeSignals(klines, fg, btcKlines1D, klines4H, klines1D){
   };
   const allFiltersPass = Object.values(hardFilters).every(v => v === true);
 
-  // ── SCORING (max 7) ──────────────────────────────────────────────────
+  // ── SCORING (max 10) ──────────────────────────────────────────────────
   let score = 0;
   const scoreDetail = {};
 
@@ -1067,7 +1067,7 @@ function updateUI(sig, fg, ticker){
     // Show which filter failed
     const failed = Object.entries(sig.hardFilters).filter(([k,v])=>!v).map(([k])=>k);
     mkTag(`Filter gagal: ${failed[0]}`,'warn');
-  } else if(sig.dir==='buy' && sig.finalScore>=5){
+  } else if(sig.dir==='buy' && sig.finalScore>=6){
     mkTag('Spot — Beli','spot');
     mkTag('Derivatif — Long','long');
   } else if(sig.dir==='buy'){
@@ -1087,9 +1087,6 @@ function updateUI(sig, fg, ticker){
   } else {
     entrySection.style.display = 'block';
     holdSection.style.display = 'none';
-
-    // Entry label — beli saja (sistem baru hanya BELI)
-    const isSell = false;
 
     // Entry / SL / Targets
     document.getElementById('e-entry').textContent = fmt(price);
@@ -1374,13 +1371,14 @@ async function updateTFTable(mainSig){
     if(tf===activeTF) continue;
     try{
       const kl = await fetchKlines(activeCoin.id, tf.interval, 100);
-      const s = computeSignals(kl, null);
-      fillTFRow(tf.label, s);
+      const s  = computeSignals(kl, null);
+      const ss = computeSignalShort(kl, null, null, null);
+      fillTFRow(tf.label, s, ss);
     }catch(e){ /* skip */ }
   }
 }
 
-function fillTFRow(tfLabel, s){
+function fillTFRow(tfLabel, s, ss){
   const rsiEl=document.getElementById('tf-rsi-'+tfLabel);
   const macdEl=document.getElementById('tf-macd-'+tfLabel);
   const bbEl=document.getElementById('tf-bb-'+tfLabel);
@@ -1392,8 +1390,10 @@ function fillTFRow(tfLabel, s){
   macdEl.textContent = s.macd.hist>0?'Positif':'Negatif';
   bbEl.textContent = s.bb.pos<20?'Lower':s.bb.pos>80?'Upper':'Middle';
   adxEl.textContent = s.adx.val.toFixed(1);
-  const dir = s.dir;
-  pillEl.innerHTML = `<span class="pill ${dir}">${s.verdict||'Netral'}</span>`;
+  // Tampilkan BELI atau JUAL — mana yang valid
+  const dir = s.dir !== 'neutral' ? s.dir : (ss && ss.dir !== 'neutral' ? ss.dir : 'neutral');
+  const verdict = s.dir !== 'neutral' ? s.verdict : (ss && ss.dir !== 'neutral' ? ss.verdict : 'Netral');
+  pillEl.innerHTML = `<span class="pill ${dir}">${verdict}</span>`;
   noteEl.textContent = s.totalBuy>=4?'Setup kuat terbentuk':s.totalSell>=4?'Tekanan jual kuat':s.adx.val<20?'Market sideways':'Sinyal lemah';
 }
 
@@ -1451,8 +1451,8 @@ function updateSellCard(sig){
   document.getElementById('s-t1-sub').textContent = `${fmtPct((sig.t1-p)/p*100)} · R/R ${sig.rr1}`;
   document.getElementById('s-t2').textContent = fmt(sig.t2);
   document.getElementById('s-t2-sub').textContent = fmtPct((sig.t2-p)/p*100);
-  document.getElementById('s-t3b').textContent = fmt(sig.t3);
-  document.getElementById('s-t3b-sub').textContent = fmtPct((sig.t3-p)/p*100);
+  document.getElementById('s-t3-detail').textContent = fmt(sig.t3);
+  document.getElementById('s-t3-detail-sub').textContent = fmtPct((sig.t3-p)/p*100);
   document.getElementById('s-t4').textContent = fmt(sig.t4);
   document.getElementById('s-t4-sub').textContent = fmtPct((sig.t4-p)/p*100);
   document.getElementById('s-t5').textContent = fmt(sig.t5);
