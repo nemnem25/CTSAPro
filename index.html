@@ -176,12 +176,32 @@ footer{border-top:1px solid var(--border);padding:1.25rem 2rem;display:flex;alig
     </div>
   </div>
 
+  <!-- INFO BANNER -->
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:.65rem 1.25rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem">
+    <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:.4rem">
+        <span style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em">Timeframe sinyal</span>
+        <span style="font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--text)">1H · 4H · 1D</span>
+      </div>
+      <div style="width:1px;height:12px;background:var(--border)"></div>
+      <div style="display:flex;align-items:center;gap:.4rem">
+        <span style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em">Minimum TF</span>
+        <span style="font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--text)">1 Jam — tidak ada sinyal di bawah 1H</span>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:.4rem">
+      <span style="width:6px;height:6px;border-radius:50%;background:#10b981;display:inline-block;animation:pulse 2s infinite"></span>
+      <span style="font-family:var(--font-mono);font-size:9px;color:var(--text3)">Auto-refresh setiap</span>
+      <span style="font-family:var(--font-mono);font-size:10px;font-weight:700;color:#10b981">60 detik</span>
+    </div>
+  </div>
+
   <div id="signal-cards-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.5rem;align-items:start">
 
   <div class="verdict-card loading" id="verdict-card" style="margin-bottom:0">
     <div class="verdict-top">
       <div>
-        <div style="font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:4px">Sinyal Keseluruhan</div>
+        <div style="font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:4px">Sinyal LONG · Spot &amp; Derivatif</div>
         <div class="verdict-label loading" id="verdict-label"><span class="spinner"></span>Menghitung indikator...</div>
       </div>
       <div style="display:flex;align-items:baseline;gap:4px">
@@ -193,7 +213,7 @@ footer{border-top:1px solid var(--border);padding:1.25rem 2rem;display:flex;alig
     <div class="score-bar-wrap"><div class="score-bar neutral" id="score-bar" style="width:0%"></div></div>
     <div id="entry-section">
       <div class="entry-grid" style="grid-template-columns:repeat(4,1fr)">
-        <div class="entry-cell"><div class="entry-lbl">Entry Market</div><div class="entry-val" id="e-entry">--</div><div class="entry-sub" id="e-entry-sub">Sekarang</div></div>
+        <div class="entry-cell" style="border-color:rgba(34,197,94,.3)"><div class="entry-lbl" style="color:#4ade80">Entry Long</div><div class="entry-val" id="e-entry" style="color:#4ade80">--</div><div class="entry-sub" id="e-entry-sub">Harga sekarang</div></div>
         <div class="entry-cell" style="border-color:rgba(99,102,241,.3)"><div class="entry-lbl" style="color:#a5b4fc">Entry Limit</div><div class="entry-val" id="e-limit" style="color:#a5b4fc">--</div><div class="entry-sub" id="e-limit-sub">−0.5× ATR · lebih optimal</div></div>
         <div class="entry-cell sl"><div class="entry-lbl">Stop Loss</div><div class="entry-val" id="e-sl">--</div><div class="entry-sub" id="e-sl-sub">--</div></div>
         <div class="entry-cell t1"><div class="entry-lbl">Target 1</div><div class="entry-val" id="e-t1">--</div><div class="entry-sub" id="e-t1-sub">--</div></div>
@@ -203,10 +223,11 @@ footer{border-top:1px solid var(--border);padding:1.25rem 2rem;display:flex;alig
         <div class="entry-cell t3"><div class="entry-lbl">Target 5</div><div class="entry-val" id="e-t5">--</div><div class="entry-sub" id="e-t5-sub">--</div></div>
       </div>
       <div id="signal-warning" style="display:none;margin-top:.75rem;padding:.75rem 1rem;border-radius:8px;font-size:12px"></div>
+      <div id="signal-confirm" style="display:none;margin-top:.75rem;padding:.75rem 1rem;border-radius:8px;font-size:12px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);color:#4ade80"></div>
     </div>
     <div id="hold-section" style="display:none;text-align:center;padding:2rem">
-      <div style="font-size:28px;margin-bottom:.5rem">⏳</div>
-      <div style="font-weight:600;font-size:15px;color:var(--text);margin-bottom:.25rem">Tidak ada sinyal trading saat ini</div>
+      <div style="font-size:28px;margin-bottom:.5rem">📈</div>
+      <div style="font-weight:600;font-size:15px;color:var(--text);margin-bottom:.25rem">Tidak ada setup LONG saat ini</div>
       <div style="font-size:12px;color:var(--text3)">Tunggu hingga ada breakout + retest hold yang valid,<br>semua 6 hard filter lolos, dan score ≥ 6/10.</div>
     </div>
   </div>
@@ -215,7 +236,7 @@ footer{border-top:1px solid var(--border);padding:1.25rem 2rem;display:flex;alig
   <div class="verdict-card sell" id="sell-card" style="display:none;margin-bottom:0">
     <div class="verdict-top">
       <div>
-        <div style="font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:4px">Early Warning — Harga Turun</div>
+        <div style="font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:4px">Sinyal SHORT · Derivatif</div>
         <div class="verdict-label sell" id="sell-verdict-label">JUAL</div>
       </div>
       <div style="display:flex;align-items:baseline;gap:4px">
@@ -227,28 +248,28 @@ footer{border-top:1px solid var(--border);padding:1.25rem 2rem;display:flex;alig
     <div class="score-bar-wrap"><div class="score-bar sell" id="sell-score-bar" style="width:0%"></div></div>
     <div class="entry-grid" style="grid-template-columns:repeat(4,1fr)">
       <div class="entry-cell" style="border-color:rgba(239,68,68,.3)">
-        <div class="entry-lbl" style="color:#f87171">Jangan beli di atas</div>
+        <div class="entry-lbl" style="color:#f87171">Entry Short</div>
         <div class="entry-val" id="s-breakdown" style="color:#f87171">--</div>
-        <div class="entry-sub" id="s-breakdown-sub">Breakdown level</div>
+        <div class="entry-sub" id="s-breakdown-sub">Harga sekarang</div>
+      </div>
+      <div class="entry-cell" style="border-color:rgba(99,102,241,.3)">
+        <div class="entry-lbl" style="color:#a5b4fc">Entry Limit</div>
+        <div class="entry-val" id="s-entry-limit" style="color:#a5b4fc">--</div>
+        <div class="entry-sub" id="s-entry-limit-sub">+0.5× ATR · lebih optimal</div>
       </div>
       <div class="entry-cell sl">
-        <div class="entry-lbl">Invalidasi warning</div>
+        <div class="entry-lbl">Stop Loss</div>
         <div class="entry-val" id="s-sl">--</div>
         <div class="entry-sub" id="s-sl-sub">--</div>
       </div>
-      <div class="entry-cell" style="border-color:rgba(34,197,94,.3)">
-        <div class="entry-lbl" style="color:#22c55e">Zona akumulasi</div>
-        <div class="entry-val" id="s-accum" style="color:#22c55e">--</div>
-        <div class="entry-sub" id="s-accum-sub">Beli kembali nanti</div>
-      </div>
-      <div class="entry-cell">
-        <div class="entry-lbl">Potensi turun ke</div>
+      <div class="entry-cell t1">
+        <div class="entry-lbl">Target 1</div>
         <div class="entry-val" id="s-t3">--</div>
         <div class="entry-sub" id="s-t3-sub">--</div>
       </div>
     </div>
     <div style="margin-top:.75rem">
-      <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Target penurunan</div>
+      <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Target SHORT</div>
       <div class="entry-grid" style="grid-template-columns:repeat(5,1fr)">
         <div class="entry-cell"><div class="entry-lbl">Target 1</div><div class="entry-val" id="s-t1">--</div><div class="entry-sub" id="s-t1-sub">−3× ATR</div></div>
         <div class="entry-cell"><div class="entry-lbl">Target 2</div><div class="entry-val" id="s-t2">--</div><div class="entry-sub" id="s-t2-sub">−6× ATR</div></div>
@@ -1073,8 +1094,9 @@ function updateUI(sig, fg, ticker){
     const failed = Object.entries(sig.hardFilters).filter(([k,v])=>!v).map(([k])=>k);
     mkTag(`Filter gagal: ${failed[0]}`,'warn');
   } else if(sig.dir==='buy' && sig.finalScore>=6){
-    mkTag('Spot — Beli','spot');
-    mkTag('Derivatif — Long','long');
+    mkTag('LONG','spot');
+    mkTag('Spot Beli','spot');
+    mkTag('Derivatif Long','long');
   } else if(sig.dir==='buy'){
     mkTag('Hati-hati — Score Rendah','warn');
   } else {
@@ -1095,21 +1117,32 @@ function updateUI(sig, fg, ticker){
 
     // Entry / SL / Targets
     document.getElementById('e-entry').textContent = fmt(price);
-    document.getElementById('e-entry-sub').textContent = 'Beli sekarang';
+    document.getElementById('e-entry-sub').textContent = 'Harga sekarang · entry long';
     document.getElementById('e-limit').textContent = fmt(sig.entryLimit);
     document.getElementById('e-limit-sub').textContent = `−0.5× ATR · ${fmtPct((sig.entryLimit-price)/price*100)} · lebih optimal`;
     document.getElementById('e-sl').textContent = fmt(sig.sl);
-    document.getElementById('e-sl-sub').textContent = `−1.5× ATR · ${fmtPct((sig.sl-price)/price*100)}`;
+    document.getElementById('e-sl-sub').textContent = `${fmtPct((sig.sl-price)/price*100)} · Stop Loss`;
     document.getElementById('e-t1').textContent = fmt(sig.t1);
-    document.getElementById('e-t1-sub').textContent = `+3.0× ATR · ${fmtPct((sig.t1-price)/price*100)} · R/R ${sig.rr1}`;
+    document.getElementById('e-t1-sub').textContent = `${fmtPct((sig.t1-price)/price*100)} · R/R ${sig.rr1}`;
     document.getElementById('e-t2').textContent = fmt(sig.t2);
-    document.getElementById('e-t2-sub').textContent = `+6.0× ATR · ${fmtPct((sig.t2-price)/price*100)}`;
+    document.getElementById('e-t2-sub').textContent = `${fmtPct((sig.t2-price)/price*100)}`;
     document.getElementById('e-t3').textContent = fmt(sig.t3);
-    document.getElementById('e-t3-sub').textContent = `+9.0× ATR · ${fmtPct((sig.t3-price)/price*100)}`;
+    document.getElementById('e-t3-sub').textContent = `${fmtPct((sig.t3-price)/price*100)}`;
     document.getElementById('e-t4').textContent = fmt(sig.t4);
-    document.getElementById('e-t4-sub').textContent = `+12.0× ATR · ${fmtPct((sig.t4-price)/price*100)}`;
+    document.getElementById('e-t4-sub').textContent = `${fmtPct((sig.t4-price)/price*100)}`;
     document.getElementById('e-t5').textContent = fmt(sig.t5);
-    document.getElementById('e-t5-sub').textContent = `+15.0× ATR · ${fmtPct((sig.t5-price)/price*100)}`;
+    document.getElementById('e-t5-sub').textContent = `${fmtPct((sig.t5-price)/price*100)}`;
+
+    // Info box — konfirmasi LONG
+    const confirmBox = document.getElementById('signal-confirm');
+    if(confirmBox){
+      if(sig.breakout && sig.breakout.found){
+        confirmBox.style.display = 'block';
+        confirmBox.textContent = `Breakout dari ${fmt(sig.breakout.level)} terkonfirmasi. Entry long ${fmt(price)}, SL ${fmt(sig.sl)} (${fmtPct((sig.sl-price)/price*100)}), target pertama ${fmt(sig.t1)} (${fmtPct((sig.t1-price)/price*100)}).`;
+      } else {
+        confirmBox.style.display = 'none';
+      }
+    }
   }
 
   // ── SCORING INDICATORS ──────────────────────────────────────────────
@@ -1407,72 +1440,92 @@ function fillTFRow(tfLabel, s, ss){
 function updateSellCard(sig){
   const card = document.getElementById('sell-card');
   if(!sig || sig.dir === 'neutral'){
-    card.style.display = 'none';
+    card.style.display = 'block';
+    card.className = 'verdict-card neutral';
+    card.style.marginBottom = '0';
+    card.innerHTML = `
+      <div class="verdict-top">
+        <div>
+          <div style="font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:4px">Sinyal SHORT · Derivatif</div>
+          <div class="verdict-label loading">TUNGGU</div>
+        </div>
+        <div style="display:flex;align-items:baseline;gap:4px">
+          <span class="score-num" style="color:var(--neutral)">--</span>
+          <span class="score-denom">/ 10 poin (min 6)</span>
+        </div>
+      </div>
+      <div style="text-align:center;padding:2rem 1rem">
+        <div style="font-size:28px;margin-bottom:.75rem">📉</div>
+        <div style="font-weight:600;font-size:15px;color:var(--text);margin-bottom:.5rem">Tidak ada setup SHORT saat ini</div>
+        <div style="font-size:12px;color:var(--text3);line-height:1.6">Tunggu hingga ada breakdown + retest gagal<br>yang valid, semua filter lolos, dan score ≥ 6/10.</div>
+      </div>`;
     return;
   }
   card.style.display = 'block';
-
-  document.getElementById('sell-verdict-label').textContent = sig.verdict;
-  document.getElementById('sell-score-num').textContent = sig.finalScore;
-  const barPct = Math.max(0, sig.finalScore) / 10 * 100;
-  document.getElementById('sell-score-bar').style.width = barPct + '%';
+  card.className = 'verdict-card sell';
+  card.style.marginBottom = '0';
+  card.innerHTML = `
+    <div class="verdict-top">
+      <div>
+        <div style="font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:4px">Sinyal SHORT · Derivatif</div>
+        <div class="verdict-label sell" id="sell-verdict-label">${sig.verdict}</div>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:4px">
+        <span class="score-num" id="sell-score-num">${sig.finalScore}</span>
+        <span class="score-denom">/ 10 poin (min 6)</span>
+      </div>
+    </div>
+    <div id="sell-market-tags" style="display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap"></div>
+    <div class="score-bar-wrap"><div class="score-bar sell" id="sell-score-bar" style="width:${Math.max(0,sig.finalScore)/10*100}%"></div></div>
+    <div class="entry-grid" style="grid-template-columns:repeat(4,1fr)">
+      <div class="entry-cell" style="border-color:rgba(239,68,68,.3)">
+        <div class="entry-lbl" style="color:#f87171">Entry Short</div>
+        <div class="entry-val" id="s-breakdown" style="color:#f87171">${fmt(sig.price)}</div>
+        <div class="entry-sub" id="s-breakdown-sub">Harga sekarang</div>
+      </div>
+      <div class="entry-cell" style="border-color:rgba(99,102,241,.3)">
+        <div class="entry-lbl" style="color:#a5b4fc">Entry Limit</div>
+        <div class="entry-val" id="s-entry-limit" style="color:#a5b4fc">${fmt(sig.entryLimit)}</div>
+        <div class="entry-sub" id="s-entry-limit-sub">+0.5× ATR · lebih optimal</div>
+      </div>
+      <div class="entry-cell sl">
+        <div class="entry-lbl">Stop Loss</div>
+        <div class="entry-val" id="s-sl">${fmt(sig.sl)}</div>
+        <div class="entry-sub" id="s-sl-sub">${fmtPct((sig.sl-sig.price)/sig.price*100)}</div>
+      </div>
+      <div class="entry-cell t1">
+        <div class="entry-lbl">Target 1</div>
+        <div class="entry-val" id="s-t3">${fmt(sig.t1)}</div>
+        <div class="entry-sub" id="s-t3-sub">${fmtPct((sig.t1-sig.price)/sig.price*100)} · R/R ${sig.rr1}</div>
+      </div>
+    </div>
+    <div style="margin-top:.75rem">
+      <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Target SHORT</div>
+      <div class="entry-grid" style="grid-template-columns:repeat(5,1fr)">
+        <div class="entry-cell"><div class="entry-lbl">Target 1</div><div class="entry-val">${fmt(sig.t1)}</div><div class="entry-sub">${fmtPct((sig.t1-sig.price)/sig.price*100)}</div></div>
+        <div class="entry-cell"><div class="entry-lbl">Target 2</div><div class="entry-val">${fmt(sig.t2)}</div><div class="entry-sub">${fmtPct((sig.t2-sig.price)/sig.price*100)}</div></div>
+        <div class="entry-cell"><div class="entry-lbl">Target 3</div><div class="entry-val">${fmt(sig.t3)}</div><div class="entry-sub">${fmtPct((sig.t3-sig.price)/sig.price*100)}</div></div>
+        <div class="entry-cell"><div class="entry-lbl">Target 4</div><div class="entry-val">${fmt(sig.t4)}</div><div class="entry-sub">${fmtPct((sig.t4-sig.price)/sig.price*100)}</div></div>
+        <div class="entry-cell"><div class="entry-lbl">Target 5</div><div class="entry-val">${fmt(sig.t5)}</div><div class="entry-sub">${fmtPct((sig.t5-sig.price)/sig.price*100)}</div></div>
+      </div>
+    </div>
+    ${sig.breakdownFound ? `<div style="margin-top:.75rem;padding:.75rem 1rem;border-radius:8px;font-size:12px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#fca5a5">Breakdown dari ${fmt(sig.breakdownLevel)} terkonfirmasi. Entry short di ${fmt(sig.price)}, SL di ${fmt(sig.sl)} (${fmtPct((sig.sl-sig.price)/sig.price*100)}), target pertama ${fmt(sig.t1)} (${fmtPct((sig.t1-sig.price)/sig.price*100)}).</div>` : ''}`;
 
   // Tags
   const tags = document.getElementById('sell-market-tags');
-  tags.innerHTML = '';
-  const mkTag = (txt, s) => {
-    const el = document.createElement('span');
-    el.textContent = txt;
-    el.style.cssText = `font-family:var(--font-mono);font-size:10px;font-weight:500;padding:3px 9px;border-radius:4px;letter-spacing:.04em;${s}`;
-    tags.appendChild(el);
-  };
-  mkTag('Early Warning', 'background:rgba(239,68,68,.12);color:#dc2626;border:1px solid rgba(239,68,68,.25)');
-  mkTag('Harga Turun', 'background:rgba(239,68,68,.12);color:#dc2626;border:1px solid rgba(239,68,68,.25)');
-  mkTag('Jangan Beli Dulu', 'background:rgba(245,158,11,.12);color:#d97706;border:1px solid rgba(245,158,11,.25)');
-
-  // MTF badges
-  const tf4h = sig.tf4hBearish ? '✅ 4H Bearish' : '❌ 4H Belum';
-  const tf1d = sig.tf1dBearish ? '✅ 1D Bearish' : '❌ 1D Belum';
-  mkTag(tf4h, sig.tf4hBearish
-    ? 'background:rgba(239,68,68,.08);color:#f87171;border:1px solid rgba(239,68,68,.2)'
-    : 'background:rgba(100,116,139,.08);color:#64748b;border:1px solid rgba(100,116,139,.2)');
-  mkTag(tf1d, sig.tf1dBearish
-    ? 'background:rgba(239,68,68,.08);color:#f87171;border:1px solid rgba(239,68,68,.2)'
-    : 'background:rgba(100,116,139,.08);color:#64748b;border:1px solid rgba(100,116,139,.2)');
-
-  // Levels
-  const p = sig.price;
-  document.getElementById('s-breakdown').textContent = fmt(sig.breakdownLevel);
-  document.getElementById('s-breakdown-sub').textContent = 'Breakdown level — jangan beli di atas';
-  document.getElementById('s-sl').textContent = fmt(sig.sl);
-  document.getElementById('s-sl-sub').textContent = `+1.5× ATR · ${fmtPct((sig.sl-p)/p*100)} · Invalidasi`;
-  document.getElementById('s-accum').textContent = `${fmt(sig.accumHigh)} — ${fmt(sig.accumLow)}`;
-  document.getElementById('s-accum-sub').textContent = 'Zona akumulasi (T1-T2)';
-  document.getElementById('s-t3').textContent = fmt(sig.t3);
-  document.getElementById('s-t3-sub').textContent = `−9× ATR · ${fmtPct((sig.t3-p)/p*100)}`;
-
-  // Target rows
-  document.getElementById('s-t1').textContent = fmt(sig.t1);
-  document.getElementById('s-t1-sub').textContent = `${fmtPct((sig.t1-p)/p*100)} · R/R ${sig.rr1}`;
-  document.getElementById('s-t2').textContent = fmt(sig.t2);
-  document.getElementById('s-t2-sub').textContent = fmtPct((sig.t2-p)/p*100);
-  document.getElementById('s-t3-detail').textContent = fmt(sig.t3);
-  document.getElementById('s-t3-detail-sub').textContent = fmtPct((sig.t3-p)/p*100);
-  document.getElementById('s-t4').textContent = fmt(sig.t4);
-  document.getElementById('s-t4-sub').textContent = fmtPct((sig.t4-p)/p*100);
-  document.getElementById('s-t5').textContent = fmt(sig.t5);
-  document.getElementById('s-t5-sub').textContent = fmtPct((sig.t5-p)/p*100);
-
-  // Warning box
-  const wb = document.getElementById('sell-warning-box');
-  if(sig.breakdownFound){
-    wb.style.display = 'block';
-    wb.textContent = `Harga breakdown dari ${fmt(sig.breakdownLevel)} — retest gagal. `
-      + `Tunggu stabilisasi di zona akumulasi ${fmt(sig.accumHigh)} — ${fmt(sig.accumLow)} sebelum beli kembali.`;
-  } else {
-    wb.style.display = 'none';
+  if(tags){
+    tags.innerHTML = '';
+    const mkTag = (txt, s) => { const el = document.createElement('span'); el.textContent = txt; el.style.cssText = `font-family:var(--font-mono);font-size:10px;font-weight:500;padding:3px 9px;border-radius:4px;letter-spacing:.04em;${s}`; tags.appendChild(el); };
+    mkTag('SHORT', 'background:rgba(239,68,68,.12);color:#dc2626;border:1px solid rgba(239,68,68,.25)');
+    mkTag('Derivatif', 'background:rgba(239,68,68,.12);color:#dc2626;border:1px solid rgba(239,68,68,.25)');
+    mkTag('Posisi Short', 'background:rgba(245,158,11,.12);color:#d97706;border:1px solid rgba(245,158,11,.25)');
+    const tf4h = sig.tf4hBearish ? '✅ 4H Bearish' : '❌ 4H Belum';
+    const tf1d = sig.tf1dBearish ? '✅ 1D Bearish' : '❌ 1D Belum';
+    mkTag(tf4h, sig.tf4hBearish ? 'background:rgba(239,68,68,.08);color:#f87171;border:1px solid rgba(239,68,68,.2)' : 'background:rgba(100,116,139,.08);color:#64748b;border:1px solid rgba(100,116,139,.2)');
+    mkTag(tf1d, sig.tf1dBearish ? 'background:rgba(239,68,68,.08);color:#f87171;border:1px solid rgba(239,68,68,.2)' : 'background:rgba(100,116,139,.08);color:#64748b;border:1px solid rgba(100,116,139,.2)');
   }
 }
+
 
 async function loadAll(){
   document.getElementById('live-status').textContent = 'Memuat...';
