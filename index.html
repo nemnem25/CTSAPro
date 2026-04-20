@@ -810,9 +810,8 @@ function computeSignals(klines, fg, btcKlines1D, klines4H, klines1D){
   }
 
   const isBuy       = dir === 'buy';
-  const sl          = isBuy
-    ? Math.min(price - 1.5*atrNow, (breakoutLevel || price) - 0.5*atrNow)
-    : Math.max(price + 1.5*atrNow, (breakdownLevel || price) + 0.5*atrNow);
+  // computeSignals hanya untuk BELI — SL selalu di bawah breakout level
+  const sl          = Math.min(price - 1.5*atrNow, (breakoutLevel || price) - 0.5*atrNow);
   const t1          = isBuy ? price + 3.0*atrNow : price - 3.0*atrNow;
   const t2          = isBuy ? price + 6.0*atrNow : price - 6.0*atrNow;
   const t3          = isBuy ? price + 9.0*atrNow : price - 9.0*atrNow;
