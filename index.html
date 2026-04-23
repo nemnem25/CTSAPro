@@ -508,8 +508,7 @@ const APP_VERSION = '2.0';
 document.getElementById('app-version').textContent = 'v' + APP_VERSION;
 
 
-const APP_VERSION = '2.0';
-document.getElementById('app-version').textContent = 'v' + APP_VERSION;
+// APP_VERSION already declared above
 
 // ── CONFIG ──────────────────────────────────────────────────────────
 const COINS = [
@@ -542,43 +541,9 @@ let activeTF = TFS[0]; // default 1H
 let priceChartInst = null;
 let macdChartInst = null;
 
-// ── CLOCK ────────────────────────────────────────────────────────────
-function updateClock(){
-  document.getElementById('clock').textContent =
-    new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-}
-setInterval(updateClock,1000); updateClock();
+// Clock handled by new updateClock below
 
-// ── BUILD SELECTORS ──────────────────────────────────────────────────
-function buildSelectors(){
-  const cs = document.getElementById('coin-selector');
-  COINS.forEach((c,i)=>{
-    const b = document.createElement('button');
-    b.className = 'coin-btn' + (i===0?' active':'');
-    b.textContent = c.sym;
-    b.onclick = ()=>{
-      document.querySelectorAll('.coin-btn').forEach(x=>x.classList.remove('active'));
-      b.classList.add('active');
-      activeCoin = c;
-      loadAll();
-    };
-    cs.appendChild(b);
-  });
-
-  const ts = document.getElementById('tf-selector');
-  TFS.forEach((t,i)=>{
-    const b = document.createElement('button');
-    b.className = 'tf-btn' + (i===0?' active':'');
-    b.textContent = t.label;
-    b.onclick = ()=>{
-      document.querySelectorAll('.tf-btn').forEach(x=>x.classList.remove('active'));
-      b.classList.add('active');
-      activeTF = t;
-      loadAll();
-    };
-    ts.appendChild(b);
-  });
-}
+// buildSelectors handled by new version below
 
 // ── PRICE FORMAT ─────────────────────────────────────────────────────
 function fmt(n){
