@@ -700,7 +700,7 @@ function computeSignals(klines, fg, btcKlines1D, klines4H, klines1D){
   const price   = closes[closes.length-1];
 
   // ── INDICATORS ──────────────────────────────────────────────────────
-  const rsi      = calcRSI(closes);
+  const rsi      = calcRSI(closes, 17);
   const rsiNow   = rsi[rsi.length-1];
 
   const {macdLine, signalLine, hist} = calcMACD(closes);
@@ -732,26 +732,26 @@ function computeSignals(klines, fg, btcKlines1D, klines4H, klines1D){
   const atrNow   = atr[atr.length-1];
 
   // EMA50 & EMA200 coin
-  const ema50coin  = calcEMA(closes, 50);
-  const ema200coin = calcEMA(closes, 200);
+  const ema50coin  = calcEMA(closes, 36);
+  const ema200coin = calcEMA(closes, 205);
   const ema50Now   = ema50coin[ema50coin.length-1];
   const ema200Now  = ema200coin[ema200coin.length-1];
 
   // Volume MA20
-  const volMA20 = vols.slice(-20).reduce((a,b)=>a+b,0)/20;
+  const volMA20 = vols.slice(-23).reduce((a,b)=>a+b,0)/23;
   const volNow  = vols[vols.length-1];
 
   // Breakout & Retest
-  const breakoutResult = detectBreakout(closes, highs, vols, 20, 10);
+  const breakoutResult = detectBreakout(closes, highs, vols, 28, 12);
   const breakoutFound  = breakoutResult.found;
   const breakoutLevel  = breakoutResult.level;
   const breakoutIdx    = breakoutResult.candleIdx;
   const retestHold     = breakoutFound
-    ? detectRetestHold(closes, lows, highs, breakoutIdx, breakoutLevel, 0.005, 10)
+    ? detectRetestHold(closes, lows, highs, breakoutIdx, breakoutLevel, 0.00876, 7)
     : false;
 
   // Structure HH/HL
-  const structureBullish = detectStructure(highs, lows, 20);
+  const structureBullish = detectStructure(highs, lows, 26);
 
   // BTC 1D EMA50 & EMA200
   let btcBullish = true; // default allow if no BTC data
@@ -779,10 +779,9 @@ function computeSignals(klines, fg, btcKlines1D, klines4H, klines1D){
   const hardFilters = {
     btcBullish,
     priceTrend:   price > ema50Now,
-    momentum:     adxNow > 20,
-    noConflict:   sellScore <= 1,
+    momentum:     adxNow > 25,
+    noConflict:   sellScore <= 2,
     breakout:     breakoutFound,
-    retestHold,
   };
   const allFiltersPass = Object.values(hardFilters).every(v => v === true);
 
@@ -791,11 +790,11 @@ function computeSignals(klines, fg, btcKlines1D, klines4H, klines1D){
   const scoreDetail = {};
 
   scoreDetail.breakout    = breakoutFound   ? 1 : 0; score += scoreDetail.breakout;
-  scoreDetail.retestHold  = retestHold      ? 1 : 0; score += scoreDetail.retestHold;
-  scoreDetail.rsi         = (rsiNow>=55 && rsiNow<=68) ? 1 : 0; score += scoreDetail.rsi;
+  scoreDetail.retestHold  = retestHold      ? 2 : 0; score += scoreDetail.retestHold;
+  scoreDetail.rsi         = (rsiNow>=54 && rsiNow<=65) ? 1 : 0; score += scoreDetail.rsi;
   scoreDetail.macdCross   = macdCrossUp     ? 1 : 0; score += scoreDetail.macdCross;
   scoreDetail.volume      = volNow > volMA20 ? 1 : 0; score += scoreDetail.volume;
-  scoreDetail.adx         = adxNow > 25     ? 1 : 0; score += scoreDetail.adx;
+  scoreDetail.adx         = adxNow > 34     ? 1 : 0; score += scoreDetail.adx;
   scoreDetail.structure   = structureBullish ? 1 : 0; score += scoreDetail.structure;
   scoreDetail.trendCoin   = ema50Now > ema200Now ? 1 : 0; score += scoreDetail.trendCoin;
 
@@ -803,7 +802,7 @@ function computeSignals(klines, fg, btcKlines1D, klines4H, klines1D){
   scoreDetail.tf4h = 0;
   if(klines4H && klines4H.length >= 200){
     const c4 = klines4H.map(k=>k.c);
-    const e50_4h = calcEMA(c4, 50); const e200_4h = calcEMA(c4, 200);
+    const e50_4h = calcEMA(c4, 36); const e200_4h = calcEMA(c4, 205);
     if(e50_4h[e50_4h.length-1] > e200_4h[e200_4h.length-1]) { scoreDetail.tf4h = 1; }
   }
   score += scoreDetail.tf4h;
@@ -812,7 +811,7 @@ function computeSignals(klines, fg, btcKlines1D, klines4H, klines1D){
   scoreDetail.tf1d = 0;
   if(klines1D && klines1D.length >= 200){
     const c1d = klines1D.map(k=>k.c);
-    const e50_1d = calcEMA(c1d, 50); const e200_1d = calcEMA(c1d, 200);
+    const e50_1d = calcEMA(c1d, 36); const e200_1d = calcEMA(c1d, 205);
     if(e50_1d[e50_1d.length-1] > e200_1d[e200_1d.length-1]) { scoreDetail.tf1d = 1; }
   }
   score += scoreDetail.tf1d;
@@ -829,26 +828,26 @@ function computeSignals(klines, fg, btcKlines1D, klines4H, klines1D){
 
   // ── VERDICT ──────────────────────────────────────────────────────────
   let verdict = 'TUNGGU', dir = 'neutral';
-  if(allFiltersPass && finalScore >= 6){
+  if(allFiltersPass && finalScore >= 6){ // skor max 11 (retest +2)
     verdict = finalScore >= 8 ? 'BELI KUAT' : finalScore >= 6 ? 'BELI' : 'BELI LEMAH';
     dir = 'buy';
   }
 
   const isBuy       = dir === 'buy';
   // computeSignals hanya untuk BELI — SL selalu di bawah breakout level
-  const sl          = Math.min(price - 1.5*atrNow, (breakoutLevel || price) - 0.5*atrNow);
-  const t1          = isBuy ? price + 3.0*atrNow : price - 3.0*atrNow;
-  const t2          = isBuy ? price + 6.0*atrNow : price - 6.0*atrNow;
-  const t3          = isBuy ? price + 9.0*atrNow : price - 9.0*atrNow;
-  const t4          = isBuy ? price + 12.0*atrNow : price - 12.0*atrNow;
-  const t5          = isBuy ? price + 15.0*atrNow : price - 15.0*atrNow;
+  const sl          = Math.min(price - 1.186*atrNow, (breakoutLevel || price) - 0.5*atrNow);
+  const t1          = isBuy ? price + 2.4*atrNow : price - 2.4*atrNow;
+  const t2          = isBuy ? price + 4.8*atrNow : price - 4.8*atrNow;
+  const t3          = isBuy ? price + 7.2*atrNow : price - 7.2*atrNow;
+  const t4          = isBuy ? price + 9.6*atrNow : price - 9.6*atrNow;
+  const t5          = isBuy ? price + 12.0*atrNow : price - 12.0*atrNow;
   const rr1         = (Math.abs(t1-price)/Math.abs(sl-price)).toFixed(1);
   const entryLimit  = isBuy ? price - 0.5*atrNow : price + 0.5*atrNow;
 
   return {
     price, atrNow,
-    rsi:  {val:rsiNow, badge: rsiNow>=55&&rsiNow<=68?'buy':rsiNow>70?'sell':'neutral',
-           desc: `RSI ${rsiNow.toFixed(1)} — ${rsiNow>=55&&rsiNow<=68?'Zona ideal entry (55–68)':rsiNow>70?'Overbought':'Belum di zona entry'}`},
+    rsi:  {val:rsiNow, badge: rsiNow>=54&&rsiNow<=65?'buy':rsiNow>70?'sell':'neutral',
+           desc: `RSI ${rsiNow.toFixed(1)} — ${rsiNow>=54&&rsiNow<=65?'Zona ideal entry (54–65)':rsiNow>70?'Overbought':'Belum di zona entry'}`},
     macd: {val:macdNow, hist:histNow, badge: macdCrossUp?'buy':macdCrossDown?'sell':'neutral',
            desc: macdCrossUp?'MACD Cross Up — momentum bullish terkonfirmasi':macdCrossDown?'MACD Cross Down — momentum bearish':'MACD belum cross',
            isCrossUp:macdCrossUp, isCrossDown:macdCrossDown},
@@ -890,7 +889,7 @@ function computeSignalShort(klines, btcKlines1D, klines4H, klines1D){
   const vols    = klines.map(k=>k.v);
   const price   = closes[closes.length-1];
 
-  const rsi    = calcRSI(closes);
+  const rsi    = calcRSI(closes, 17);
   const rsiNow = rsi[rsi.length-1];
 
   const {macdLine, signalLine, hist} = calcMACD(closes);
@@ -909,31 +908,31 @@ function computeSignalShort(klines, btcKlines1D, klines4H, klines1D){
   const atr    = calcATR(highs, lows, closes);
   const atrNow = atr[atr.length-1];
 
-  const ema50coin  = calcEMA(closes, 50);
-  const ema200coin = calcEMA(closes, 200);
+  const ema50coin  = calcEMA(closes, 36);
+  const ema200coin = calcEMA(closes, 205);
   const ema50Now   = ema50coin[ema50coin.length-1];
   const ema200Now  = ema200coin[ema200coin.length-1];
 
-  const volMA20 = vols.slice(-20).reduce((a,b)=>a+b,0)/20;
+  const volMA20 = vols.slice(-23).reduce((a,b)=>a+b,0)/23;
   const volNow  = vols[vols.length-1];
 
   // Breakdown & Retest Fail
-  const bdResult    = detectBreakdown(closes, lows, vols, 20, 10);
+  const bdResult    = detectBreakdown(closes, lows, vols, 28, 12);
   const breakdownFound  = bdResult.found;
   const breakdownLevel  = bdResult.level;
   const breakdownIdx    = bdResult.candleIdx || bdResult.idx;
   const retestFail      = breakdownFound
-    ? detectRetestFail(closes, highs, lows, breakdownIdx, breakdownLevel, 0.005, 10)
+    ? detectRetestFail(closes, highs, lows, breakdownIdx, breakdownLevel, 0.00876, 7)
     : false;
 
   // Structure LL/LH
-  const structureBearish = detectStructureBearish(highs, lows, 20);
+  const structureBearish = detectStructureBearish(highs, lows, 26);
 
   // BTC Bearish: BTC < EMA50 1D
   let btcBearish = false;
   if(btcKlines1D && btcKlines1D.length >= 50){
     const bc   = btcKlines1D.map(k=>k.c);
-    const be50 = calcEMA(bc, 50);
+    const be50 = calcEMA(bc, 36);
     btcBearish = bc[bc.length-1] < be50[be50.length-1];
   }
 
@@ -1004,7 +1003,7 @@ function computeSignalShort(klines, btcKlines1D, klines4H, klines1D){
 
   // ── VERDICT ──────────────────────────────────────────────────────────
   let verdict = 'TUNGGU', dir = 'neutral';
-  if(allFiltersPass && finalScore >= 6){
+  if(allFiltersPass && finalScore >= 6){ // skor max 11 (retest +2)
     verdict = finalScore >= 8 ? 'JUAL KUAT' : 'JUAL';
     dir = 'sell';
   }
