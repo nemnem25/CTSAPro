@@ -206,7 +206,7 @@ footer{border-top:1px solid var(--border);padding:1.25rem 2rem;display:flex;alig
       </div>
       <div style="display:flex;align-items:baseline;gap:4px">
         <span class="score-num" id="score-num">--</span>
-        <span class="score-denom">/ 10 poin (min 6)</span>
+        <span class="score-denom">/ 11 poin (min 6)</span>
       </div>
     </div>
     <div id="market-tags" style="display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap"></div>
@@ -228,7 +228,7 @@ footer{border-top:1px solid var(--border);padding:1.25rem 2rem;display:flex;alig
     <div id="hold-section" style="display:none;text-align:center;padding:2rem">
       <div style="font-size:28px;margin-bottom:.5rem">📈</div>
       <div style="font-weight:600;font-size:15px;color:var(--text);margin-bottom:.25rem">Tidak ada setup LONG saat ini</div>
-      <div style="font-size:12px;color:var(--text3)">Tunggu hingga ada breakout + retest hold yang valid,<br>semua 6 hard filter lolos, dan score ≥ 6/10.</div>
+      <div style="font-size:12px;color:var(--text3)">Tunggu hingga ada breakout + retest hold yang valid,<br>semua 5 hard filter lolos, dan score ≥ 6/11.</div>
     </div>
   </div>
 
@@ -241,7 +241,7 @@ footer{border-top:1px solid var(--border);padding:1.25rem 2rem;display:flex;alig
       </div>
       <div style="display:flex;align-items:baseline;gap:4px">
         <span class="score-num" id="sell-score-num">--</span>
-        <span class="score-denom">/ 10 poin (min 6)</span>
+        <span class="score-denom">/ 11 poin (min 6)</span>
       </div>
     </div>
     <div id="sell-market-tags" style="display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap"></div>
@@ -271,11 +271,11 @@ footer{border-top:1px solid var(--border);padding:1.25rem 2rem;display:flex;alig
     <div style="margin-top:.75rem">
       <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Target SHORT</div>
       <div class="entry-grid" style="grid-template-columns:repeat(5,1fr)">
-        <div class="entry-cell"><div class="entry-lbl">Target 1</div><div class="entry-val" id="s-t1">--</div><div class="entry-sub" id="s-t1-sub">−3× ATR</div></div>
-        <div class="entry-cell"><div class="entry-lbl">Target 2</div><div class="entry-val" id="s-t2">--</div><div class="entry-sub" id="s-t2-sub">−6× ATR</div></div>
-        <div class="entry-cell"><div class="entry-lbl">Target 3</div><div class="entry-val" id="s-t3-detail">--</div><div class="entry-sub" id="s-t3-detail-sub">−9× ATR</div></div>
-        <div class="entry-cell"><div class="entry-lbl">Target 4</div><div class="entry-val" id="s-t4">--</div><div class="entry-sub" id="s-t4-sub">−12× ATR</div></div>
-        <div class="entry-cell"><div class="entry-lbl">Target 5</div><div class="entry-val" id="s-t5">--</div><div class="entry-sub" id="s-t5-sub">−15× ATR</div></div>
+        <div class="entry-cell"><div class="entry-lbl">Target 1</div><div class="entry-val" id="s-t1">--</div><div class="entry-sub" id="s-t1-sub">−2.4× ATR</div></div>
+        <div class="entry-cell"><div class="entry-lbl">Target 2</div><div class="entry-val" id="s-t2">--</div><div class="entry-sub" id="s-t2-sub">−4.8× ATR</div></div>
+        <div class="entry-cell"><div class="entry-lbl">Target 3</div><div class="entry-val" id="s-t3-detail">--</div><div class="entry-sub" id="s-t3-detail-sub">−7.2× ATR</div></div>
+        <div class="entry-cell"><div class="entry-lbl">Target 4</div><div class="entry-val" id="s-t4">--</div><div class="entry-sub" id="s-t4-sub">−9.6× ATR</div></div>
+        <div class="entry-cell"><div class="entry-lbl">Target 5</div><div class="entry-val" id="s-t5">--</div><div class="entry-sub" id="s-t5-sub">−12.0× ATR</div></div>
       </div>
     </div>
     <div id="sell-warning-box" style="margin-top:.75rem;padding:.75rem 1rem;border-radius:8px;font-size:12px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#fca5a5;display:none"></div>
@@ -306,11 +306,11 @@ footer{border-top:1px solid var(--border);padding:1.25rem 2rem;display:flex;alig
 
   <div class="section-title">10 Aspek Scoring</div>
   <div class="ind-grid" id="ind-grid">
-    <div class="ind-card"><div class="ind-top"><span class="ind-name">RSI (14)</span><span class="ind-badge wait" id="b-rsi">--</span></div><div class="ind-value" id="v-rsi">--</div><div class="ind-desc" id="d-rsi">Menghitung...</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-rsi" style="width:0%;background:var(--buy)"></div></div></div>
+    <div class="ind-card"><div class="ind-top"><span class="ind-name">RSI (17)</span><span class="ind-badge wait" id="b-rsi">--</span></div><div class="ind-value" id="v-rsi">--</div><div class="ind-desc" id="d-rsi">Menghitung...</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-rsi" style="width:0%;background:var(--buy)"></div></div></div>
     <div class="ind-card"><div class="ind-top"><span class="ind-name">MACD Cross</span><span class="ind-badge wait" id="b-macd">--</span></div><div class="ind-value" id="v-macd">--</div><div class="ind-desc" id="d-macd">Menghitung...</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-macd" style="width:0%;background:var(--buy)"></div></div></div>
     <div class="ind-card"><div class="ind-top"><span class="ind-name">Breakout</span><span class="ind-badge wait" id="b-breakout">--</span></div><div class="ind-value" id="v-breakout">--</div><div class="ind-desc" id="d-breakout">Menghitung...</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-breakout" style="width:0%;background:var(--buy)"></div></div></div>
     <div class="ind-card"><div class="ind-top"><span class="ind-name">Retest Hold</span><span class="ind-badge wait" id="b-retest">--</span></div><div class="ind-value" id="v-retest">--</div><div class="ind-desc" id="d-retest">Menghitung...</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-retest" style="width:0%;background:var(--buy)"></div></div></div>
-    <div class="ind-card"><div class="ind-top"><span class="ind-name">ADX (14)</span><span class="ind-badge wait" id="b-adx">--</span></div><div class="ind-value" id="v-adx">--</div><div class="ind-desc" id="d-adx">Menghitung...</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-adx" style="width:0%;background:var(--neutral)"></div></div></div>
+    <div class="ind-card"><div class="ind-top"><span class="ind-name">ADX (14) >34</span><span class="ind-badge wait" id="b-adx">--</span></div><div class="ind-value" id="v-adx">--</div><div class="ind-desc" id="d-adx">Menghitung...</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-adx" style="width:0%;background:var(--neutral)"></div></div></div>
     <div class="ind-card"><div class="ind-top"><span class="ind-name">Struktur HH/HL</span><span class="ind-badge wait" id="b-structure">--</span></div><div class="ind-value" id="v-structure">--</div><div class="ind-desc" id="d-structure">Menghitung...</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-structure" style="width:0%;background:var(--buy)"></div></div></div>
     <div class="ind-card"><div class="ind-top"><span class="ind-name">Volume vs MA</span><span class="ind-badge wait" id="b-vol">--</span></div><div class="ind-value" id="v-vol">--</div><div class="ind-desc" id="d-vol">Menghitung...</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-vol" style="width:0%;background:var(--buy)"></div></div></div>
     <div class="ind-card"><div class="ind-top"><span class="ind-name">Trend Coin 1H</span><span class="ind-badge wait" id="b-trend-coin">--</span></div><div class="ind-value" id="v-trend-coin">--</div><div class="ind-desc" id="d-trend-coin">EMA50 vs EMA200</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-trend-coin" style="width:0%;background:var(--buy)"></div></div></div>
@@ -323,10 +323,10 @@ footer{border-top:1px solid var(--border);padding:1.25rem 2rem;display:flex;alig
   <div class="ind-grid" id="filter-grid">
     <div class="ind-card"><div class="ind-top"><span class="ind-name">BTC Context</span><span class="ind-badge wait" id="b-btc">--</span></div><div class="ind-value" id="v-btc">--</div><div class="ind-desc" id="d-btc">Memuat...</div></div>
     <div class="ind-card"><div class="ind-top"><span class="ind-name">Price > EMA50</span><span class="ind-badge wait" id="b-price-trend">--</span></div><div class="ind-value" id="v-price-trend">--</div><div class="ind-desc" id="d-price-trend">Harga vs EMA50</div></div>
-    <div class="ind-card"><div class="ind-top"><span class="ind-name">ADX > 20</span><span class="ind-badge wait" id="b-adx-filter">--</span></div><div class="ind-value" id="v-adx-filter">--</div><div class="ind-desc" id="d-adx-filter">Momentum filter</div></div>
-    <div class="ind-card"><div class="ind-top"><span class="ind-name">No Conflict</span><span class="ind-badge wait" id="b-conflict">--</span></div><div class="ind-value" id="v-conflict">--</div><div class="ind-desc" id="d-conflict">SellScore = 0</div></div>
+    <div class="ind-card"><div class="ind-top"><span class="ind-name">ADX > 25</span><span class="ind-badge wait" id="b-adx-filter">--</span></div><div class="ind-value" id="v-adx-filter">--</div><div class="ind-desc" id="d-adx-filter">Momentum filter</div></div>
+    <div class="ind-card"><div class="ind-top"><span class="ind-name">No Conflict</span><span class="ind-badge wait" id="b-conflict">--</span></div><div class="ind-value" id="v-conflict">--</div><div class="ind-desc" id="d-conflict">SellScore ≤ 2</div></div>
     <div class="ind-card"><div class="ind-top"><span class="ind-name">Breakout ✓</span><span class="ind-badge wait" id="b-bo-filter">--</span></div><div class="ind-value" id="v-bo-filter">--</div><div class="ind-desc" id="d-bo-filter">Hard filter</div></div>
-    <div class="ind-card"><div class="ind-top"><span class="ind-name">Retest Hold ✓</span><span class="ind-badge wait" id="b-rt-filter">--</span></div><div class="ind-value" id="v-rt-filter">--</div><div class="ind-desc" id="d-rt-filter">Hard filter</div></div>
+    <div class="ind-card"><div class="ind-top"><span class="ind-name">Retest Hold (+2)</span><span class="ind-badge wait" id="b-rt-filter">--</span></div><div class="ind-value" id="v-rt-filter">--</div><div class="ind-desc" id="d-rt-filter">Hard filter</div></div>
   </div>
 
   <div class="section-title">Fear & Greed — Dual Source</div>
@@ -354,7 +354,7 @@ footer{border-top:1px solid var(--border);padding:1.25rem 2rem;display:flex;alig
     </svg>
     <span class="footer-note" style="font-weight:500;color:var(--text2)">CTSA Pro <span id="app-version">v1.1</span></span>
     <span class="footer-note">·</span>
-    <span class="footer-note">Data: Binance API · Fear&Greed: Alternative.me + CMC (info only) · Breakout+Retest System v2.0 · Bukan saran investasi · DYOR</span>
+    <span class="footer-note">Data: Binance API · Fear&Greed: Alternative.me + CMC (info only) · Breakout+Retest System v2.0 · Parameter Trial 1546 · Bukan saran investasi · DYOR</span>
   </div>
   <span class="footer-note">RSI · MACD · BB · ADX · OBV · Fear&Greed · ATR</span>
 </footer>
@@ -828,7 +828,7 @@ function computeSignals(klines, fg, btcKlines1D, klines4H, klines1D){
 
   // ── VERDICT ──────────────────────────────────────────────────────────
   let verdict = 'TUNGGU', dir = 'neutral';
-  if(allFiltersPass && finalScore >= 6){ // skor max 11 (retest +2)
+  if(allFiltersPass && finalScore >= 6){
     verdict = finalScore >= 8 ? 'BELI KUAT' : finalScore >= 6 ? 'BELI' : 'BELI LEMAH';
     dir = 'buy';
   }
@@ -896,7 +896,7 @@ function computeSignalShort(klines, btcKlines1D, klines4H, klines1D){
   const macdNow  = macdLine[macdLine.length-1];
   const sigNow   = signalLine[signalLine.length-1];
   const histNow  = hist[hist.length-1];
-  const histPrev = hist[hist.length-2];
+  const histPrev = hist[hist.length-2] || 0;
   const macdCrossUp   = macdNow > sigNow && histNow > 0 && histPrev <= 0;
   const macdCrossDown = macdNow < sigNow && histNow < 0 && histPrev >= 0;
 
@@ -949,7 +949,7 @@ function computeSignalShort(klines, btcKlines1D, klines4H, klines1D){
   // ── HARD FILTER JUAL ─────────────────────────────────────────────────
   const hardFilters = {
     priceBelowEMA: price < ema50Now,
-    momentum:      adxNow > 20,
+    momentum:      adxNow > 25,
     noConflict:    buyScore <= 1,
     breakdown:     breakdownFound,
     retestFail,
@@ -965,7 +965,7 @@ function computeSignalShort(klines, btcKlines1D, klines4H, klines1D){
   scoreDetail.rsi           = (rsiNow>=32&&rsiNow<=45)  ? 1 : 0; score += scoreDetail.rsi;
   scoreDetail.macdCross     = macdCrossDown             ? 1 : 0; score += scoreDetail.macdCross;
   scoreDetail.volume        = volNow > volMA20           ? 1 : 0; score += scoreDetail.volume;
-  scoreDetail.adx           = adxNow > 25               ? 1 : 0; score += scoreDetail.adx;
+  scoreDetail.adx           = adxNow > 34               ? 1 : 0; score += scoreDetail.adx;
   scoreDetail.structure     = structureBearish           ? 1 : 0; score += scoreDetail.structure;
   scoreDetail.trendCoin     = ema50Now < ema200Now       ? 1 : 0; score += scoreDetail.trendCoin;
   scoreDetail.btcBearish    = btcBearish                 ? 1 : 0; score += scoreDetail.btcBearish;
@@ -975,7 +975,7 @@ function computeSignalShort(klines, btcKlines1D, klines4H, klines1D){
   let tf4hBearish = false;
   if(klines4H && klines4H.length >= 200){
     const c4 = klines4H.map(k=>k.c);
-    const e50_4h = calcEMA(c4,50), e200_4h = calcEMA(c4,200);
+    const e50_4h = calcEMA(c4,36), e200_4h = calcEMA(c4,205);
     tf4hBearish = e50_4h[e50_4h.length-1] < e200_4h[e200_4h.length-1];
     if(tf4hBearish){ scoreDetail.tf4h = 1; }
   }
@@ -986,7 +986,7 @@ function computeSignalShort(klines, btcKlines1D, klines4H, klines1D){
   let tf1dBearish = false;
   if(klines1D && klines1D.length >= 200){
     const c1d = klines1D.map(k=>k.c);
-    const e50_1d = calcEMA(c1d,50), e200_1d = calcEMA(c1d,200);
+    const e50_1d = calcEMA(c1d,36), e200_1d = calcEMA(c1d,205);
     tf1dBearish = e50_1d[e50_1d.length-1] < e200_1d[e200_1d.length-1];
     if(tf1dBearish){ scoreDetail.tf1d = 1; }
   }
@@ -1003,17 +1003,17 @@ function computeSignalShort(klines, btcKlines1D, klines4H, klines1D){
 
   // ── VERDICT ──────────────────────────────────────────────────────────
   let verdict = 'TUNGGU', dir = 'neutral';
-  if(allFiltersPass && finalScore >= 6){ // skor max 11 (retest +2)
+  if(allFiltersPass && finalScore >= 6){
     verdict = finalScore >= 8 ? 'JUAL KUAT' : 'JUAL';
     dir = 'sell';
   }
 
-  const sl         = Math.max(price + 1.5*atrNow, (breakdownLevel || price) + 0.5*atrNow);
-  const t1         = price - 3.0*atrNow;
-  const t2         = price - 6.0*atrNow;
-  const t3         = price - 9.0*atrNow;
-  const t4         = price - 12.0*atrNow;
-  const t5         = price - 15.0*atrNow;
+  const sl         = Math.max(price + 1.186*atrNow, (breakdownLevel || price) + 0.5*atrNow);
+  const t1         = price - 2.4*atrNow;
+  const t2         = price - 4.8*atrNow;
+  const t3         = price - 7.2*atrNow;
+  const t4         = price - 9.6*atrNow;
+  const t5         = price - 12.0*atrNow;
   const entryLimit = price + 0.5*atrNow;
   const rr1        = (Math.abs(t1-price)/Math.abs(sl-price)).toFixed(1);
   const accumHigh  = t1;
@@ -1169,7 +1169,7 @@ function updateUI(sig, fg, ticker){
 
   // Retest
   const rtHold = sig.retest.hold;
-  setBadge('b-retest', rtHold?'buy':'wait', rtHold?'✅ +1':'—');
+  setBadge('b-retest', rtHold?'buy':'wait', rtHold?'✅ +2':'—');
   document.getElementById('v-retest').textContent = rtHold ? 'Valid' : 'Belum';
   document.getElementById('d-retest').textContent = sig.retest.desc;
   document.getElementById('bar-retest').style.width = rtHold?'100%':'0%';
@@ -1242,9 +1242,15 @@ function updateUI(sig, fg, ticker){
   filterPass('b-btc',        hf.btcBullish,   hf.btcBullish?'Bullish':'Bearish', sig.btcContext.desc);
   filterPass('b-price-trend',hf.priceTrend,   hf.priceTrend?'Di atas EMA50':'Di bawah EMA50', 'Harga vs EMA50');
   filterPass('b-adx-filter', hf.momentum,     `ADX ${sig.adx.val.toFixed(1)}`, hf.momentum?'Momentum cukup':'ADX terlalu rendah');
-  filterPass('b-conflict',   hf.noConflict,   hf.noConflict?'SellScore<=1':`SellScore=${sig.totalSell}`, 'Maks 1 sinyal berlawanan');
+  filterPass('b-conflict',   hf.noConflict,   hf.noConflict?'SellScore<=2':`SellScore=${sig.totalSell}`, 'Maks 2 sinyal berlawanan');
   filterPass('b-bo-filter',  hf.breakout,     hf.breakout?'Terdeteksi':'Belum ada', sig.breakout.desc);
-  filterPass('b-rt-filter',  hf.retestHold,   hf.retestHold?'Valid':'Belum valid', sig.retest.desc);
+  // Retest Hold bukan hard filter — tampilkan sebagai info scoring
+  {
+    const el = document.getElementById('b-rt-filter');
+    if(el){ el.className='ind-badge '+(sig.retest.hold?'buy':'neutral'); el.textContent=sig.retest.hold?'✅ +2 Skor':'Opsional'; }
+    const vEl=document.getElementById('v-rt-filter'); if(vEl) vEl.textContent=sig.retest.hold?'Valid (Scoring)':'Belum (Opsional)';
+    const dEl=document.getElementById('d-rt-filter'); if(dEl) dEl.textContent=sig.retest.desc+' · Bukan hard filter, memberi +2 poin';
+  }
 
   // Penalty display in warning box
   const warnBox = document.getElementById('signal-warning');
@@ -1258,7 +1264,7 @@ function updateUI(sig, fg, ticker){
     warnBox.style.background = 'rgba(245,158,11,.1)';
     warnBox.style.border = '1px solid rgba(245,158,11,.25)';
     warnBox.style.color = '#d97706';
-    warnBox.textContent = `⚠️ Penalti aktif: ${penalties.join(', ')} | Skor bersih: ${sig.finalScore}/10`;
+    warnBox.textContent = `⚠️ Penalti aktif: ${penalties.join(', ')} | Skor bersih: ${sig.finalScore}/11`;
   } else {
     warnBox.style.display = 'none';
   }
@@ -1274,7 +1280,7 @@ function updateUI(sig, fg, ticker){
     <div><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">EMA 200</div><div style="font-family:var(--font-mono);font-size:12px;color:#fb923c;font-weight:500">${fmt(sig.ema200[sig.ema200.length-1])}</div></div>
     <div><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Upper BB</div><div style="font-family:var(--font-mono);font-size:12px;color:#6366f1;font-weight:500">${fmt(sig.bb.u)}</div></div>
     <div><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Lower BB</div><div style="font-family:var(--font-mono);font-size:12px;color:#22c55e;font-weight:500">${fmt(sig.bb.l)}</div></div>
-    <div><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Score</div><div style="font-family:var(--font-mono);font-size:12px;color:${sig.finalScore>=6?'var(--buy)':sig.finalScore>=4?'var(--neutral)':'var(--sell)'};font-weight:700">${sig.finalScore}/10</div></div>
+    <div><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Score</div><div style="font-family:var(--font-mono);font-size:12px;color:${sig.finalScore>=6?'var(--buy)':sig.finalScore>=4?'var(--neutral)':'var(--sell)'};font-weight:700">${sig.finalScore}/11</div></div>
   `;
 
   // MACD signal text
@@ -1450,13 +1456,13 @@ function updateSellCard(sig){
         </div>
         <div style="display:flex;align-items:baseline;gap:4px">
           <span class="score-num" style="color:var(--neutral)">--</span>
-          <span class="score-denom">/ 10 poin (min 6)</span>
+          <span class="score-denom">/ 11 poin (min 6)</span>
         </div>
       </div>
       <div style="text-align:center;padding:2rem 1rem">
         <div style="font-size:28px;margin-bottom:.75rem">📉</div>
         <div style="font-weight:600;font-size:15px;color:var(--text);margin-bottom:.5rem">Tidak ada setup SHORT saat ini</div>
-        <div style="font-size:12px;color:var(--text3);line-height:1.6">Tunggu hingga ada breakdown + retest gagal<br>yang valid, semua filter lolos, dan score ≥ 6/10.</div>
+        <div style="font-size:12px;color:var(--text3);line-height:1.6">Tunggu hingga ada breakdown + retest gagal<br>yang valid, semua filter lolos, dan score ≥ 6/11.</div>
       </div>`;
     return;
   }
@@ -1471,11 +1477,11 @@ function updateSellCard(sig){
       </div>
       <div style="display:flex;align-items:baseline;gap:4px">
         <span class="score-num" id="sell-score-num">${sig.finalScore}</span>
-        <span class="score-denom">/ 10 poin (min 6)</span>
+        <span class="score-denom">/ 11 poin (min 6)</span>
       </div>
     </div>
     <div id="sell-market-tags" style="display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap"></div>
-    <div class="score-bar-wrap"><div class="score-bar sell" id="sell-score-bar" style="width:${Math.max(0,sig.finalScore)/10*100}%"></div></div>
+    <div class="score-bar-wrap"><div class="score-bar sell" id="sell-score-bar" style="width:${Math.max(0,sig.finalScore)/11*100}%"></div></div>
     <div class="entry-grid" style="grid-template-columns:repeat(4,1fr)">
       <div class="entry-cell" style="border-color:rgba(239,68,68,.3)">
         <div class="entry-lbl" style="color:#f87171">Entry Short</div>
