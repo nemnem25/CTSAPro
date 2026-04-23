@@ -605,12 +605,15 @@ function proxyFetch(url, opts={}){
 // ── BINANCE FETCH ────────────────────────────────────────────────────
 async function fetchKlines(symbol, interval, limit=200){
   const url = `https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`;
-  const r = await proxyFetch(url);
-  if(!r.ok) throw new Error(`Binance error ${r.status}`);
-  const data = await r.json();
-  return data.map(k=>({
-    t: k[0], o:+k[1], h:+k[2], l:+k[3], c:+k[4], v:+k[5]
-  }));
+  const controller = new AbortController();
+  const tid = setTimeout(()=>controller.abort(), 8000);
+  try{
+    const r = await proxyFetch(url, {signal:controller.signal});
+    clearTimeout(tid);
+    if(!r.ok) throw new Error(`Binance error ${r.status}`);
+    const data = await r.json();
+    return data.map(k=>({t:k[0],o:+k[1],h:+k[2],l:+k[3],c:+k[4],v:+k[5]}));
+  }catch(e){ clearTimeout(tid); throw e; }
 }
 
 async function fetch24h(symbol){
@@ -1796,9 +1799,10 @@ async function runFeedScan() {
     try {
       const [klines, klines4H, klines1D] = await Promise.all([
         fetchKlines(coin.id, '1h', 200),
-        fetchKlines(coin.id, '4h', 210),
-        fetchKlines(coin.id, '1d', 210),
+        fetchKlines(coin.id, '4h', 210).catch(() => null),
+        fetchKlines(coin.id, '1d', 210).catch(() => null),
       ]);
+      if (!klines) continue;
 
       const sigBuy  = computeSignals(klines, null, btcKlines1D, klines4H, klines1D);
       const sigSell = computeSignalShort(klines, btcKlines1D, klines4H, klines1D);
