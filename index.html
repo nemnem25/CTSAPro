@@ -1701,6 +1701,33 @@ function switchTab(tab) {
   if (tab === 'detail' && !detailLoaded) loadAll();
 }
 
+
+// ── NOTIFY SCANNER ────────────────────────────────────────────────────
+const SCANNER_NOTIFY = 'https://ctsa-scanner.mahapalamultimedia.workers.dev/notify';
+
+async function notifyScanner(coin, sig, type) {
+  try {
+    const isBuy = type === 'buy';
+    await fetch(SCANNER_NOTIFY, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sym:     coin.id,
+        type:    type,
+        score:   sig.finalScore,
+        price:   sig.price,
+        sl:      sig.sl,
+        t1:      sig.t1,
+        verdict: sig.verdict,
+        tf:      '1H',
+      }),
+    });
+    console.log(`Notified scanner: ${coin.sym} ${type}`);
+  } catch(e) {
+    console.warn('Notify scanner failed:', e.message);
+  }
+}
+
 // ── SIGNAL FEED ───────────────────────────────────────────────────────
 const COINS_FEED = [
   {sym:'BTC',id:'BTCUSDT'},{sym:'ETH',id:'ETHUSDT'},{sym:'BNB',id:'BNBUSDT'},
@@ -1776,11 +1803,13 @@ async function runFeedScan() {
       if (sigBuy.dir === 'buy') {
         feedResults.push({ coin, sig: sigBuy, type: 'buy' });
         renderFeedCard(coin, sigBuy, 'buy');
+        notifyScanner(coin, sigBuy, 'buy');
         found++;
       }
       if (sigSell.dir === 'sell') {
         feedResults.push({ coin, sig: sigSell, type: 'sell' });
         renderFeedCard(coin, sigSell, 'sell');
+        notifyScanner(coin, sigSell, 'sell');
         found++;
       }
     } catch(e) {
