@@ -979,7 +979,7 @@ function computeSignals(klines, fg, btcKlines1D, klines4H, klines1D){
     breakout:   {found:breakoutFound, level:breakoutLevel, desc: breakoutFound?`Breakout di ${fmt(breakoutLevel)}`:'Belum ada breakout'},
     retest:     {hold:retestHold, desc: retestHold?'Retest hold valid — buyer konfirmasi':'Belum ada retest valid'},
     structure:  {bullish:structureBullish, desc: structureBullish?'HH + HL — struktur bullish terkonfirmasi':'Struktur belum HH/HL'},
-    btcContext: {bullish:btcBullish, desc: btcBullish?'BTC bullish — EMA50 > EMA200':'BTC bearish — sinyal BELI diblokir'},
+    btcContext: {bullish:btcBullish, desc: btcBullish?'BTC bullish — EMA36 > EMA205':'BTC bearish — sinyal BELI diblokir'},
     hardFilters, allFiltersPass,
     scoreDetail, penaltyDetail,
     score, penalty, finalScore,
@@ -1067,7 +1067,7 @@ function computeSignalShort(klines, btcKlines1D, klines4H, klines1D){
     momentum:      adxNow > 25,
     noConflict:    buyScore <= 1,
     breakdown:     breakdownFound,
-    retestFail,
+    // retestFail bukan hard filter — scoring +1
   };
   const allFiltersPass = Object.values(hardFilters).every(v => v === true);
 
@@ -1316,8 +1316,8 @@ function updateUI(sig, fg, ticker){
   // Trend Coin 1H
   const tcOk = sig.scoreDetail.trendCoin > 0;
   setBadge('b-trend-coin', tcOk?'buy':'wait', tcOk?'✅ +1':'—');
-  document.getElementById('v-trend-coin').textContent = tcOk ? 'EMA50>EMA200' : 'EMA50<EMA200';
-  document.getElementById('d-trend-coin').textContent = tcOk ? 'Trend 1H bullish' : 'Trend 1H belum bullish';
+  document.getElementById('v-trend-coin').textContent = tcOk ? 'EMA36>EMA205' : 'EMA50<EMA200';
+  document.getElementById('d-trend-coin').textContent = tcOk ? 'Trend 1H bullish (EMA36>EMA205)' : 'Trend 1H belum bullish';
   document.getElementById('bar-trend-coin').style.width = tcOk?'100%':'0%';
   document.getElementById('bar-trend-coin').style.background = 'var(--buy)';
 
@@ -1325,7 +1325,7 @@ function updateUI(sig, fg, ticker){
   const tf4hOk = sig.scoreDetail.tf4h > 0;
   setBadge('b-tf4h', tf4hOk?'buy':'wait', tf4hOk?'✅ +1':'—');
   document.getElementById('v-tf4h').textContent = tf4hOk ? 'Bullish' : 'Belum';
-  document.getElementById('d-tf4h').textContent = tf4hOk ? 'EMA50 > EMA200 di 4H ✅' : 'EMA50 < EMA200 di 4H';
+  document.getElementById('d-tf4h').textContent = tf4hOk ? 'EMA36 > EMA205 di 4H ✅' : 'EMA36 < EMA205 di 4H';
   document.getElementById('bar-tf4h').style.width = tf4hOk?'100%':'0%';
   document.getElementById('bar-tf4h').style.background = 'var(--buy)';
 
@@ -1333,7 +1333,7 @@ function updateUI(sig, fg, ticker){
   const tf1dOk = sig.scoreDetail.tf1d > 0;
   setBadge('b-tf1d', tf1dOk?'buy':'wait', tf1dOk?'✅ +1':'—');
   document.getElementById('v-tf1d').textContent = tf1dOk ? 'Bullish' : 'Belum';
-  document.getElementById('d-tf1d').textContent = tf1dOk ? 'EMA50 > EMA200 di 1D ✅' : 'EMA50 < EMA200 di 1D';
+  document.getElementById('d-tf1d').textContent = tf1dOk ? 'EMA36 > EMA205 di 1D ✅' : 'EMA36 < EMA205 di 1D';
   document.getElementById('bar-tf1d').style.width = tf1dOk?'100%':'0%';
   document.getElementById('bar-tf1d').style.background = 'var(--buy)';
   setBadge('b-fg', 'neutral', 'Info');
@@ -1355,7 +1355,7 @@ function updateUI(sig, fg, ticker){
     if(document.getElementById(did)) document.getElementById(did).textContent = desc;
   };
   filterPass('b-btc',        hf.btcBullish,   hf.btcBullish?'Bullish':'Bearish', sig.btcContext.desc);
-  filterPass('b-price-trend',hf.priceTrend,   hf.priceTrend?'Di atas EMA50':'Di bawah EMA50', 'Harga vs EMA50');
+  filterPass('b-price-trend',hf.priceTrend,   hf.priceTrend?'Di atas EMA36':'Di bawah EMA36', 'Harga vs EMA36');
   filterPass('b-adx-filter', hf.momentum,     `ADX ${sig.adx.val.toFixed(1)}`, hf.momentum?'Momentum cukup':'ADX terlalu rendah');
   filterPass('b-conflict',   hf.noConflict,   hf.noConflict?'SellScore<=2':`SellScore=${sig.totalSell}`, 'Maks 2 sinyal berlawanan');
   filterPass('b-bo-filter',  hf.breakout,     hf.breakout?'Terdeteksi':'Belum ada', sig.breakout.desc);
