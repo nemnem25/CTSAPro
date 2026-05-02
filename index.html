@@ -1316,7 +1316,7 @@ function updateUI(sig, fg, ticker){
   // Trend Coin 1H
   const tcOk = sig.scoreDetail.trendCoin > 0;
   setBadge('b-trend-coin', tcOk?'buy':'wait', tcOk?'✅ +1':'—');
-  document.getElementById('v-trend-coin').textContent = tcOk ? 'EMA36>EMA205' : 'EMA50<EMA200';
+  document.getElementById('v-trend-coin').textContent = tcOk ? 'EMA50>EMA200' : 'EMA50<EMA200';
   document.getElementById('d-trend-coin').textContent = tcOk ? 'Trend 1H bullish (EMA36>EMA205)' : 'Trend 1H belum bullish';
   document.getElementById('bar-trend-coin').style.width = tcOk?'100%':'0%';
   document.getElementById('bar-trend-coin').style.background = 'var(--buy)';
@@ -1325,7 +1325,7 @@ function updateUI(sig, fg, ticker){
   const tf4hOk = sig.scoreDetail.tf4h > 0;
   setBadge('b-tf4h', tf4hOk?'buy':'wait', tf4hOk?'✅ +1':'—');
   document.getElementById('v-tf4h').textContent = tf4hOk ? 'Bullish' : 'Belum';
-  document.getElementById('d-tf4h').textContent = tf4hOk ? 'EMA36 > EMA205 di 4H ✅' : 'EMA36 < EMA205 di 4H';
+  document.getElementById('d-tf4h').textContent = tf4hOk ? 'EMA50 > EMA200 di 4H ✅' : 'EMA50 < EMA200 di 4H';
   document.getElementById('bar-tf4h').style.width = tf4hOk?'100%':'0%';
   document.getElementById('bar-tf4h').style.background = 'var(--buy)';
 
@@ -1333,7 +1333,7 @@ function updateUI(sig, fg, ticker){
   const tf1dOk = sig.scoreDetail.tf1d > 0;
   setBadge('b-tf1d', tf1dOk?'buy':'wait', tf1dOk?'✅ +1':'—');
   document.getElementById('v-tf1d').textContent = tf1dOk ? 'Bullish' : 'Belum';
-  document.getElementById('d-tf1d').textContent = tf1dOk ? 'EMA36 > EMA205 di 1D ✅' : 'EMA36 < EMA205 di 1D';
+  document.getElementById('d-tf1d').textContent = tf1dOk ? 'EMA50 > EMA200 di 1D ✅' : 'EMA50 < EMA200 di 1D';
   document.getElementById('bar-tf1d').style.width = tf1dOk?'100%':'0%';
   document.getElementById('bar-tf1d').style.background = 'var(--buy)';
   setBadge('b-fg', 'neutral', 'Info');
@@ -1700,6 +1700,8 @@ function switchTab(tab) {
   if (tab === 'history') loadHistory();
   if (tab === 'detail' && !detailLoaded) loadAll();
 }
+
+
 
 // ── SIGNAL FEED ───────────────────────────────────────────────────────
 const COINS_FEED = [
