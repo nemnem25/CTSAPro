@@ -2,8 +2,8 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>CTSA Pro — Signal Feed</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CTSA Pro — Signal Dashboard</title>
 <style>
 :root {
   --bg:#0a0b0d;--bg2:#111318;--bg3:#181c23;
@@ -19,80 +19,16 @@
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:14px;line-height:1.6;min-height:100vh}
-
-/* ── NAV ── */
-nav{position:sticky;top:0;z-index:100;background:rgba(10,11,13,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;height:52px}
+nav{position:sticky;top:0;z-index:100;background:rgba(10,11,13,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:52px}
 .nav-brand{font-family:var(--font-head);font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px}
 .nav-dot{width:8px;height:8px;border-radius:50%;background:var(--buy);animation:pulse 2s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
 .nav-sub{font-family:var(--font-mono);font-size:9px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase}
-.nav-right{display:flex;align-items:center;gap:.75rem}
-.nav-time{font-family:var(--font-mono);font-size:11px;color:var(--text2)}
-
-/* ── TABS ── */
-.tab-bar{display:flex;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:52px;z-index:99}
-.tab-btn{flex:1;padding:11px 8px;font-family:var(--font-mono);font-size:11px;font-weight:500;color:var(--text3);background:transparent;border:none;cursor:pointer;letter-spacing:.04em;transition:all .15s;border-bottom:2px solid transparent;display:flex;align-items:center;justify-content:center;gap:6px}
-.tab-btn:hover{color:var(--text2)}
-.tab-btn.active{color:var(--text);border-bottom-color:var(--buy)}
-.tab-badge{font-size:9px;padding:1px 6px;border-radius:8px;background:var(--buy-dim);color:var(--buy);border:1px solid var(--buy-border)}
-.tab-badge.sell{background:var(--sell-dim);color:var(--sell);border-color:var(--sell-border)}
-
-/* ── TAB PANELS ── */
-.tab-panel{display:none}
-.tab-panel.active{display:block}
-
-/* ── MAIN LAYOUT ── */
-main{max-width:1320px;margin:0 auto;padding:1.25rem}
-
-/* ── SIGNAL FEED ── */
-.feed-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px}
-.feed-title{font-family:var(--font-head);font-size:13px;font-weight:600;color:var(--text2);letter-spacing:.04em;text-transform:uppercase}
-.feed-meta{font-family:var(--font-mono);font-size:10px;color:var(--text3)}
-.scan-progress{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:.75rem 1rem;margin-bottom:1rem;display:flex;align-items:center;gap:.75rem}
-.scan-bar-wrap{flex:1;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden}
-.scan-bar-fill{height:100%;border-radius:2px;background:var(--buy);transition:width .3s ease}
-.scan-txt{font-family:var(--font-mono);font-size:10px;color:var(--text2);white-space:nowrap}
-
-/* ── SIGNAL CARDS GRID ── */
-.signal-cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:1.5rem}
-@media(max-width:600px){.signal-cards-grid{grid-template-columns:repeat(2,1fr);gap:8px}}
-
-.sig-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden}
-.sig-card:hover{border-color:var(--border2);transform:translateY(-1px)}
-.sig-card.buy{border-left:3px solid var(--buy)}
-.sig-card.sell{border-left:3px solid var(--sell)}
-.sig-card.selected{border-color:rgba(99,102,241,.5);background:rgba(99,102,241,.05)}
-
-.sig-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-.sig-coin{font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--text)}
-.sig-verdict{font-family:var(--font-mono);font-size:9px;font-weight:500;padding:2px 7px;border-radius:4px;letter-spacing:.04em}
-.sig-verdict.buy{background:var(--buy-dim);color:var(--buy);border:1px solid var(--buy-border)}
-.sig-verdict.sell{background:var(--sell-dim);color:var(--sell);border:1px solid var(--sell-border)}
-
-.sig-score{font-family:var(--font-mono);font-size:10px;color:var(--text3);margin-bottom:6px}
-.sig-score-bar{height:2px;background:var(--bg3);border-radius:1px;overflow:hidden;margin-bottom:8px}
-.sig-score-fill{height:100%;border-radius:1px;transition:width .8s ease}
-.sig-score-fill.buy{background:var(--buy)}
-.sig-score-fill.sell{background:var(--sell)}
-
-.sig-levels{display:grid;grid-template-columns:1fr 1fr;gap:4px}
-.sig-level{display:flex;flex-direction:column;gap:1px}
-.sig-level-lbl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;font-family:var(--font-mono)}
-.sig-level-val{font-family:var(--font-mono);font-size:11px;font-weight:500;color:var(--text)}
-.sig-level-val.sl{color:var(--sell)}
-.sig-level-val.tp{color:var(--buy)}
-
-/* ── EMPTY / LOADING STATES ── */
-.feed-empty{text-align:center;padding:3rem 1rem;color:var(--text3)}
-.feed-empty-icon{font-size:32px;margin-bottom:.75rem;opacity:.4}
-.feed-empty-title{font-size:14px;font-weight:600;color:var(--text2);margin-bottom:.25rem}
-.feed-empty-sub{font-size:12px}
-.spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border2);border-top-color:var(--buy);border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:6px}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* ── DETAIL SECTION (Tab 2) ── */
-.detail-top{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem;flex-wrap:wrap}
-.detail-coin-selector{display:flex;gap:6px;flex-wrap:wrap}
+.nav-right{display:flex;align-items:center;gap:1rem}
+.nav-time{font-family:var(--font-mono);font-size:12px;color:var(--text2)}
+main{max-width:1320px;margin:0 auto;padding:2rem}
+.selector-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:12px}
+.coin-selector{display:flex;gap:6px;flex-wrap:wrap}
 .coin-btn{font-family:var(--font-mono);font-size:11px;font-weight:500;padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--bg2);color:var(--text2);cursor:pointer;transition:all .15s;letter-spacing:.04em}
 .coin-btn:hover{border-color:var(--border2);color:var(--text)}
 .coin-btn.active{background:var(--accent-dim);border-color:rgba(99,102,241,.4);color:#a5b4fc}
@@ -100,20 +36,18 @@ main{max-width:1320px;margin:0 auto;padding:1.25rem}
 .tf-btn{font-family:var(--font-mono);font-size:10px;padding:4px 9px;border-radius:5px;border:1px solid var(--border);background:transparent;color:var(--text3);cursor:pointer;transition:all .15s;letter-spacing:.04em}
 .tf-btn:hover{color:var(--text2);border-color:var(--border2)}
 .tf-btn.active{background:var(--bg3);border-color:var(--border2);color:var(--text)}
-
-/* ── EXISTING UI STYLES (carried over) ── */
+.price-hero{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.5rem 2rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;animation:fadeIn .4s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.price-hero{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.25rem 1.5rem;margin-bottom:1.25rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;animation:fadeIn .4s ease}
 .price-coin{font-family:var(--font-head);font-size:13px;font-weight:600;color:var(--text2);letter-spacing:.06em;text-transform:uppercase}
-.price-value{font-family:var(--font-head);font-size:32px;font-weight:800;letter-spacing:-.04em;color:var(--text);line-height:1}
+.price-value{font-family:var(--font-head);font-size:36px;font-weight:800;letter-spacing:-.04em;color:var(--text);line-height:1}
 .price-change{font-family:var(--font-mono);font-size:13px;font-weight:500;padding:3px 8px;border-radius:5px}
 .price-change.up{background:var(--buy-dim);color:var(--buy);border:1px solid var(--buy-border)}
 .price-change.dn{background:var(--sell-dim);color:var(--sell);border:1px solid var(--sell-border)}
-.price-stats{display:flex;gap:1.5rem;flex-wrap:wrap}
+.price-stats{display:flex;gap:2rem;flex-wrap:wrap}
 .price-stat{display:flex;flex-direction:column;gap:2px}
 .stat-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;font-family:var(--font-mono)}
 .stat-val{font-family:var(--font-mono);font-size:13px;font-weight:500;color:var(--text)}
-.verdict-card{border-radius:16px;padding:1.5rem;margin-bottom:1.25rem;border:1px solid;animation:fadeIn .5s ease .1s both;position:relative;overflow:hidden}
+.verdict-card{border-radius:16px;padding:1.5rem 2rem;margin-bottom:1.5rem;border:1px solid;animation:fadeIn .5s ease .1s both;position:relative;overflow:hidden}
 .verdict-card.buy{background:linear-gradient(135deg,rgba(34,197,94,.08) 0%,rgba(34,197,94,.03) 100%);border-color:var(--buy-border)}
 .verdict-card.sell{background:linear-gradient(135deg,rgba(239,68,68,.08) 0%,rgba(239,68,68,.03) 100%);border-color:var(--sell-border)}
 .verdict-card.neutral{background:linear-gradient(135deg,rgba(245,158,11,.08) 0%,rgba(245,158,11,.03) 100%);border-color:rgba(245,158,11,.25)}
@@ -141,7 +75,7 @@ main{max-width:1320px;margin:0 auto;padding:1.25rem}
 .entry-cell.t2 .entry-val{color:#4ade80}
 .entry-cell.t3 .entry-val{color:var(--buy)}
 .section-title{font-family:var(--font-head);font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem}
-.ind-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.25rem;animation:fadeIn .5s ease .2s both}
+.ind-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem;animation:fadeIn .5s ease .2s both}
 .ind-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;transition:border-color .2s}
 .ind-card:hover{border-color:var(--border2)}
 .ind-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
@@ -156,13 +90,13 @@ main{max-width:1320px;margin:0 auto;padding:1.25rem}
 .ind-note{font-size:10px;font-family:var(--font-mono);color:var(--text3);background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.18);border-radius:5px;padding:4px 8px;margin-top:8px;line-height:1.4}
 .ind-mini-bar{height:3px;background:var(--bg3);border-radius:2px;margin-top:10px;overflow:hidden}
 .ind-mini-fill{height:100%;border-radius:2px;transition:width .8s ease}
-.chart-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.25rem;margin-bottom:1.25rem;animation:fadeIn .5s ease .15s both}
+.chart-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.25rem;margin-bottom:1.5rem;animation:fadeIn .5s ease .15s both}
 .chart-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px}
 .chart-stats{display:flex;align-items:center;gap:1.5rem}
 .chart-legend{display:flex;gap:8px;font-family:var(--font-mono);font-size:10px;flex-wrap:wrap}
 .leg-item{display:flex;align-items:center;gap:4px;color:var(--text3)}
 .leg-line{display:inline-block;width:16px;height:2px;border-radius:1px}
-.fg-dual{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:1.25rem;animation:fadeIn .5s ease .35s both}
+.fg-dual{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:1.5rem;animation:fadeIn .5s ease .35s both}
 .fg-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem}
 .fg-source{font-family:var(--font-mono);font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:6px}
 .fg-num{font-family:var(--font-head);font-size:32px;font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:4px}
@@ -171,7 +105,7 @@ main{max-width:1320px;margin:0 auto;padding:1.25rem}
 .fg-fill{height:100%;border-radius:2px;transition:width 1.2s cubic-bezier(.34,1.56,.64,1)}
 .fg-consensus{background:var(--bg3);border-color:var(--border2)}
 .diverge-badge{display:inline-block;font-family:var(--font-mono);font-size:9px;padding:2px 7px;border-radius:4px;background:var(--neutral-dim);color:var(--neutral);border:1px solid rgba(245,158,11,.25);margin-top:6px}
-.tf-table-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.25rem;animation:fadeIn .5s ease .3s both}
+.tf-table-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.5rem;animation:fadeIn .5s ease .3s both}
 .tf-table{width:100%;border-collapse:collapse}
 .tf-table th{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);padding:10px 16px;text-align:left;border-bottom:1px solid var(--border);background:var(--bg3);font-weight:500}
 .tf-table td{padding:10px 16px;border-bottom:1px solid var(--border);font-size:12px}
@@ -184,58 +118,17 @@ main{max-width:1320px;margin:0 auto;padding:1.25rem}
 .pill.neutral{background:var(--neutral-dim);color:var(--neutral)}
 .tf-desc{color:var(--text2);font-size:11px}
 .tf-note{color:var(--text3);font-size:10px;font-family:var(--font-mono)}
+footer{border-top:1px solid var(--border);padding:1.25rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.footer-note{font-family:var(--font-mono);font-size:10px;color:var(--text3);letter-spacing:.04em}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border2);border-top-color:var(--buy);border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
 .error-msg{background:var(--sell-dim);border:1px solid var(--sell-border);border-radius:8px;padding:.75rem 1rem;font-family:var(--font-mono);font-size:11px;color:var(--sell);margin-bottom:1rem}
-
-/* ── HISTORY TAB ── */
-.history-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
-.history-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1.25rem}
-.hist-stat{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:.75rem 1rem;text-align:center}
-.hist-stat-val{font-family:var(--font-mono);font-size:18px;font-weight:500;color:var(--text);line-height:1;margin-bottom:2px}
-.hist-stat-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;font-family:var(--font-mono)}
-.history-list{display:flex;flex-direction:column;gap:6px}
-.hist-item{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:.75rem 1rem;display:flex;align-items:center;gap:.75rem;transition:border-color .15s}
-.hist-item:hover{border-color:var(--border2)}
-.hist-item.buy{border-left:3px solid var(--buy)}
-.hist-item.sell{border-left:3px solid var(--sell)}
-.hist-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.hist-dot.buy{background:var(--buy)}
-.hist-dot.sell{background:var(--sell)}
-.hist-coin{font-family:var(--font-head);font-size:13px;font-weight:600;color:var(--text)}
-.hist-verdict{font-family:var(--font-mono);font-size:10px;padding:1px 6px;border-radius:4px;margin-left:6px}
-.hist-verdict.buy{background:var(--buy-dim);color:var(--buy)}
-.hist-verdict.sell{background:var(--sell-dim);color:var(--sell)}
-.hist-time{font-size:10px;color:var(--text3);font-family:var(--font-mono)}
-.hist-score{font-family:var(--font-mono);font-size:12px;font-weight:500;color:var(--text2);margin-left:auto}
-.hist-price{font-family:var(--font-mono);font-size:11px;color:var(--text3)}
-.hist-result{font-family:var(--font-mono);font-size:10px;padding:2px 8px;border-radius:4px}
-.hist-result.win{background:var(--buy-dim);color:var(--buy)}
-.hist-result.loss{background:var(--sell-dim);color:var(--sell)}
-.hist-result.pending{background:var(--neutral-dim);color:var(--neutral)}
-.hist-result.reversal{background:var(--accent-dim);color:#a5b4fc}
-.hist-empty{text-align:center;padding:3rem;color:var(--text3);font-size:13px}
-
-/* ── RESPONSIVE ── */
-@media(max-width:900px){
-  .ind-grid{grid-template-columns:1fr 1fr}
-  .entry-grid{grid-template-columns:repeat(3,1fr)}
-  .fg-dual{grid-template-columns:1fr 1fr}
-  .history-stats{grid-template-columns:repeat(2,1fr)}
-  #signal-cards-grid{grid-template-columns:1fr}
-}
-@media(max-width:600px){
-  main{padding:.75rem}
-  .ind-grid{grid-template-columns:1fr}
-  .entry-grid{grid-template-columns:1fr 1fr}
-  .fg-dual{grid-template-columns:1fr}
-  .price-value{font-size:26px}
-  .signal-cards-grid{grid-template-columns:repeat(2,1fr)}
-  .history-stats{grid-template-columns:repeat(2,1fr)}
-}
+@media(max-width:900px){.ind-grid{grid-template-columns:1fr 1fr}.entry-grid{grid-template-columns:repeat(3,1fr)}.fg-dual{grid-template-columns:1fr 1fr}.price-stats{gap:1rem}#signal-cards-grid{grid-template-columns:1fr}}
+@media(max-width:600px){main{padding:1rem}.ind-grid{grid-template-columns:1fr}.entry-grid{grid-template-columns:1fr 1fr}.fg-dual{grid-template-columns:1fr}.price-value{font-size:28px}}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <div class="nav-brand">
     <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
@@ -246,7 +139,7 @@ main{max-width:1320px;margin:0 auto;padding:1.25rem}
     </svg>
     <div style="display:flex;flex-direction:column;gap:0">
       <span style="font-weight:700;font-size:15px;letter-spacing:-.01em;line-height:1.1">CTSA Pro</span>
-      <span class="nav-sub">Signal Feed v2.0</span>
+      <span class="nav-sub">Signal Dashboard</span>
     </div>
   </div>
   <div class="nav-right">
@@ -258,71 +151,14 @@ main{max-width:1320px;margin:0 auto;padding:1.25rem}
   </div>
 </nav>
 
-<!-- TAB BAR -->
-<div class="tab-bar">
-  <button class="tab-btn active" id="tab-feed-btn" onclick="switchTab('feed')">
-    Sinyal Aktif
-    <span class="tab-badge" id="feed-count" style="display:none">0</span>
-  </button>
-  <button class="tab-btn" id="tab-detail-btn" onclick="switchTab('detail')">
-    Detail Coin
-  </button>
-  <button class="tab-btn" id="tab-history-btn" onclick="switchTab('history')">
-    Riwayat
-    <span class="tab-badge" id="history-count" style="display:none">0</span>
-  </button>
-</div>
-
-<!-- ══ TAB 1: SINYAL AKTIF ══ -->
-<div class="tab-panel active" id="tab-feed">
-<main>
-  <div id="feed-error" class="error-msg" style="display:none"></div>
-
-  <!-- Scan Progress -->
-  <div class="scan-progress" id="scan-progress">
-    <span class="spinner"></span>
-    <div class="scan-bar-wrap">
-      <div class="scan-bar-fill" id="scan-bar" style="width:0%"></div>
-    </div>
-    <span class="scan-txt" id="scan-txt">Memulai scan 29 coin...</span>
-  </div>
-
-  <!-- Feed Header -->
-  <div class="feed-header" id="feed-header" style="display:none">
-    <div>
-      <div class="feed-title">Sinyal Aktif</div>
-      <div class="feed-meta" id="feed-meta">--</div>
-    </div>
-    <div style="display:flex;gap:6px;align-items:center">
-      <span style="font-family:var(--font-mono);font-size:10px;color:var(--text3)">Refresh:</span>
-      <span style="font-family:var(--font-mono);font-size:10px;color:var(--buy)" id="feed-countdown">60s</span>
-    </div>
-  </div>
-
-  <!-- Signal Cards -->
-  <div class="signal-cards-grid" id="signal-cards-feed"></div>
-
-  <!-- Empty state -->
-  <div class="feed-empty" id="feed-empty" style="display:none">
-    <div class="feed-empty-icon">📊</div>
-    <div class="feed-empty-title">Tidak ada sinyal saat ini</div>
-    <div class="feed-empty-sub">Semua 29 coin sudah di-scan. Tidak ada yang memenuhi kriteria entry saat ini.</div>
-  </div>
-</main>
-</div>
-
-<!-- ══ TAB 2: DETAIL COIN ══ -->
-<div class="tab-panel" id="tab-detail">
 <main>
   <div id="error-box" class="error-msg" style="display:none"></div>
 
-  <!-- Coin + TF selector -->
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:12px">
-    <div class="detail-coin-selector" id="coin-selector"></div>
+  <div class="selector-row">
+    <div class="coin-selector" id="coin-selector"></div>
     <div class="tf-selector" id="tf-selector"></div>
   </div>
 
-  <!-- Price Hero -->
   <div class="price-hero" id="price-hero">
     <div>
       <div class="price-coin" id="price-pair">--/USDT</div>
@@ -340,7 +176,7 @@ main{max-width:1320px;margin:0 auto;padding:1.25rem}
     </div>
   </div>
 
-  <!-- Info Banner -->
+  <!-- INFO BANNER -->
   <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:.65rem 1.25rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem">
     <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap">
       <div style="display:flex;align-items:center;gap:.4rem">
@@ -355,50 +191,98 @@ main{max-width:1320px;margin:0 auto;padding:1.25rem}
     </div>
     <div style="display:flex;align-items:center;gap:.4rem">
       <span style="width:6px;height:6px;border-radius:50%;background:#10b981;display:inline-block;animation:pulse 2s infinite"></span>
-      <span style="font-family:var(--font-mono);font-size:9px;color:var(--text3)">Auto-refresh</span>
+      <span style="font-family:var(--font-mono);font-size:9px;color:var(--text3)">Auto-refresh setiap</span>
       <span style="font-family:var(--font-mono);font-size:10px;font-weight:700;color:#10b981">60 detik</span>
     </div>
   </div>
 
-  <!-- Signal Cards Grid (LONG + SHORT) -->
-  <div id="signal-cards-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;align-items:start">
-    <div class="verdict-card loading" id="verdict-card" style="margin-bottom:0">
-      <div class="verdict-top">
-        <div>
-          <div style="font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:4px">Sinyal LONG · Spot &amp; Derivatif</div>
-          <div class="verdict-label loading" id="verdict-label"><span class="spinner"></span>Menghitung...</div>
-        </div>
-        <div style="display:flex;align-items:baseline;gap:4px">
-          <span class="score-num" id="score-num">--</span>
-          <span class="score-denom">/ 11 poin (min 6)</span>
-        </div>
+  <div id="signal-cards-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.5rem;align-items:start">
+
+  <div class="verdict-card loading" id="verdict-card" style="margin-bottom:0">
+    <div class="verdict-top">
+      <div>
+        <div style="font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:4px">Sinyal LONG · Spot &amp; Derivatif</div>
+        <div class="verdict-label loading" id="verdict-label"><span class="spinner"></span>Menghitung indikator...</div>
       </div>
-      <div id="market-tags" style="display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap"></div>
-      <div class="score-bar-wrap"><div class="score-bar neutral" id="score-bar" style="width:0%"></div></div>
-      <div id="entry-section">
-        <div class="entry-grid" style="grid-template-columns:repeat(4,1fr)">
-          <div class="entry-cell" style="border-color:rgba(34,197,94,.3)"><div class="entry-lbl" style="color:#4ade80">Entry Long</div><div class="entry-val" id="e-entry" style="color:#4ade80">--</div><div class="entry-sub" id="e-entry-sub">Harga sekarang</div></div>
-          <div class="entry-cell" style="border-color:rgba(99,102,241,.3)"><div class="entry-lbl" style="color:#a5b4fc">Entry Limit</div><div class="entry-val" id="e-limit" style="color:#a5b4fc">--</div><div class="entry-sub" id="e-limit-sub">−0.5× ATR</div></div>
-          <div class="entry-cell sl"><div class="entry-lbl">Stop Loss</div><div class="entry-val" id="e-sl">--</div><div class="entry-sub" id="e-sl-sub">--</div></div>
-          <div class="entry-cell t1"><div class="entry-lbl">Target 1</div><div class="entry-val" id="e-t1">--</div><div class="entry-sub" id="e-t1-sub">--</div></div>
-          <div class="entry-cell t2"><div class="entry-lbl">Target 2</div><div class="entry-val" id="e-t2">--</div><div class="entry-sub" id="e-t2-sub">--</div></div>
-          <div class="entry-cell t3"><div class="entry-lbl">Target 3</div><div class="entry-val" id="e-t3">--</div><div class="entry-sub" id="e-t3-sub">--</div></div>
-          <div class="entry-cell t3"><div class="entry-lbl">Target 4</div><div class="entry-val" id="e-t4">--</div><div class="entry-sub" id="e-t4-sub">--</div></div>
-          <div class="entry-cell t3"><div class="entry-lbl">Target 5</div><div class="entry-val" id="e-t5">--</div><div class="entry-sub" id="e-t5-sub">--</div></div>
-        </div>
-        <div id="signal-warning" style="display:none;margin-top:.75rem;padding:.75rem 1rem;border-radius:8px;font-size:12px"></div>
-        <div id="signal-confirm" style="display:none;margin-top:.75rem;padding:.75rem 1rem;border-radius:8px;font-size:12px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);color:#4ade80"></div>
-      </div>
-      <div id="hold-section" style="display:none;text-align:center;padding:2rem">
-        <div style="font-size:28px;margin-bottom:.5rem">📈</div>
-        <div style="font-weight:600;font-size:15px;color:var(--text);margin-bottom:.25rem">Tidak ada setup LONG saat ini</div>
-        <div style="font-size:12px;color:var(--text3)">Tunggu hingga ada breakout valid,<br>semua 5 hard filter lolos, dan score ≥ 6/11.</div>
+      <div style="display:flex;align-items:baseline;gap:4px">
+        <span class="score-num" id="score-num">--</span>
+        <span class="score-denom">/ 10 poin (min 6)</span>
       </div>
     </div>
-    <div class="verdict-card neutral" id="sell-card" style="display:none;margin-bottom:0"></div>
+    <div id="market-tags" style="display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap"></div>
+    <div class="score-bar-wrap"><div class="score-bar neutral" id="score-bar" style="width:0%"></div></div>
+    <div id="entry-section">
+      <div class="entry-grid" style="grid-template-columns:repeat(4,1fr)">
+        <div class="entry-cell" style="border-color:rgba(34,197,94,.3)"><div class="entry-lbl" style="color:#4ade80">Entry Long</div><div class="entry-val" id="e-entry" style="color:#4ade80">--</div><div class="entry-sub" id="e-entry-sub">Harga sekarang</div></div>
+        <div class="entry-cell" style="border-color:rgba(99,102,241,.3)"><div class="entry-lbl" style="color:#a5b4fc">Entry Limit</div><div class="entry-val" id="e-limit" style="color:#a5b4fc">--</div><div class="entry-sub" id="e-limit-sub">−0.5× ATR · lebih optimal</div></div>
+        <div class="entry-cell sl"><div class="entry-lbl">Stop Loss</div><div class="entry-val" id="e-sl">--</div><div class="entry-sub" id="e-sl-sub">--</div></div>
+        <div class="entry-cell t1"><div class="entry-lbl">Target 1</div><div class="entry-val" id="e-t1">--</div><div class="entry-sub" id="e-t1-sub">--</div></div>
+        <div class="entry-cell t2"><div class="entry-lbl">Target 2</div><div class="entry-val" id="e-t2">--</div><div class="entry-sub" id="e-t2-sub">--</div></div>
+        <div class="entry-cell t3"><div class="entry-lbl">Target 3</div><div class="entry-val" id="e-t3">--</div><div class="entry-sub" id="e-t3-sub">--</div></div>
+        <div class="entry-cell t3"><div class="entry-lbl">Target 4</div><div class="entry-val" id="e-t4">--</div><div class="entry-sub" id="e-t4-sub">--</div></div>
+        <div class="entry-cell t3"><div class="entry-lbl">Target 5</div><div class="entry-val" id="e-t5">--</div><div class="entry-sub" id="e-t5-sub">--</div></div>
+      </div>
+      <div id="signal-warning" style="display:none;margin-top:.75rem;padding:.75rem 1rem;border-radius:8px;font-size:12px"></div>
+      <div id="signal-confirm" style="display:none;margin-top:.75rem;padding:.75rem 1rem;border-radius:8px;font-size:12px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);color:#4ade80"></div>
+    </div>
+    <div id="hold-section" style="display:none;text-align:center;padding:2rem">
+      <div style="font-size:28px;margin-bottom:.5rem">📈</div>
+      <div style="font-weight:600;font-size:15px;color:var(--text);margin-bottom:.25rem">Tidak ada setup LONG saat ini</div>
+      <div style="font-size:12px;color:var(--text3)">Tunggu hingga ada breakout + retest hold yang valid,<br>semua 6 hard filter lolos, dan score ≥ 6/10.</div>
+    </div>
   </div>
 
-  <!-- Chart -->
+  <!-- SELL SIGNAL CARD -->
+  <div class="verdict-card sell" id="sell-card" style="display:none;margin-bottom:0">
+    <div class="verdict-top">
+      <div>
+        <div style="font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:4px">Sinyal SHORT · Derivatif</div>
+        <div class="verdict-label sell" id="sell-verdict-label">JUAL</div>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:4px">
+        <span class="score-num" id="sell-score-num">--</span>
+        <span class="score-denom">/ 10 poin (min 6)</span>
+      </div>
+    </div>
+    <div id="sell-market-tags" style="display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap"></div>
+    <div class="score-bar-wrap"><div class="score-bar sell" id="sell-score-bar" style="width:0%"></div></div>
+    <div class="entry-grid" style="grid-template-columns:repeat(4,1fr)">
+      <div class="entry-cell" style="border-color:rgba(239,68,68,.3)">
+        <div class="entry-lbl" style="color:#f87171">Entry Short</div>
+        <div class="entry-val" id="s-breakdown" style="color:#f87171">--</div>
+        <div class="entry-sub" id="s-breakdown-sub">Harga sekarang</div>
+      </div>
+      <div class="entry-cell" style="border-color:rgba(99,102,241,.3)">
+        <div class="entry-lbl" style="color:#a5b4fc">Entry Limit</div>
+        <div class="entry-val" id="s-entry-limit" style="color:#a5b4fc">--</div>
+        <div class="entry-sub" id="s-entry-limit-sub">+0.5× ATR · lebih optimal</div>
+      </div>
+      <div class="entry-cell sl">
+        <div class="entry-lbl">Stop Loss</div>
+        <div class="entry-val" id="s-sl">--</div>
+        <div class="entry-sub" id="s-sl-sub">--</div>
+      </div>
+      <div class="entry-cell t1">
+        <div class="entry-lbl">Target 1</div>
+        <div class="entry-val" id="s-t3">--</div>
+        <div class="entry-sub" id="s-t3-sub">--</div>
+      </div>
+    </div>
+    <div style="margin-top:.75rem">
+      <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Target SHORT</div>
+      <div class="entry-grid" style="grid-template-columns:repeat(5,1fr)">
+        <div class="entry-cell"><div class="entry-lbl">Target 1</div><div class="entry-val" id="s-t1">--</div><div class="entry-sub" id="s-t1-sub">−3× ATR</div></div>
+        <div class="entry-cell"><div class="entry-lbl">Target 2</div><div class="entry-val" id="s-t2">--</div><div class="entry-sub" id="s-t2-sub">−6× ATR</div></div>
+        <div class="entry-cell"><div class="entry-lbl">Target 3</div><div class="entry-val" id="s-t3-detail">--</div><div class="entry-sub" id="s-t3-detail-sub">−9× ATR</div></div>
+        <div class="entry-cell"><div class="entry-lbl">Target 4</div><div class="entry-val" id="s-t4">--</div><div class="entry-sub" id="s-t4-sub">−12× ATR</div></div>
+        <div class="entry-cell"><div class="entry-lbl">Target 5</div><div class="entry-val" id="s-t5">--</div><div class="entry-sub" id="s-t5-sub">−15× ATR</div></div>
+      </div>
+    </div>
+    <div id="sell-warning-box" style="margin-top:.75rem;padding:.75rem 1rem;border-radius:8px;font-size:12px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#fca5a5;display:none"></div>
+  </div>
+
+  </div><!-- end signal-cards-grid -->
+
   <div class="section-title" id="chart-title">Grafik Harga</div>
   <div class="chart-wrap">
     <div class="chart-meta">
@@ -406,56 +290,52 @@ main{max-width:1320px;margin:0 auto;padding:1.25rem}
       <div class="chart-legend">
         <span class="leg-item"><span class="leg-line" style="background:#e8eaf0"></span>Harga</span>
         <span class="leg-item"><span class="leg-line" style="background:#6366f1"></span>Upper BB</span>
-        <span class="leg-item"><span class="leg-line" style="background:rgba(139,144,158,.4)"></span>Mid BB</span>
+        <span class="leg-item"><span class="leg-line" style="background:rgba(139,144,158,.4);border-top:1px dashed #555"></span>Mid BB</span>
         <span class="leg-item"><span class="leg-line" style="background:#22c55e"></span>Lower BB</span>
         <span class="leg-item"><span class="leg-line" style="background:#f59e0b"></span>EMA20</span>
-        <span class="leg-item"><span class="leg-line" style="background:#fb923c"></span>EMA36</span>
+        <span class="leg-item"><span class="leg-line" style="background:#fb923c"></span>EMA50</span>
       </div>
     </div>
-    <div style="position:relative;height:240px"><canvas id="priceChart"></canvas></div>
-    <div style="margin-top:1rem;position:relative;height:80px"><canvas id="macdChart"></canvas></div>
+    <div style="position:relative;height:260px"><canvas id="priceChart" role="img" aria-label="Grafik harga dengan Bollinger Bands dan EMA">Grafik harga dengan indikator teknikal.</canvas></div>
+    <div style="margin-top:1rem;position:relative;height:80px"><canvas id="macdChart" role="img" aria-label="MACD Histogram">MACD Histogram.</canvas></div>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-top:.5rem">
       <span style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em">MACD (12,26,9) — Histogram</span>
       <span style="font-family:var(--font-mono);font-size:9px" id="macd-signal-txt"></span>
     </div>
   </div>
 
-  <!-- Scoring -->
   <div class="section-title">10 Aspek Scoring</div>
   <div class="ind-grid" id="ind-grid">
-    <div class="ind-card"><div class="ind-top"><span class="ind-name">RSI (17)</span><span class="ind-badge wait" id="b-rsi">--</span></div><div class="ind-value" id="v-rsi">--</div><div class="ind-desc" id="d-rsi">Menghitung...</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-rsi" style="width:0%;background:var(--buy)"></div></div></div>
+    <div class="ind-card"><div class="ind-top"><span class="ind-name">RSI (14)</span><span class="ind-badge wait" id="b-rsi">--</span></div><div class="ind-value" id="v-rsi">--</div><div class="ind-desc" id="d-rsi">Menghitung...</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-rsi" style="width:0%;background:var(--buy)"></div></div></div>
     <div class="ind-card"><div class="ind-top"><span class="ind-name">MACD Cross</span><span class="ind-badge wait" id="b-macd">--</span></div><div class="ind-value" id="v-macd">--</div><div class="ind-desc" id="d-macd">Menghitung...</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-macd" style="width:0%;background:var(--buy)"></div></div></div>
     <div class="ind-card"><div class="ind-top"><span class="ind-name">Breakout</span><span class="ind-badge wait" id="b-breakout">--</span></div><div class="ind-value" id="v-breakout">--</div><div class="ind-desc" id="d-breakout">Menghitung...</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-breakout" style="width:0%;background:var(--buy)"></div></div></div>
-    <div class="ind-card"><div class="ind-top"><span class="ind-name">Retest Hold (+2)</span><span class="ind-badge wait" id="b-retest">--</span></div><div class="ind-value" id="v-retest">--</div><div class="ind-desc" id="d-retest">Menghitung...</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-retest" style="width:0%;background:var(--buy)"></div></div></div>
-    <div class="ind-card"><div class="ind-top"><span class="ind-name">ADX (14) >34</span><span class="ind-badge wait" id="b-adx">--</span></div><div class="ind-value" id="v-adx">--</div><div class="ind-desc" id="d-adx">Menghitung...</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-adx" style="width:0%;background:var(--neutral)"></div></div></div>
+    <div class="ind-card"><div class="ind-top"><span class="ind-name">Retest Hold</span><span class="ind-badge wait" id="b-retest">--</span></div><div class="ind-value" id="v-retest">--</div><div class="ind-desc" id="d-retest">Menghitung...</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-retest" style="width:0%;background:var(--buy)"></div></div></div>
+    <div class="ind-card"><div class="ind-top"><span class="ind-name">ADX (14)</span><span class="ind-badge wait" id="b-adx">--</span></div><div class="ind-value" id="v-adx">--</div><div class="ind-desc" id="d-adx">Menghitung...</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-adx" style="width:0%;background:var(--neutral)"></div></div></div>
     <div class="ind-card"><div class="ind-top"><span class="ind-name">Struktur HH/HL</span><span class="ind-badge wait" id="b-structure">--</span></div><div class="ind-value" id="v-structure">--</div><div class="ind-desc" id="d-structure">Menghitung...</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-structure" style="width:0%;background:var(--buy)"></div></div></div>
     <div class="ind-card"><div class="ind-top"><span class="ind-name">Volume vs MA</span><span class="ind-badge wait" id="b-vol">--</span></div><div class="ind-value" id="v-vol">--</div><div class="ind-desc" id="d-vol">Menghitung...</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-vol" style="width:0%;background:var(--buy)"></div></div></div>
-    <div class="ind-card"><div class="ind-top"><span class="ind-name">Trend Coin 1H</span><span class="ind-badge wait" id="b-trend-coin">--</span></div><div class="ind-value" id="v-trend-coin">--</div><div class="ind-desc" id="d-trend-coin">EMA36 vs EMA205</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-trend-coin" style="width:0%;background:var(--buy)"></div></div></div>
-    <div class="ind-card"><div class="ind-top"><span class="ind-name">4H Bullish</span><span class="ind-badge wait" id="b-tf4h">--</span></div><div class="ind-value" id="v-tf4h">--</div><div class="ind-desc" id="d-tf4h">EMA36 > EMA205 di 4H</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-tf4h" style="width:0%;background:var(--buy)"></div></div></div>
-    <div class="ind-card"><div class="ind-top"><span class="ind-name">1D Bullish</span><span class="ind-badge wait" id="b-tf1d">--</span></div><div class="ind-value" id="v-tf1d">--</div><div class="ind-desc" id="d-tf1d">EMA36 > EMA205 di 1D</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-tf1d" style="width:0%;background:var(--buy)"></div></div></div>
-    <div class="ind-card"><div class="ind-top"><span class="ind-name">Fear &amp; Greed</span><span class="ind-badge wait" id="b-fg">--</span></div><div class="ind-value" id="v-fg">--</div><div class="ind-desc" id="d-fg">Memuat sentimen...</div><div class="ind-note" id="fg-global-note"></div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-fg" style="width:0%;background:var(--neutral)"></div></div></div>
+    <div class="ind-card"><div class="ind-top"><span class="ind-name">Trend Coin 1H</span><span class="ind-badge wait" id="b-trend-coin">--</span></div><div class="ind-value" id="v-trend-coin">--</div><div class="ind-desc" id="d-trend-coin">EMA50 vs EMA200</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-trend-coin" style="width:0%;background:var(--buy)"></div></div></div>
+    <div class="ind-card"><div class="ind-top"><span class="ind-name">4H Bullish 🆕</span><span class="ind-badge wait" id="b-tf4h">--</span></div><div class="ind-value" id="v-tf4h">--</div><div class="ind-desc" id="d-tf4h">EMA50 > EMA200 di 4H</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-tf4h" style="width:0%;background:var(--buy)"></div></div></div>
+    <div class="ind-card"><div class="ind-top"><span class="ind-name">1D Bullish 🆕</span><span class="ind-badge wait" id="b-tf1d">--</span></div><div class="ind-value" id="v-tf1d">--</div><div class="ind-desc" id="d-tf1d">EMA50 > EMA200 di 1D</div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-tf1d" style="width:0%;background:var(--buy)"></div></div></div>
+    <div class="ind-card"><div class="ind-top"><span class="ind-name">Fear & Greed</span><span class="ind-badge wait" id="b-fg">--</span></div><div class="ind-value" id="v-fg">--</div><div class="ind-desc" id="d-fg">Memuat sentimen...</div><div class="ind-note" id="fg-global-note"></div><div class="ind-mini-bar"><div class="ind-mini-fill" id="bar-fg" style="width:0%;background:var(--neutral)"></div></div></div>
   </div>
 
-  <!-- Hard Filter -->
   <div class="section-title">Hard Filter Status</div>
   <div class="ind-grid" id="filter-grid">
     <div class="ind-card"><div class="ind-top"><span class="ind-name">BTC Context</span><span class="ind-badge wait" id="b-btc">--</span></div><div class="ind-value" id="v-btc">--</div><div class="ind-desc" id="d-btc">Memuat...</div></div>
-    <div class="ind-card"><div class="ind-top"><span class="ind-name">Price > EMA36</span><span class="ind-badge wait" id="b-price-trend">--</span></div><div class="ind-value" id="v-price-trend">--</div><div class="ind-desc" id="d-price-trend">Harga vs EMA36</div></div>
-    <div class="ind-card"><div class="ind-top"><span class="ind-name">ADX > 25</span><span class="ind-badge wait" id="b-adx-filter">--</span></div><div class="ind-value" id="v-adx-filter">--</div><div class="ind-desc" id="d-adx-filter">Momentum filter</div></div>
-    <div class="ind-card"><div class="ind-top"><span class="ind-name">No Conflict</span><span class="ind-badge wait" id="b-conflict">--</span></div><div class="ind-value" id="v-conflict">--</div><div class="ind-desc" id="d-conflict">SellScore ≤ 2</div></div>
+    <div class="ind-card"><div class="ind-top"><span class="ind-name">Price > EMA50</span><span class="ind-badge wait" id="b-price-trend">--</span></div><div class="ind-value" id="v-price-trend">--</div><div class="ind-desc" id="d-price-trend">Harga vs EMA50</div></div>
+    <div class="ind-card"><div class="ind-top"><span class="ind-name">ADX > 20</span><span class="ind-badge wait" id="b-adx-filter">--</span></div><div class="ind-value" id="v-adx-filter">--</div><div class="ind-desc" id="d-adx-filter">Momentum filter</div></div>
+    <div class="ind-card"><div class="ind-top"><span class="ind-name">No Conflict</span><span class="ind-badge wait" id="b-conflict">--</span></div><div class="ind-value" id="v-conflict">--</div><div class="ind-desc" id="d-conflict">SellScore = 0</div></div>
     <div class="ind-card"><div class="ind-top"><span class="ind-name">Breakout ✓</span><span class="ind-badge wait" id="b-bo-filter">--</span></div><div class="ind-value" id="v-bo-filter">--</div><div class="ind-desc" id="d-bo-filter">Hard filter</div></div>
-    <div class="ind-card"><div class="ind-top"><span class="ind-name">Retest Hold (+2)</span><span class="ind-badge wait" id="b-rt-filter">--</span></div><div class="ind-value" id="v-rt-filter">--</div><div class="ind-desc" id="d-rt-filter">Scoring opsional</div></div>
+    <div class="ind-card"><div class="ind-top"><span class="ind-name">Retest Hold ✓</span><span class="ind-badge wait" id="b-rt-filter">--</span></div><div class="ind-value" id="v-rt-filter">--</div><div class="ind-desc" id="d-rt-filter">Hard filter</div></div>
   </div>
 
-  <!-- Fear & Greed -->
-  <div class="section-title">Fear &amp; Greed — Dual Source</div>
+  <div class="section-title">Fear & Greed — Dual Source</div>
   <div class="fg-dual">
     <div class="fg-card"><div class="fg-source">Alternative.me</div><div class="fg-num" id="fg-alt-num">--</div><div class="fg-label" id="fg-alt-lbl">Memuat...</div><div class="fg-bar"><div class="fg-fill" id="fg-alt-bar" style="width:0%"></div></div></div>
     <div class="fg-card"><div class="fg-source">CoinMarketCap</div><div class="fg-num" id="fg-cmc-num">--</div><div class="fg-label" id="fg-cmc-lbl">Memuat...</div><div class="fg-bar"><div class="fg-fill" id="fg-cmc-bar" style="width:0%"></div></div><div id="fg-cmc-note" style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-top:6px"></div></div>
     <div class="fg-card fg-consensus"><div class="fg-source">Konsensus</div><div class="fg-num" id="fg-con-num">--</div><div class="fg-label" id="fg-con-lbl">--</div><div class="fg-bar"><div class="fg-fill" id="fg-con-bar" style="width:0%;background:#6366f1"></div></div><div id="fg-diverge" style="margin-top:6px"></div></div>
   </div>
 
-  <!-- Multi-Timeframe -->
   <div class="section-title">Analisis Multi-Timeframe</div>
   <div class="tf-table-wrap">
     <table class="tf-table">
@@ -464,51 +344,25 @@ main{max-width:1320px;margin:0 auto;padding:1.25rem}
     </table>
   </div>
 </main>
-</div>
 
-<!-- ══ TAB 3: RIWAYAT ══ -->
-<div class="tab-panel" id="tab-history">
-<main>
-  <div class="history-header">
-    <div class="feed-title">Riwayat Sinyal</div>
-    <button onclick="loadHistory()" style="font-family:var(--font-mono);font-size:10px;padding:5px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg2);color:var(--text2);cursor:pointer">Refresh</button>
-  </div>
-
-  <!-- Stats -->
-  <div class="history-stats" id="history-stats">
-    <div class="hist-stat"><div class="hist-stat-val" id="hs-total">--</div><div class="hist-stat-lbl">Total</div></div>
-    <div class="hist-stat"><div class="hist-stat-val" style="color:var(--buy)" id="hs-wins">--</div><div class="hist-stat-lbl">Win</div></div>
-    <div class="hist-stat"><div class="hist-stat-val" style="color:var(--sell)" id="hs-losses">--</div><div class="hist-stat-lbl">Loss</div></div>
-    <div class="hist-stat"><div class="hist-stat-val" style="color:var(--neutral)" id="hs-winrate">--</div><div class="hist-stat-lbl">Win Rate</div></div>
-  </div>
-
-  <!-- List -->
-  <div class="history-list" id="history-list">
-    <div class="hist-empty">
-      <span class="spinner"></span> Memuat riwayat dari Cloudflare KV...
-    </div>
-  </div>
-</main>
-</div>
-
-<!-- Footer -->
-<footer style="border-top:1px solid var(--border);padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+<footer>
   <div style="display:flex;align-items:center;gap:8px">
-    <svg width="16" height="16" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="7" fill="#22c55e" fill-opacity=".15"/><polyline points="4,20 9,13 13,16 18,8 24,11" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="24" cy="11" r="2" fill="#22c55e"/></svg>
-    <span style="font-family:var(--font-mono);font-size:10px;font-weight:500;color:var(--text2)">CTSA Pro <span id="app-version">v2.0</span></span>
-    <span style="font-family:var(--font-mono);font-size:10px;color:var(--text3)">·</span>
-    <span style="font-family:var(--font-mono);font-size:10px;color:var(--text3)">Parameter Trial 1546 · Binance API · Bukan saran investasi · DYOR</span>
+    <svg width="16" height="16" viewBox="0 0 28 28" fill="none">
+      <rect width="28" height="28" rx="7" fill="#22c55e" fill-opacity=".15"/>
+      <polyline points="4,20 9,13 13,16 18,8 24,11" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <circle cx="24" cy="11" r="2" fill="#22c55e"/>
+    </svg>
+    <span class="footer-note" style="font-weight:500;color:var(--text2)">CTSA Pro <span id="app-version">v1.1</span></span>
+    <span class="footer-note">·</span>
+    <span class="footer-note">Data: Binance API · Fear&Greed: Alternative.me + CMC (info only) · Breakout+Retest System v2.0 · Bukan saran investasi · DYOR</span>
   </div>
-  <span style="font-family:var(--font-mono);font-size:10px;color:var(--text3)">RSI(17) · MACD · BB · ADX · ATR · Fear&amp;Greed</span>
+  <span class="footer-note">RSI · MACD · BB · ADX · OBV · Fear&Greed · ATR</span>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
 const APP_VERSION = '2.0';
 document.getElementById('app-version').textContent = 'v' + APP_VERSION;
-
-
-// APP_VERSION already declared above
 
 // ── CONFIG ──────────────────────────────────────────────────────────
 const COINS = [
@@ -541,9 +395,43 @@ let activeTF = TFS[0]; // default 1H
 let priceChartInst = null;
 let macdChartInst = null;
 
-// Clock handled by new updateClock below
+// ── CLOCK ────────────────────────────────────────────────────────────
+function updateClock(){
+  document.getElementById('clock').textContent =
+    new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+setInterval(updateClock,1000); updateClock();
 
-// buildSelectors handled by new version below
+// ── BUILD SELECTORS ──────────────────────────────────────────────────
+function buildSelectors(){
+  const cs = document.getElementById('coin-selector');
+  COINS.forEach((c,i)=>{
+    const b = document.createElement('button');
+    b.className = 'coin-btn' + (i===0?' active':'');
+    b.textContent = c.sym;
+    b.onclick = ()=>{
+      document.querySelectorAll('.coin-btn').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      activeCoin = c;
+      loadAll();
+    };
+    cs.appendChild(b);
+  });
+
+  const ts = document.getElementById('tf-selector');
+  TFS.forEach((t,i)=>{
+    const b = document.createElement('button');
+    b.className = 'tf-btn' + (i===0?' active':'');
+    b.textContent = t.label;
+    b.onclick = ()=>{
+      document.querySelectorAll('.tf-btn').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      activeTF = t;
+      loadAll();
+    };
+    ts.appendChild(b);
+  });
+}
 
 // ── PRICE FORMAT ─────────────────────────────────────────────────────
 function fmt(n){
@@ -570,15 +458,12 @@ function proxyFetch(url, opts={}){
 // ── BINANCE FETCH ────────────────────────────────────────────────────
 async function fetchKlines(symbol, interval, limit=200){
   const url = `https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`;
-  const controller = new AbortController();
-  const tid = setTimeout(()=>controller.abort(), 8000);
-  try{
-    const r = await proxyFetch(url, {signal:controller.signal});
-    clearTimeout(tid);
-    if(!r.ok) throw new Error(`Binance error ${r.status}`);
-    const data = await r.json();
-    return data.map(k=>({t:k[0],o:+k[1],h:+k[2],l:+k[3],c:+k[4],v:+k[5]}));
-  }catch(e){ clearTimeout(tid); throw e; }
+  const r = await proxyFetch(url);
+  if(!r.ok) throw new Error(`Binance error ${r.status}`);
+  const data = await r.json();
+  return data.map(k=>({
+    t: k[0], o:+k[1], h:+k[2], l:+k[3], c:+k[4], v:+k[5]
+  }));
 }
 
 async function fetch24h(symbol){
@@ -815,7 +700,7 @@ function computeSignals(klines, fg, btcKlines1D, klines4H, klines1D){
   const price   = closes[closes.length-1];
 
   // ── INDICATORS ──────────────────────────────────────────────────────
-  const rsi      = calcRSI(closes, 17);
+  const rsi      = calcRSI(closes);
   const rsiNow   = rsi[rsi.length-1];
 
   const {macdLine, signalLine, hist} = calcMACD(closes);
@@ -847,26 +732,26 @@ function computeSignals(klines, fg, btcKlines1D, klines4H, klines1D){
   const atrNow   = atr[atr.length-1];
 
   // EMA50 & EMA200 coin
-  const ema50coin  = calcEMA(closes, 36);
-  const ema200coin = calcEMA(closes, 205);
+  const ema50coin  = calcEMA(closes, 50);
+  const ema200coin = calcEMA(closes, 200);
   const ema50Now   = ema50coin[ema50coin.length-1];
   const ema200Now  = ema200coin[ema200coin.length-1];
 
   // Volume MA20
-  const volMA20 = vols.slice(-23).reduce((a,b)=>a+b,0)/23;
+  const volMA20 = vols.slice(-20).reduce((a,b)=>a+b,0)/20;
   const volNow  = vols[vols.length-1];
 
   // Breakout & Retest
-  const breakoutResult = detectBreakout(closes, highs, vols, 28, 12);
+  const breakoutResult = detectBreakout(closes, highs, vols, 20, 10);
   const breakoutFound  = breakoutResult.found;
   const breakoutLevel  = breakoutResult.level;
   const breakoutIdx    = breakoutResult.candleIdx;
   const retestHold     = breakoutFound
-    ? detectRetestHold(closes, lows, highs, breakoutIdx, breakoutLevel, 0.00876, 7)
+    ? detectRetestHold(closes, lows, highs, breakoutIdx, breakoutLevel, 0.005, 10)
     : false;
 
   // Structure HH/HL
-  const structureBullish = detectStructure(highs, lows, 26);
+  const structureBullish = detectStructure(highs, lows, 20);
 
   // BTC 1D EMA50 & EMA200
   let btcBullish = true; // default allow if no BTC data
@@ -894,9 +779,10 @@ function computeSignals(klines, fg, btcKlines1D, klines4H, klines1D){
   const hardFilters = {
     btcBullish,
     priceTrend:   price > ema50Now,
-    momentum:     adxNow > 25,
-    noConflict:   sellScore <= 2,
+    momentum:     adxNow > 20,
+    noConflict:   sellScore <= 1,
     breakout:     breakoutFound,
+    retestHold,
   };
   const allFiltersPass = Object.values(hardFilters).every(v => v === true);
 
@@ -905,11 +791,11 @@ function computeSignals(klines, fg, btcKlines1D, klines4H, klines1D){
   const scoreDetail = {};
 
   scoreDetail.breakout    = breakoutFound   ? 1 : 0; score += scoreDetail.breakout;
-  scoreDetail.retestHold  = retestHold      ? 2 : 0; score += scoreDetail.retestHold;
-  scoreDetail.rsi         = (rsiNow>=54 && rsiNow<=65) ? 1 : 0; score += scoreDetail.rsi;
+  scoreDetail.retestHold  = retestHold      ? 1 : 0; score += scoreDetail.retestHold;
+  scoreDetail.rsi         = (rsiNow>=55 && rsiNow<=68) ? 1 : 0; score += scoreDetail.rsi;
   scoreDetail.macdCross   = macdCrossUp     ? 1 : 0; score += scoreDetail.macdCross;
   scoreDetail.volume      = volNow > volMA20 ? 1 : 0; score += scoreDetail.volume;
-  scoreDetail.adx         = adxNow > 34     ? 1 : 0; score += scoreDetail.adx;
+  scoreDetail.adx         = adxNow > 25     ? 1 : 0; score += scoreDetail.adx;
   scoreDetail.structure   = structureBullish ? 1 : 0; score += scoreDetail.structure;
   scoreDetail.trendCoin   = ema50Now > ema200Now ? 1 : 0; score += scoreDetail.trendCoin;
 
@@ -917,7 +803,7 @@ function computeSignals(klines, fg, btcKlines1D, klines4H, klines1D){
   scoreDetail.tf4h = 0;
   if(klines4H && klines4H.length >= 200){
     const c4 = klines4H.map(k=>k.c);
-    const e50_4h = calcEMA(c4, 36); const e200_4h = calcEMA(c4, 205);
+    const e50_4h = calcEMA(c4, 50); const e200_4h = calcEMA(c4, 200);
     if(e50_4h[e50_4h.length-1] > e200_4h[e200_4h.length-1]) { scoreDetail.tf4h = 1; }
   }
   score += scoreDetail.tf4h;
@@ -926,7 +812,7 @@ function computeSignals(klines, fg, btcKlines1D, klines4H, klines1D){
   scoreDetail.tf1d = 0;
   if(klines1D && klines1D.length >= 200){
     const c1d = klines1D.map(k=>k.c);
-    const e50_1d = calcEMA(c1d, 36); const e200_1d = calcEMA(c1d, 205);
+    const e50_1d = calcEMA(c1d, 50); const e200_1d = calcEMA(c1d, 200);
     if(e50_1d[e50_1d.length-1] > e200_1d[e200_1d.length-1]) { scoreDetail.tf1d = 1; }
   }
   score += scoreDetail.tf1d;
@@ -950,19 +836,19 @@ function computeSignals(klines, fg, btcKlines1D, klines4H, klines1D){
 
   const isBuy       = dir === 'buy';
   // computeSignals hanya untuk BELI — SL selalu di bawah breakout level
-  const sl          = Math.min(price - 1.186*atrNow, (breakoutLevel || price) - 0.5*atrNow);
-  const t1          = isBuy ? price + 2.4*atrNow : price - 2.4*atrNow;
-  const t2          = isBuy ? price + 4.8*atrNow : price - 4.8*atrNow;
-  const t3          = isBuy ? price + 7.2*atrNow : price - 7.2*atrNow;
-  const t4          = isBuy ? price + 9.6*atrNow : price - 9.6*atrNow;
-  const t5          = isBuy ? price + 12.0*atrNow : price - 12.0*atrNow;
+  const sl          = Math.min(price - 1.5*atrNow, (breakoutLevel || price) - 0.5*atrNow);
+  const t1          = isBuy ? price + 3.0*atrNow : price - 3.0*atrNow;
+  const t2          = isBuy ? price + 6.0*atrNow : price - 6.0*atrNow;
+  const t3          = isBuy ? price + 9.0*atrNow : price - 9.0*atrNow;
+  const t4          = isBuy ? price + 12.0*atrNow : price - 12.0*atrNow;
+  const t5          = isBuy ? price + 15.0*atrNow : price - 15.0*atrNow;
   const rr1         = (Math.abs(t1-price)/Math.abs(sl-price)).toFixed(1);
   const entryLimit  = isBuy ? price - 0.5*atrNow : price + 0.5*atrNow;
 
   return {
     price, atrNow,
-    rsi:  {val:rsiNow, badge: rsiNow>=54&&rsiNow<=65?'buy':rsiNow>70?'sell':'neutral',
-           desc: `RSI ${rsiNow.toFixed(1)} — ${rsiNow>=54&&rsiNow<=65?'Zona ideal entry (54–65)':rsiNow>70?'Overbought':'Belum di zona entry'}`},
+    rsi:  {val:rsiNow, badge: rsiNow>=55&&rsiNow<=68?'buy':rsiNow>70?'sell':'neutral',
+           desc: `RSI ${rsiNow.toFixed(1)} — ${rsiNow>=55&&rsiNow<=68?'Zona ideal entry (55–68)':rsiNow>70?'Overbought':'Belum di zona entry'}`},
     macd: {val:macdNow, hist:histNow, badge: macdCrossUp?'buy':macdCrossDown?'sell':'neutral',
            desc: macdCrossUp?'MACD Cross Up — momentum bullish terkonfirmasi':macdCrossDown?'MACD Cross Down — momentum bearish':'MACD belum cross',
            isCrossUp:macdCrossUp, isCrossDown:macdCrossDown},
@@ -979,7 +865,7 @@ function computeSignals(klines, fg, btcKlines1D, klines4H, klines1D){
     breakout:   {found:breakoutFound, level:breakoutLevel, desc: breakoutFound?`Breakout di ${fmt(breakoutLevel)}`:'Belum ada breakout'},
     retest:     {hold:retestHold, desc: retestHold?'Retest hold valid — buyer konfirmasi':'Belum ada retest valid'},
     structure:  {bullish:structureBullish, desc: structureBullish?'HH + HL — struktur bullish terkonfirmasi':'Struktur belum HH/HL'},
-    btcContext: {bullish:btcBullish, desc: btcBullish?'BTC bullish — EMA36 > EMA205':'BTC bearish — sinyal BELI diblokir'},
+    btcContext: {bullish:btcBullish, desc: btcBullish?'BTC bullish — EMA50 > EMA200':'BTC bearish — sinyal BELI diblokir'},
     hardFilters, allFiltersPass,
     scoreDetail, penaltyDetail,
     score, penalty, finalScore,
@@ -1004,14 +890,14 @@ function computeSignalShort(klines, btcKlines1D, klines4H, klines1D){
   const vols    = klines.map(k=>k.v);
   const price   = closes[closes.length-1];
 
-  const rsi    = calcRSI(closes, 17);
+  const rsi    = calcRSI(closes);
   const rsiNow = rsi[rsi.length-1];
 
   const {macdLine, signalLine, hist} = calcMACD(closes);
   const macdNow  = macdLine[macdLine.length-1];
   const sigNow   = signalLine[signalLine.length-1];
   const histNow  = hist[hist.length-1];
-  const histPrev = hist[hist.length-2] || 0;
+  const histPrev = hist[hist.length-2];
   const macdCrossUp   = macdNow > sigNow && histNow > 0 && histPrev <= 0;
   const macdCrossDown = macdNow < sigNow && histNow < 0 && histPrev >= 0;
 
@@ -1023,31 +909,31 @@ function computeSignalShort(klines, btcKlines1D, klines4H, klines1D){
   const atr    = calcATR(highs, lows, closes);
   const atrNow = atr[atr.length-1];
 
-  const ema50coin  = calcEMA(closes, 36);
-  const ema200coin = calcEMA(closes, 205);
+  const ema50coin  = calcEMA(closes, 50);
+  const ema200coin = calcEMA(closes, 200);
   const ema50Now   = ema50coin[ema50coin.length-1];
   const ema200Now  = ema200coin[ema200coin.length-1];
 
-  const volMA20 = vols.slice(-23).reduce((a,b)=>a+b,0)/23;
+  const volMA20 = vols.slice(-20).reduce((a,b)=>a+b,0)/20;
   const volNow  = vols[vols.length-1];
 
   // Breakdown & Retest Fail
-  const bdResult    = detectBreakdown(closes, lows, vols, 28, 12);
+  const bdResult    = detectBreakdown(closes, lows, vols, 20, 10);
   const breakdownFound  = bdResult.found;
   const breakdownLevel  = bdResult.level;
   const breakdownIdx    = bdResult.candleIdx || bdResult.idx;
   const retestFail      = breakdownFound
-    ? detectRetestFail(closes, highs, lows, breakdownIdx, breakdownLevel, 0.00876, 7)
+    ? detectRetestFail(closes, highs, lows, breakdownIdx, breakdownLevel, 0.005, 10)
     : false;
 
   // Structure LL/LH
-  const structureBearish = detectStructureBearish(highs, lows, 26);
+  const structureBearish = detectStructureBearish(highs, lows, 20);
 
   // BTC Bearish: BTC < EMA50 1D
   let btcBearish = false;
   if(btcKlines1D && btcKlines1D.length >= 50){
     const bc   = btcKlines1D.map(k=>k.c);
-    const be50 = calcEMA(bc, 36);
+    const be50 = calcEMA(bc, 50);
     btcBearish = bc[bc.length-1] < be50[be50.length-1];
   }
 
@@ -1064,10 +950,10 @@ function computeSignalShort(klines, btcKlines1D, klines4H, klines1D){
   // ── HARD FILTER JUAL ─────────────────────────────────────────────────
   const hardFilters = {
     priceBelowEMA: price < ema50Now,
-    momentum:      adxNow > 25,
+    momentum:      adxNow > 20,
     noConflict:    buyScore <= 1,
     breakdown:     breakdownFound,
-    // retestFail bukan hard filter — scoring +1
+    retestFail,
   };
   const allFiltersPass = Object.values(hardFilters).every(v => v === true);
 
@@ -1080,7 +966,7 @@ function computeSignalShort(klines, btcKlines1D, klines4H, klines1D){
   scoreDetail.rsi           = (rsiNow>=32&&rsiNow<=45)  ? 1 : 0; score += scoreDetail.rsi;
   scoreDetail.macdCross     = macdCrossDown             ? 1 : 0; score += scoreDetail.macdCross;
   scoreDetail.volume        = volNow > volMA20           ? 1 : 0; score += scoreDetail.volume;
-  scoreDetail.adx           = adxNow > 34               ? 1 : 0; score += scoreDetail.adx;
+  scoreDetail.adx           = adxNow > 25               ? 1 : 0; score += scoreDetail.adx;
   scoreDetail.structure     = structureBearish           ? 1 : 0; score += scoreDetail.structure;
   scoreDetail.trendCoin     = ema50Now < ema200Now       ? 1 : 0; score += scoreDetail.trendCoin;
   scoreDetail.btcBearish    = btcBearish                 ? 1 : 0; score += scoreDetail.btcBearish;
@@ -1090,7 +976,7 @@ function computeSignalShort(klines, btcKlines1D, klines4H, klines1D){
   let tf4hBearish = false;
   if(klines4H && klines4H.length >= 200){
     const c4 = klines4H.map(k=>k.c);
-    const e50_4h = calcEMA(c4,36), e200_4h = calcEMA(c4,205);
+    const e50_4h = calcEMA(c4,50), e200_4h = calcEMA(c4,200);
     tf4hBearish = e50_4h[e50_4h.length-1] < e200_4h[e200_4h.length-1];
     if(tf4hBearish){ scoreDetail.tf4h = 1; }
   }
@@ -1101,7 +987,7 @@ function computeSignalShort(klines, btcKlines1D, klines4H, klines1D){
   let tf1dBearish = false;
   if(klines1D && klines1D.length >= 200){
     const c1d = klines1D.map(k=>k.c);
-    const e50_1d = calcEMA(c1d,36), e200_1d = calcEMA(c1d,205);
+    const e50_1d = calcEMA(c1d,50), e200_1d = calcEMA(c1d,200);
     tf1dBearish = e50_1d[e50_1d.length-1] < e200_1d[e200_1d.length-1];
     if(tf1dBearish){ scoreDetail.tf1d = 1; }
   }
@@ -1123,12 +1009,12 @@ function computeSignalShort(klines, btcKlines1D, klines4H, klines1D){
     dir = 'sell';
   }
 
-  const sl         = Math.max(price + 1.186*atrNow, (breakdownLevel || price) + 0.5*atrNow);
-  const t1         = price - 2.4*atrNow;
-  const t2         = price - 4.8*atrNow;
-  const t3         = price - 7.2*atrNow;
-  const t4         = price - 9.6*atrNow;
-  const t5         = price - 12.0*atrNow;
+  const sl         = Math.max(price + 1.5*atrNow, (breakdownLevel || price) + 0.5*atrNow);
+  const t1         = price - 3.0*atrNow;
+  const t2         = price - 6.0*atrNow;
+  const t3         = price - 9.0*atrNow;
+  const t4         = price - 12.0*atrNow;
+  const t5         = price - 15.0*atrNow;
   const entryLimit = price + 0.5*atrNow;
   const rr1        = (Math.abs(t1-price)/Math.abs(sl-price)).toFixed(1);
   const accumHigh  = t1;
@@ -1284,7 +1170,7 @@ function updateUI(sig, fg, ticker){
 
   // Retest
   const rtHold = sig.retest.hold;
-  setBadge('b-retest', rtHold?'buy':'wait', rtHold?'✅ +2':'—');
+  setBadge('b-retest', rtHold?'buy':'wait', rtHold?'✅ +1':'—');
   document.getElementById('v-retest').textContent = rtHold ? 'Valid' : 'Belum';
   document.getElementById('d-retest').textContent = sig.retest.desc;
   document.getElementById('bar-retest').style.width = rtHold?'100%':'0%';
@@ -1316,8 +1202,8 @@ function updateUI(sig, fg, ticker){
   // Trend Coin 1H
   const tcOk = sig.scoreDetail.trendCoin > 0;
   setBadge('b-trend-coin', tcOk?'buy':'wait', tcOk?'✅ +1':'—');
-  document.getElementById('v-trend-coin').textContent = tcOk ? 'EMA36>EMA205' : 'EMA50<EMA200';
-  document.getElementById('d-trend-coin').textContent = tcOk ? 'Trend 1H bullish (EMA36>EMA205)' : 'Trend 1H belum bullish';
+  document.getElementById('v-trend-coin').textContent = tcOk ? 'EMA50>EMA200' : 'EMA50<EMA200';
+  document.getElementById('d-trend-coin').textContent = tcOk ? 'Trend 1H bullish' : 'Trend 1H belum bullish';
   document.getElementById('bar-trend-coin').style.width = tcOk?'100%':'0%';
   document.getElementById('bar-trend-coin').style.background = 'var(--buy)';
 
@@ -1325,7 +1211,7 @@ function updateUI(sig, fg, ticker){
   const tf4hOk = sig.scoreDetail.tf4h > 0;
   setBadge('b-tf4h', tf4hOk?'buy':'wait', tf4hOk?'✅ +1':'—');
   document.getElementById('v-tf4h').textContent = tf4hOk ? 'Bullish' : 'Belum';
-  document.getElementById('d-tf4h').textContent = tf4hOk ? 'EMA36 > EMA205 di 4H ✅' : 'EMA36 < EMA205 di 4H';
+  document.getElementById('d-tf4h').textContent = tf4hOk ? 'EMA50 > EMA200 di 4H ✅' : 'EMA50 < EMA200 di 4H';
   document.getElementById('bar-tf4h').style.width = tf4hOk?'100%':'0%';
   document.getElementById('bar-tf4h').style.background = 'var(--buy)';
 
@@ -1333,7 +1219,7 @@ function updateUI(sig, fg, ticker){
   const tf1dOk = sig.scoreDetail.tf1d > 0;
   setBadge('b-tf1d', tf1dOk?'buy':'wait', tf1dOk?'✅ +1':'—');
   document.getElementById('v-tf1d').textContent = tf1dOk ? 'Bullish' : 'Belum';
-  document.getElementById('d-tf1d').textContent = tf1dOk ? 'EMA36 > EMA205 di 1D ✅' : 'EMA36 < EMA205 di 1D';
+  document.getElementById('d-tf1d').textContent = tf1dOk ? 'EMA50 > EMA200 di 1D ✅' : 'EMA50 < EMA200 di 1D';
   document.getElementById('bar-tf1d').style.width = tf1dOk?'100%':'0%';
   document.getElementById('bar-tf1d').style.background = 'var(--buy)';
   setBadge('b-fg', 'neutral', 'Info');
@@ -1355,17 +1241,11 @@ function updateUI(sig, fg, ticker){
     if(document.getElementById(did)) document.getElementById(did).textContent = desc;
   };
   filterPass('b-btc',        hf.btcBullish,   hf.btcBullish?'Bullish':'Bearish', sig.btcContext.desc);
-  filterPass('b-price-trend',hf.priceTrend,   hf.priceTrend?'Di atas EMA36':'Di bawah EMA36', 'Harga vs EMA36');
+  filterPass('b-price-trend',hf.priceTrend,   hf.priceTrend?'Di atas EMA50':'Di bawah EMA50', 'Harga vs EMA50');
   filterPass('b-adx-filter', hf.momentum,     `ADX ${sig.adx.val.toFixed(1)}`, hf.momentum?'Momentum cukup':'ADX terlalu rendah');
-  filterPass('b-conflict',   hf.noConflict,   hf.noConflict?'SellScore<=2':`SellScore=${sig.totalSell}`, 'Maks 2 sinyal berlawanan');
+  filterPass('b-conflict',   hf.noConflict,   hf.noConflict?'SellScore<=1':`SellScore=${sig.totalSell}`, 'Maks 1 sinyal berlawanan');
   filterPass('b-bo-filter',  hf.breakout,     hf.breakout?'Terdeteksi':'Belum ada', sig.breakout.desc);
-  // Retest Hold bukan hard filter — tampilkan sebagai info scoring
-  {
-    const el = document.getElementById('b-rt-filter');
-    if(el){ el.className='ind-badge '+(sig.retest.hold?'buy':'neutral'); el.textContent=sig.retest.hold?'✅ +2 Skor':'Opsional'; }
-    const vEl=document.getElementById('v-rt-filter'); if(vEl) vEl.textContent=sig.retest.hold?'Valid (Scoring)':'Belum (Opsional)';
-    const dEl=document.getElementById('d-rt-filter'); if(dEl) dEl.textContent=sig.retest.desc+' · Bukan hard filter, memberi +2 poin';
-  }
+  filterPass('b-rt-filter',  hf.retestHold,   hf.retestHold?'Valid':'Belum valid', sig.retest.desc);
 
   // Penalty display in warning box
   const warnBox = document.getElementById('signal-warning');
@@ -1379,7 +1259,7 @@ function updateUI(sig, fg, ticker){
     warnBox.style.background = 'rgba(245,158,11,.1)';
     warnBox.style.border = '1px solid rgba(245,158,11,.25)';
     warnBox.style.color = '#d97706';
-    warnBox.textContent = `⚠️ Penalti aktif: ${penalties.join(', ')} | Skor bersih: ${sig.finalScore}/11`;
+    warnBox.textContent = `⚠️ Penalti aktif: ${penalties.join(', ')} | Skor bersih: ${sig.finalScore}/10`;
   } else {
     warnBox.style.display = 'none';
   }
@@ -1395,7 +1275,7 @@ function updateUI(sig, fg, ticker){
     <div><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">EMA 200</div><div style="font-family:var(--font-mono);font-size:12px;color:#fb923c;font-weight:500">${fmt(sig.ema200[sig.ema200.length-1])}</div></div>
     <div><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Upper BB</div><div style="font-family:var(--font-mono);font-size:12px;color:#6366f1;font-weight:500">${fmt(sig.bb.u)}</div></div>
     <div><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Lower BB</div><div style="font-family:var(--font-mono);font-size:12px;color:#22c55e;font-weight:500">${fmt(sig.bb.l)}</div></div>
-    <div><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Score</div><div style="font-family:var(--font-mono);font-size:12px;color:${sig.finalScore>=6?'var(--buy)':sig.finalScore>=4?'var(--neutral)':'var(--sell)'};font-weight:700">${sig.finalScore}/11</div></div>
+    <div><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Score</div><div style="font-family:var(--font-mono);font-size:12px;color:${sig.finalScore>=6?'var(--buy)':sig.finalScore>=4?'var(--neutral)':'var(--sell)'};font-weight:700">${sig.finalScore}/10</div></div>
   `;
 
   // MACD signal text
@@ -1571,13 +1451,13 @@ function updateSellCard(sig){
         </div>
         <div style="display:flex;align-items:baseline;gap:4px">
           <span class="score-num" style="color:var(--neutral)">--</span>
-          <span class="score-denom">/ 11 poin (min 6)</span>
+          <span class="score-denom">/ 10 poin (min 6)</span>
         </div>
       </div>
       <div style="text-align:center;padding:2rem 1rem">
         <div style="font-size:28px;margin-bottom:.75rem">📉</div>
         <div style="font-weight:600;font-size:15px;color:var(--text);margin-bottom:.5rem">Tidak ada setup SHORT saat ini</div>
-        <div style="font-size:12px;color:var(--text3);line-height:1.6">Tunggu hingga ada breakdown + retest gagal<br>yang valid, semua filter lolos, dan score ≥ 6/11.</div>
+        <div style="font-size:12px;color:var(--text3);line-height:1.6">Tunggu hingga ada breakdown + retest gagal<br>yang valid, semua filter lolos, dan score ≥ 6/10.</div>
       </div>`;
     return;
   }
@@ -1592,11 +1472,11 @@ function updateSellCard(sig){
       </div>
       <div style="display:flex;align-items:baseline;gap:4px">
         <span class="score-num" id="sell-score-num">${sig.finalScore}</span>
-        <span class="score-denom">/ 11 poin (min 6)</span>
+        <span class="score-denom">/ 10 poin (min 6)</span>
       </div>
     </div>
     <div id="sell-market-tags" style="display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap"></div>
-    <div class="score-bar-wrap"><div class="score-bar sell" id="sell-score-bar" style="width:${Math.max(0,sig.finalScore)/11*100}%"></div></div>
+    <div class="score-bar-wrap"><div class="score-bar sell" id="sell-score-bar" style="width:${Math.max(0,sig.finalScore)/10*100}%"></div></div>
     <div class="entry-grid" style="grid-template-columns:repeat(4,1fr)">
       <div class="entry-cell" style="border-color:rgba(239,68,68,.3)">
         <div class="entry-lbl" style="color:#f87171">Entry Short</div>
@@ -1687,367 +1567,9 @@ async function loadAll(){
   }
 }
 
-
-// ── TAB SYSTEM ────────────────────────────────────────────────────────
-function switchTab(tab) {
-  // Hide all panels
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  // Show selected
-  document.getElementById('tab-' + tab).classList.add('active');
-  document.getElementById('tab-' + tab + '-btn').classList.add('active');
-  // Load data for tab
-  if (tab === 'history') loadHistory();
-  if (tab === 'detail' && !detailLoaded) loadAll();
-}
-
-
-// ── NOTIFY SCANNER ────────────────────────────────────────────────────
-const SCANNER_NOTIFY = 'https://ctsa-scanner.mahapalamultimedia.workers.dev/notify';
-
-async function notifyScanner(coin, sig, type) {
-  try {
-    const isBuy = type === 'buy';
-    await fetch(SCANNER_NOTIFY, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        sym:     coin.id,
-        type:    type,
-        score:   sig.finalScore,
-        price:   sig.price,
-        sl:      sig.sl,
-        t1:      sig.t1,
-        verdict: sig.verdict,
-        tf:      '1H',
-      }),
-    });
-    console.log(`Notified scanner: ${coin.sym} ${type}`);
-  } catch(e) {
-    console.warn('Notify scanner failed:', e.message);
-  }
-}
-
-// ── SIGNAL FEED ───────────────────────────────────────────────────────
-const COINS_FEED = [
-  {sym:'BTC',id:'BTCUSDT'},{sym:'ETH',id:'ETHUSDT'},{sym:'BNB',id:'BNBUSDT'},
-  {sym:'SOL',id:'SOLUSDT'},{sym:'XRP',id:'XRPUSDT'},{sym:'ADA',id:'ADAUSDT'},
-  {sym:'AVAX',id:'AVAXUSDT'},{sym:'DOT',id:'DOTUSDT'},{sym:'LINK',id:'LINKUSDT'},
-  {sym:'DOGE',id:'DOGEUSDT'},{sym:'MATIC',id:'MATICUSDT'},{sym:'UNI',id:'UNIUSDT'},
-  {sym:'ATOM',id:'ATOMUSDT'},{sym:'LTC',id:'LTCUSDT'},{sym:'NEAR',id:'NEARUSDT'},
-  {sym:'SUI',id:'SUIUSDT'},{sym:'APT',id:'APTUSDT'},{sym:'OP',id:'OPUSDT'},
-  {sym:'ARB',id:'ARBUSDT'},{sym:'INJ',id:'INJUSDT'},
-  {sym:'FET',id:'FETUSDT'},{sym:'RNDR',id:'RNDRUSDT'},{sym:'TIA',id:'TIAUSDT'},
-  {sym:'SEI',id:'SEIUSDT'},{sym:'WLD',id:'WLDUSDT'},
-  {sym:'PEPE',id:'PEPEUSDT'},{sym:'BONK',id:'BONKUSDT'},{sym:'WIF',id:'WIFUSDT'},
-  {sym:'FLOKI',id:'FLOKIUSDT'},
-];
-
-let feedCountdown = 60;
-let feedTimer = null;
-let feedResults = [];
-let detailLoaded = false;
-
-function updateFeedCountdown() {
-  feedCountdown--;
-  const el = document.getElementById('feed-countdown');
-  if (el) el.textContent = feedCountdown + 's';
-  if (feedCountdown <= 0) {
-    feedCountdown = 60;
-    runFeedScan();
-  }
-}
-
-async function runFeedScan() {
-  feedResults = [];
-  const grid = document.getElementById('signal-cards-feed');
-  const progress = document.getElementById('scan-progress');
-  const header = document.getElementById('feed-header');
-  const empty = document.getElementById('feed-empty');
-  const bar = document.getElementById('scan-bar');
-  const txt = document.getElementById('scan-txt');
-  const feedErr = document.getElementById('feed-error');
-
-  if (!grid) return;
-
-  // Reset UI
-  grid.innerHTML = '';
-  if (progress) progress.style.display = 'flex';
-  if (header) header.style.display = 'none';
-  if (empty) empty.style.display = 'none';
-  if (feedErr) feedErr.style.display = 'none';
-
-  // Fetch BTC 1D once for all coins
-  let btcKlines1D = null;
-  try {
-    btcKlines1D = await fetchKlines('BTCUSDT', '1d', 210);
-  } catch(e) { /* fallback null */ }
-
-  const total = COINS_FEED.length;
-  let done = 0;
-  let found = 0;
-
-  for (const coin of COINS_FEED) {
-    try {
-      const [klines, klines4H, klines1D] = await Promise.all([
-        fetchKlines(coin.id, '1h', 200),
-        fetchKlines(coin.id, '4h', 210).catch(() => null),
-        fetchKlines(coin.id, '1d', 210).catch(() => null),
-      ]);
-      if (!klines) continue;
-
-      const sigBuy  = computeSignals(klines, null, btcKlines1D, klines4H, klines1D);
-      const sigSell = computeSignalShort(klines, btcKlines1D, klines4H, klines1D);
-
-      // Only show if signal is active
-      if (sigBuy.dir === 'buy') {
-        feedResults.push({ coin, sig: sigBuy, type: 'buy' });
-        renderFeedCard(coin, sigBuy, 'buy');
-        notifyScanner(coin, sigBuy, 'buy');
-        found++;
-      }
-      if (sigSell.dir === 'sell') {
-        feedResults.push({ coin, sig: sigSell, type: 'sell' });
-        renderFeedCard(coin, sigSell, 'sell');
-        notifyScanner(coin, sigSell, 'sell');
-        found++;
-      }
-    } catch(e) {
-      console.warn('Feed scan error ' + coin.sym + ':', e.message);
-    }
-
-    done++;
-    const pct = Math.round(done / total * 100);
-    if (bar) bar.style.width = pct + '%';
-    if (txt) txt.textContent = 'Scan ' + coin.sym + ' (' + done + '/' + total + ')...';
-  }
-
-  // Done
-  if (progress) progress.style.display = 'none';
-  if (header) header.style.display = 'flex';
-
-  // Update feed meta
-  const metaEl = document.getElementById('feed-meta');
-  const now = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-  if (metaEl) metaEl.textContent = found + ' sinyal ditemukan dari ' + total + ' coin · Update ' + now + ' WIB';
-
-  // Update tab badge
-  const badge = document.getElementById('feed-count');
-  if (badge) {
-    if (found > 0) {
-      badge.textContent = found;
-      badge.style.display = 'inline';
-      // Check if any sell signals
-      const hasSell = feedResults.some(r => r.type === 'sell');
-      if (hasSell) badge.className = 'tab-badge sell';
-      else badge.className = 'tab-badge';
-    } else {
-      badge.style.display = 'none';
-    }
-  }
-
-  // Empty state
-  if (found === 0 && empty) empty.style.display = 'block';
-
-  // Reset countdown
-  feedCountdown = 60;
-}
-
-function renderFeedCard(coin, sig, type) {
-  const grid = document.getElementById('signal-cards-feed');
-  if (!grid) return;
-
-  const isBuy = type === 'buy';
-  const maxScore = isBuy ? 11 : 10;
-  const pct = Math.max(0, sig.finalScore) / maxScore * 100;
-  const slPct = ((sig.sl - sig.price) / sig.price * 100).toFixed(2);
-  const t1Pct = ((sig.t1 - sig.price) / sig.price * 100).toFixed(2);
-
-  const card = document.createElement('div');
-  card.className = 'sig-card ' + type;
-  card.innerHTML = `
-    <div class="sig-card-top">
-      <span class="sig-coin">${coin.sym}</span>
-      <span class="sig-verdict ${type}">${sig.verdict}</span>
-    </div>
-    <div class="sig-score">${sig.finalScore} / ${maxScore} poin</div>
-    <div class="sig-score-bar"><div class="sig-score-fill ${type}" style="width:${pct.toFixed(0)}%"></div></div>
-    <div class="sig-levels">
-      <div class="sig-level">
-        <div class="sig-level-lbl">Harga</div>
-        <div class="sig-level-val">${fmt(sig.price)}</div>
-      </div>
-      <div class="sig-level">
-        <div class="sig-level-lbl">SL</div>
-        <div class="sig-level-val sl">${fmt(sig.sl)} <span style="font-size:9px;color:var(--sell)">(${slPct}%)</span></div>
-      </div>
-      <div class="sig-level" style="margin-top:4px">
-        <div class="sig-level-lbl">TP1</div>
-        <div class="sig-level-val tp">${fmt(sig.t1)} <span style="font-size:9px;color:var(--buy)">(${t1Pct}%)</span></div>
-      </div>
-      <div class="sig-level" style="margin-top:4px">
-        <div class="sig-level-lbl">R/R</div>
-        <div class="sig-level-val" style="color:var(--text2)">${sig.rr1}</div>
-      </div>
-    </div>
-  `;
-
-  // Click: switch to detail tab with this coin
-  card.addEventListener('click', () => {
-    switchTab('detail');
-    // Set active coin
-    const coinBtn = document.querySelector(`.coin-btn[data-id="${coin.id}"]`);
-    if (coinBtn) {
-      document.querySelectorAll('.coin-btn').forEach(b => b.classList.remove('active'));
-      coinBtn.classList.add('active');
-      activeCoin = coin;
-      loadAll();
-    }
-  });
-
-  grid.appendChild(card);
-}
-
-// ── HISTORY ───────────────────────────────────────────────────────────
-const SCANNER_URL = 'https://ctsa-scanner.mahapalamultimedia.workers.dev';
-
-async function loadHistory() {
-  const list = document.getElementById('history-list');
-  const badge = document.getElementById('history-count');
-  if (!list) return;
-
-  list.innerHTML = '<div class="hist-empty"><span class="spinner"></span> Memuat dari Cloudflare KV...</div>';
-
-  try {
-    const r = await fetch(SCANNER_URL + '/log');
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    const data = await r.json();
-
-    // Update stats
-    const s = data.summary || {};
-    const totalEl = document.getElementById('hs-total');
-    const winsEl  = document.getElementById('hs-wins');
-    const lossEl  = document.getElementById('hs-losses');
-    const wrEl    = document.getElementById('hs-winrate');
-    if (totalEl) totalEl.textContent = s.total || 0;
-    if (winsEl)  winsEl.textContent  = s.wins  || 0;
-    if (lossEl)  lossEl.textContent  = s.losses|| 0;
-    if (wrEl)    wrEl.textContent    = s.winRate|| '—';
-
-    const signals = data.signals || [];
-
-    // Update tab badge
-    if (badge) {
-      if (s.pending > 0) {
-        badge.textContent = s.pending;
-        badge.style.display = 'inline';
-        badge.className = 'tab-badge';
-      } else {
-        badge.style.display = 'none';
-      }
-    }
-
-    if (signals.length === 0) {
-      list.innerHTML = '<div class="hist-empty">Belum ada riwayat sinyal.</div>';
-      return;
-    }
-
-    list.innerHTML = '';
-    signals.forEach(sig => {
-      const isBuy = sig.isBuy !== false;
-      const type = isBuy ? 'buy' : 'sell';
-      const ts = sig.timestamp ? new Date(sig.timestamp).toLocaleString('id-ID', {
-        timeZone: 'Asia/Jakarta', day: 'numeric', month: 'short',
-        hour: '2-digit', minute: '2-digit'
-      }) + ' WIB' : '--';
-
-      const resultClass = sig.result === 'win' ? 'win' :
-                          sig.result === 'loss' ? 'loss' :
-                          sig.result === 'reversal' ? 'reversal' : 'pending';
-      const resultTxt = sig.result === 'win' ? 'Win' :
-                        sig.result === 'loss' ? 'Loss' :
-                        sig.result === 'reversal' ? 'Reversal' : 'Aktif';
-
-      const maxScore = isBuy ? 11 : 10;
-      const item = document.createElement('div');
-      item.className = 'hist-item ' + type;
-      item.innerHTML = `
-        <div class="hist-dot ${type}"></div>
-        <div style="flex:1;min-width:0">
-          <div style="display:flex;align-items:center;gap:4px">
-            <span class="hist-coin">${sig.sym || '--'}/USDT</span>
-            <span class="hist-verdict ${type}">${sig.verdict || '--'}</span>
-          </div>
-          <div class="hist-time">${ts}</div>
-        </div>
-        <div style="text-align:right;flex-shrink:0">
-          <div class="hist-score">${sig.score || '--'}/${maxScore}</div>
-          <div class="hist-result ${resultClass}">${resultTxt}</div>
-          ${sig.price ? '<div class="hist-price">' + fmt(sig.price) + '</div>' : ''}
-        </div>
-      `;
-      list.appendChild(item);
-    });
-
-  } catch(e) {
-    list.innerHTML = '<div class="hist-empty">Gagal memuat riwayat: ' + e.message + '</div>';
-  }
-}
-
-// ── CLOCK ──────────────────────────────────────────────────────────────
-function updateClock() {
-  const el = document.getElementById('clock');
-  if (el) el.textContent = new Date().toLocaleTimeString('id-ID', {
-    hour: '2-digit', minute: '2-digit', second: '2-digit'
-  });
-}
-setInterval(updateClock, 1000);
-updateClock();
-
-// ── BUILD SELECTORS (Detail Tab) ─────────────────────────────────────
-function buildSelectors() {
-  const cs = document.getElementById('coin-selector');
-  if (!cs) return;
-  COINS.forEach((c, i) => {
-    const b = document.createElement('button');
-    b.className = 'coin-btn' + (i === 0 ? ' active' : '');
-    b.textContent = c.sym;
-    b.dataset.id = c.id;
-    b.onclick = () => {
-      document.querySelectorAll('.coin-btn').forEach(x => x.classList.remove('active'));
-      b.classList.add('active');
-      activeCoin = c;
-      loadAll();
-    };
-    cs.appendChild(b);
-  });
-
-  const ts = document.getElementById('tf-selector');
-  if (!ts) return;
-  TFS.forEach((t, i) => {
-    const b = document.createElement('button');
-    b.className = 'tf-btn' + (i === 0 ? ' active' : '');
-    b.textContent = t.label;
-    b.onclick = () => {
-      document.querySelectorAll('.tf-btn').forEach(x => x.classList.remove('active'));
-      b.classList.add('active');
-      activeTF = t;
-      loadAll();
-    };
-    ts.appendChild(b);
-  });
-}
-
-// ── INIT ──────────────────────────────────────────────────────────────
 buildSelectors();
-runFeedScan();
-setInterval(updateFeedCountdown, 1000);
-setInterval(() => {
-  // Auto refresh detail tab if active
-  if (document.getElementById('tab-detail').classList.contains('active')) {
-    loadAll();
-  }
-}, 60000);
+loadAll();
+setInterval(loadAll, 60000); // auto refresh setiap 60 detik
 </script>
 </body>
 </html>
