@@ -1571,7 +1571,7 @@ function updateSellCard(sig){
         </div>
         <div style="display:flex;align-items:baseline;gap:4px">
           <span class="score-num" style="color:var(--neutral)">--</span>
-          <span class="score-denom">/ 11 poin (min 6)</span>
+          <span class="score-denom">/ 10 poin (min 6)</span>
         </div>
       </div>
       <div style="text-align:center;padding:2rem 1rem">
@@ -1592,7 +1592,7 @@ function updateSellCard(sig){
       </div>
       <div style="display:flex;align-items:baseline;gap:4px">
         <span class="score-num" id="sell-score-num">${sig.finalScore}</span>
-        <span class="score-denom">/ 11 poin (min 6)</span>
+        <span class="score-denom">/ 10 poin (min 6)</span>
       </div>
     </div>
     <div id="sell-market-tags" style="display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap"></div>
@@ -1699,9 +1699,6 @@ function switchTab(tab) {
   // Load data for tab
   if (tab === 'history') loadHistory();
   if (tab === 'detail' && !detailLoaded) loadAll();
-}
-
-
 }
 
 // ── SIGNAL FEED ───────────────────────────────────────────────────────
