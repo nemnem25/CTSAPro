@@ -812,7 +812,8 @@ function computeSignals(klines, fg, btcKlines1D, klines4H, klines1D){
   const highs   = klines.map(k=>k.h);
   const lows    = klines.map(k=>k.l);
   const vols    = klines.map(k=>k.v);
-  const price   = closes[closes.length-1];
+  // Candle [-2] sudah confirmed close — bukan [-1] yang masih berjalan
+  const price   = closes[closes.length-2];
 
   // ── INDICATORS ──────────────────────────────────────────────────────
   const rsi      = calcRSI(closes, 17);
@@ -950,7 +951,7 @@ function computeSignals(klines, fg, btcKlines1D, klines4H, klines1D){
 
   const isBuy       = dir === 'buy';
   // computeSignals hanya untuk BELI — SL selalu di bawah breakout level
-  const sl          = Math.min(price - 1.186*atrNow, (breakoutLevel || price) - 0.5*atrNow);
+  const sl          = Math.min(price - 1.5*atrNow, (breakoutLevel || price) - 0.5*atrNow);
   const t1          = isBuy ? price + 2.4*atrNow : price - 2.4*atrNow;
   const t2          = isBuy ? price + 4.8*atrNow : price - 4.8*atrNow;
   const t3          = isBuy ? price + 7.2*atrNow : price - 7.2*atrNow;
@@ -1002,7 +1003,8 @@ function computeSignalShort(klines, btcKlines1D, klines4H, klines1D){
   const highs   = klines.map(k=>k.h);
   const lows    = klines.map(k=>k.l);
   const vols    = klines.map(k=>k.v);
-  const price   = closes[closes.length-1];
+  // Candle [-2] sudah confirmed close — bukan [-1] yang masih berjalan
+  const price   = closes[closes.length-2];
 
   const rsi    = calcRSI(closes, 17);
   const rsiNow = rsi[rsi.length-1];
@@ -1123,7 +1125,7 @@ function computeSignalShort(klines, btcKlines1D, klines4H, klines1D){
     dir = 'sell';
   }
 
-  const sl         = Math.max(price + 1.186*atrNow, (breakdownLevel || price) + 0.5*atrNow);
+  const sl         = Math.max(price + 1.5*atrNow, (breakdownLevel || price) + 0.5*atrNow);
   const t1         = price - 2.4*atrNow;
   const t2         = price - 4.8*atrNow;
   const t3         = price - 7.2*atrNow;
