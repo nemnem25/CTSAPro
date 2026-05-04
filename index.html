@@ -303,6 +303,10 @@ main{max-width:1320px;margin:0 auto;padding:1.25rem}
   <div class="signal-cards-grid" id="signal-cards-feed"></div>
 
   <!-- Empty state -->
+  <div style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.25);border-radius:8px;padding:10px 14px;margin-bottom:1rem;font-size:11px;color:#a5b4fc;line-height:1.7">
+    ℹ️ Sinyal ini hanya tampilan visual di browser — tidak dikirim ke Telegram dan tidak tersimpan. Pantau <a href="https://t.me/ctsaprosignals" target="_blank" style="color:#a5b4fc;text-decoration:underline">@ctsaprosignals</a> untuk sinyal otomatis 24/7.
+  </div>
+
   <div class="feed-empty" id="feed-empty" style="display:none">
     <div class="feed-empty-icon">📊</div>
     <div class="feed-empty-title">Tidak ada sinyal saat ini</div>
@@ -472,6 +476,9 @@ main{max-width:1320px;margin:0 auto;padding:1.25rem}
   <div class="history-header">
     <div class="feed-title">Riwayat Sinyal</div>
     <button onclick="loadHistory()" style="font-family:var(--font-mono);font-size:10px;padding:5px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg2);color:var(--text2);cursor:pointer">Refresh</button>
+  </div>
+  <div style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.25);border-radius:8px;padding:10px 14px;margin-bottom:1rem;font-size:11px;color:#a5b4fc;line-height:1.7">
+    ℹ️ <strong>Catatan:</strong> Isi tab Riwayat ini hanya mencatat sinyal dari <strong>Scanner Worker (cloud)</strong> yang dikirim otomatis ke <a href="https://t.me/ctsaprosignals" target="_blank" style="color:#a5b4fc;text-decoration:underline">Telegram (@ctsaprosignals)</a> setiap 5 menit, yang secara otomatis melakukan <strong>paper trade</strong> untuk BELI (spot) dan JUAL (futures).
   </div>
 
   <!-- Stats -->
