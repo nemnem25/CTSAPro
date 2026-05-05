@@ -284,7 +284,7 @@ main{max-width:1320px;margin:0 auto;padding:1.25rem}
     <div class="scan-bar-wrap">
       <div class="scan-bar-fill" id="scan-bar" style="width:0%"></div>
     </div>
-    <span class="scan-txt" id="scan-txt">Memulai scan 29 coin...</span>
+    <span class="scan-txt" id="scan-txt">Memulai scan 200 coin...</span>
   </div>
 
   <!-- Feed Header -->
@@ -519,22 +519,57 @@ document.getElementById('app-version').textContent = 'v' + APP_VERSION;
 
 // ── CONFIG ──────────────────────────────────────────────────────────
 const COINS = [
-  // Original 15
-  {sym:'BTC',id:'BTCUSDT'},{sym:'ETH',id:'ETHUSDT'},{sym:'BNB',id:'BNBUSDT'},
-  {sym:'SOL',id:'SOLUSDT'},{sym:'XRP',id:'XRPUSDT'},{sym:'ADA',id:'ADAUSDT'},
-  {sym:'AVAX',id:'AVAXUSDT'},{sym:'DOT',id:'DOTUSDT'},{sym:'LINK',id:'LINKUSDT'},
-  {sym:'DOGE',id:'DOGEUSDT'},{sym:'MATIC',id:'MATICUSDT'},{sym:'UNI',id:'UNIUSDT'},
-  {sym:'ATOM',id:'ATOMUSDT'},{sym:'LTC',id:'LTCUSDT'},{sym:'NEAR',id:'NEARUSDT'},
-  // Tier 1 — Large cap
-  {sym:'SUI',id:'SUIUSDT'},{sym:'APT',id:'APTUSDT'},{sym:'OP',id:'OPUSDT'},
-  {sym:'ARB',id:'ARBUSDT'},{sym:'INJ',id:'INJUSDT'},
-  // Tier 2 — Mid cap
-  {sym:'FET',id:'FETUSDT'},{sym:'RNDR',id:'RNDRUSDT'},{sym:'TIA',id:'TIAUSDT'},
-  {sym:'SEI',id:'SEIUSDT'},{sym:'WLD',id:'WLDUSDT'},
-  // Tier 3 — High volatility
-  {sym:'PEPE',id:'PEPEUSDT'},{sym:'BONK',id:'BONKUSDT'},{sym:'WIF',id:'WIFUSDT'},
-  {sym:'FLOKI',id:'FLOKIUSDT'},
-];
+  {sym:'BTC',id:'BTCUSDT'},{sym:'ETH',id:'ETHUSDT'},{sym:'BNB',id:'BNBUSDT'},{sym:'SOL',id:'SOLUSDT'},
+  {sym:'XRP',id:'XRPUSDT'},{sym:'ADA',id:'ADAUSDT'},{sym:'AVAX',id:'AVAXUSDT'},{sym:'DOT',id:'DOTUSDT'},
+  {sym:'LINK',id:'LINKUSDT'},{sym:'ATOM',id:'ATOMUSDT'},{sym:'LTC',id:'LTCUSDT'},{sym:'NEAR',id:'NEARUSDT'},
+  {sym:'APT',id:'APTUSDT'},{sym:'SUI',id:'SUIUSDT'},{sym:'SEI',id:'SEIUSDT'},{sym:'INJ',id:'INJUSDT'},
+  {sym:'TIA',id:'TIAUSDT'},{sym:'STX',id:'STXUSDT'},{sym:'HBAR',id:'HBARUSDT'},{sym:'ALGO',id:'ALGOUSDT'},
+  {sym:'ICP',id:'ICPUSDT'},{sym:'EGLD',id:'EGLDUSDT'},{sym:'TON',id:'TONUSDT'},{sym:'TRX',id:'TRXUSDT'},
+  {sym:'VET',id:'VETUSDT'},{sym:'EOS',id:'EOSUSDT'},{sym:'XTZ',id:'XTZUSDT'},{sym:'FTM',id:'FTMUSDT'},
+  {sym:'ONE',id:'ONEUSDT'},{sym:'KAVA',id:'KAVAUSDT'},{sym:'CELO',id:'CELOUSDT'},{sym:'FLOW',id:'FLOWUSDT'},
+  {sym:'ETC',id:'ETCUSDT'},{sym:'XLM',id:'XLMUSDT'},{sym:'CFX',id:'CFXUSDT'},{sym:'ASTR',id:'ASTRUSDT'},
+  {sym:'GLMR',id:'GLMRUSDT'},{sym:'MOVR',id:'MOVRUSDT'},{sym:'KSM',id:'KSMUSDT'},{sym:'NEO',id:'NEOUSDT'},
+  {sym:'ONT',id:'ONTUSDT'},{sym:'WAVES',id:'WAVESUSDT'},{sym:'MATIC',id:'MATICUSDT'},{sym:'ARB',id:'ARBUSDT'},
+  {sym:'OP',id:'OPUSDT'},{sym:'METIS',id:'METISUSDT'},{sym:'MANTA',id:'MANTAUSDT'},{sym:'DYM',id:'DYMUSDT'},
+  {sym:'STRK',id:'STRKUSDT'},{sym:'ZK',id:'ZKUSDT'},{sym:'ALT',id:'ALTUSDT'},{sym:'CELR',id:'CELRUSDT'},
+  {sym:'UNI',id:'UNIUSDT'},{sym:'AAVE',id:'AAVEUSDT'},{sym:'MKR',id:'MKRUSDT'},{sym:'COMP',id:'COMPUSDT'},
+  {sym:'SNX',id:'SNXUSDT'},{sym:'CRV',id:'CRVUSDT'},{sym:'YFI',id:'YFIUSDT'},{sym:'BAL',id:'BALUSDT'},
+  {sym:'1INCH',id:'1INCHUSDT'},{sym:'SUSHI',id:'SUSHIUSDT'},{sym:'RUNE',id:'RUNEUSDT'},{sym:'DYDX',id:'DYDXUSDT'},
+  {sym:'GMX',id:'GMXUSDT'},{sym:'PENDLE',id:'PENDLEUSDT'},{sym:'RDNT',id:'RDNTUSDT'},{sym:'JUP',id:'JUPUSDT'},
+  {sym:'BAKE',id:'BAKEUSDT'},{sym:'BURGER',id:'BURGERUSDT'},{sym:'ALPACA',id:'ALPACAUSDT'},{sym:'BNT',id:'BNTUSDT'},
+  {sym:'OM',id:'OMUSDT'},{sym:'ZRX',id:'ZRXUSDT'},{sym:'CVX',id:'CVXUSDT'},{sym:'FLM',id:'FLMUSDT'},
+  {sym:'RSR',id:'RSRUSDT'},{sym:'SPELL',id:'SPELLUSDT'},{sym:'JST',id:'JSTUSDT'},{sym:'SUN',id:'SUNUSDT'},
+  {sym:'XVS',id:'XVSUSDT'},{sym:'FXS',id:'FXSUSDT'},{sym:'FORTH',id:'FORTHUSDT'},{sym:'BADGER',id:'BADGERUSDT'},
+  {sym:'WING',id:'WINGUSDT'},{sym:'DEXE',id:'DEXEUSDT'},{sym:'DOGE',id:'DOGEUSDT'},{sym:'SHIB',id:'SHIBUSDT'},
+  {sym:'PEPE',id:'PEPEUSDT'},{sym:'FLOKI',id:'FLOKIUSDT'},{sym:'BONK',id:'BONKUSDT'},{sym:'WIF',id:'WIFUSDT'},
+  {sym:'MEME',id:'MEMEUSDT'},{sym:'BOME',id:'BOMEUSDT'},{sym:'POPCAT',id:'POPCATUSDT'},{sym:'MEW',id:'MEWUSDT'},
+  {sym:'NEIRO',id:'NEIROUSDT'},{sym:'MOG',id:'MOGUSDT'},{sym:'TURBO',id:'TURBOUSDT'},{sym:'GOAT',id:'GOATUSDT'},
+  {sym:'SATS',id:'SATSUSDT'},{sym:'ILV',id:'ILVUSDT'},{sym:'AXS',id:'AXSUSDT'},{sym:'SAND',id:'SANDUSDT'},
+  {sym:'MANA',id:'MANAUSDT'},{sym:'ENJ',id:'ENJUSDT'},{sym:'GALA',id:'GALAUSDT'},{sym:'IMX',id:'IMXUSDT'},
+  {sym:'APE',id:'APEUSDT'},{sym:'MAGIC',id:'MAGICUSDT'},{sym:'GMT',id:'GMTUSDT'},{sym:'SLP',id:'SLPUSDT'},
+  {sym:'TLM',id:'TLMUSDT'},{sym:'HIGH',id:'HIGHUSDT'},{sym:'CHR',id:'CHRUSDT'},{sym:'MBL',id:'MBLUSDT'},
+  {sym:'NFP',id:'NFPUSDT'},{sym:'YGG',id:'YGGUSDT'},{sym:'ALICE',id:'ALICEUSDT'},{sym:'XAI',id:'XAIUSDT'},
+  {sym:'PIXEL',id:'PIXELUSDT'},{sym:'BEAMX',id:'BEAMXUSDT'},{sym:'FET',id:'FETUSDT'},{sym:'WLD',id:'WLDUSDT'},
+  {sym:'TAO',id:'TAOUSDT'},{sym:'AGIX',id:'AGIXUSDT'},{sym:'OCEAN',id:'OCEANUSDT'},{sym:'RENDER',id:'RENDERUSDT'},
+  {sym:'ARKM',id:'ARKMUSDT'},{sym:'NMR',id:'NMRUSDT'},{sym:'VANRY',id:'VANRYUSDT'},{sym:'GRT',id:'GRTUSDT'},
+  {sym:'FIL',id:'FILUSDT'},{sym:'STORJ',id:'STORJUSDT'},{sym:'EIGEN',id:'EIGENUSDT'},{sym:'W',id:'WUSDT'},
+  {sym:'PYTH',id:'PYTHUSDT'},{sym:'JTO',id:'JTOUSDT'},{sym:'AXL',id:'AXLUSDT'},{sym:'LPT',id:'LPTUSDT'},
+  {sym:'CTSI',id:'CTSIUSDT'},{sym:'ANT',id:'ANTUSDT'},{sym:'BAT',id:'BATUSDT'},{sym:'IOTA',id:'IOTAUSDT'},
+  {sym:'IOTX',id:'IOTXUSDT'},{sym:'QNT',id:'QNTUSDT'},{sym:'ENS',id:'ENSUSDT'},{sym:'ID',id:'IDUSDT'},
+  {sym:'NKN',id:'NKNUSDT'},{sym:'MASK',id:'MASKUSDT'},{sym:'RAD',id:'RADUSDT'},{sym:'BICO',id:'BICOUSDT'},
+  {sym:'SFP',id:'SFPUSDT'},{sym:'DIA',id:'DIAUSDT'},{sym:'FIDA',id:'FIDAUSDT'},{sym:'CVC',id:'CVCUSDT'},
+  {sym:'POWR',id:'POWRUSDT'},{sym:'REQ',id:'REQUSDT'},{sym:'AMB',id:'AMBUSDT'},{sym:'LOOM',id:'LOOMUSDT'},
+  {sym:'COS',id:'COSUSDT'},{sym:'MDT',id:'MDTUSDT'},{sym:'WOO',id:'WOOUSDT'},{sym:'PORTO',id:'PORTOUSDT'},
+  {sym:'LAZIO',id:'LAZIOUSDT'},{sym:'ALPINE',id:'ALPINEUSDT'},{sym:'CITY',id:'CITYUSDT'},{sym:'OG',id:'OGUSDT'},
+  {sym:'ZEC',id:'ZECUSDT'},{sym:'DASH',id:'DASHUSDT'},{sym:'ZEN',id:'ZENUSDT'},{sym:'ROSE',id:'ROSEUSDT'},
+  {sym:'PHA',id:'PHAUSDT'},{sym:'DUSK',id:'DUSKUSDT'},{sym:'OXT',id:'OXTUSDT'},{sym:'SCRT',id:'SCRTUSDT'},
+  {sym:'POLYX',id:'POLYXUSDT'},{sym:'ACH',id:'ACHUSDT'},{sym:'STG',id:'STGUSDT'},{sym:'PROM',id:'PROMUSDT'},
+  {sym:'BAND',id:'BANDUSDT'},{sym:'KEY',id:'KEYUSDT'},{sym:'LINA',id:'LINAUSDT'},{sym:'PUNDIX',id:'PUNDIXUSDT'},
+  {sym:'CHESS',id:'CHESSUSDT'},{sym:'ARPA',id:'ARPAUSDT'},{sym:'DODO',id:'DODOUSDT'},{sym:'POND',id:'PONDUSDT'},
+  {sym:'AUCTION',id:'AUCTIONUSDT'},{sym:'DF',id:'DFUSDT'},{sym:'FOR',id:'FORUSDT'},{sym:'PROS',id:'PROSUSDT'},
+  {sym:'PERP',id:'PERPUSDT'},{sym:'BEL',id:'BELUSDT'},{sym:'VITE',id:'VITEUSDT'},{sym:'TORN',id:'TORNUSDT'},
+  {sym:'SWAP',id:'SWAPUSDT'},{sym:'TRB',id:'TRBUSDT'},{sym:'POLS',id:'POLSUSDT'},{sym:'UFT',id:'UFTUSDT'}
+]
 
 const TFS = [
   {label:'1H',interval:'1h',limit:200},
@@ -1714,18 +1749,57 @@ function switchTab(tab) {
 
 // ── SIGNAL FEED ───────────────────────────────────────────────────────
 const COINS_FEED = [
-  {sym:'BTC',id:'BTCUSDT'},{sym:'ETH',id:'ETHUSDT'},{sym:'BNB',id:'BNBUSDT'},
-  {sym:'SOL',id:'SOLUSDT'},{sym:'XRP',id:'XRPUSDT'},{sym:'ADA',id:'ADAUSDT'},
-  {sym:'AVAX',id:'AVAXUSDT'},{sym:'DOT',id:'DOTUSDT'},{sym:'LINK',id:'LINKUSDT'},
-  {sym:'DOGE',id:'DOGEUSDT'},{sym:'MATIC',id:'MATICUSDT'},{sym:'UNI',id:'UNIUSDT'},
-  {sym:'ATOM',id:'ATOMUSDT'},{sym:'LTC',id:'LTCUSDT'},{sym:'NEAR',id:'NEARUSDT'},
-  {sym:'SUI',id:'SUIUSDT'},{sym:'APT',id:'APTUSDT'},{sym:'OP',id:'OPUSDT'},
-  {sym:'ARB',id:'ARBUSDT'},{sym:'INJ',id:'INJUSDT'},
-  {sym:'FET',id:'FETUSDT'},{sym:'RNDR',id:'RNDRUSDT'},{sym:'TIA',id:'TIAUSDT'},
-  {sym:'SEI',id:'SEIUSDT'},{sym:'WLD',id:'WLDUSDT'},
-  {sym:'PEPE',id:'PEPEUSDT'},{sym:'BONK',id:'BONKUSDT'},{sym:'WIF',id:'WIFUSDT'},
-  {sym:'FLOKI',id:'FLOKIUSDT'},
-];
+  {sym:'BTC',id:'BTCUSDT'},{sym:'ETH',id:'ETHUSDT'},{sym:'BNB',id:'BNBUSDT'},{sym:'SOL',id:'SOLUSDT'},
+  {sym:'XRP',id:'XRPUSDT'},{sym:'ADA',id:'ADAUSDT'},{sym:'AVAX',id:'AVAXUSDT'},{sym:'DOT',id:'DOTUSDT'},
+  {sym:'LINK',id:'LINKUSDT'},{sym:'ATOM',id:'ATOMUSDT'},{sym:'LTC',id:'LTCUSDT'},{sym:'NEAR',id:'NEARUSDT'},
+  {sym:'APT',id:'APTUSDT'},{sym:'SUI',id:'SUIUSDT'},{sym:'SEI',id:'SEIUSDT'},{sym:'INJ',id:'INJUSDT'},
+  {sym:'TIA',id:'TIAUSDT'},{sym:'STX',id:'STXUSDT'},{sym:'HBAR',id:'HBARUSDT'},{sym:'ALGO',id:'ALGOUSDT'},
+  {sym:'ICP',id:'ICPUSDT'},{sym:'EGLD',id:'EGLDUSDT'},{sym:'TON',id:'TONUSDT'},{sym:'TRX',id:'TRXUSDT'},
+  {sym:'VET',id:'VETUSDT'},{sym:'EOS',id:'EOSUSDT'},{sym:'XTZ',id:'XTZUSDT'},{sym:'FTM',id:'FTMUSDT'},
+  {sym:'ONE',id:'ONEUSDT'},{sym:'KAVA',id:'KAVAUSDT'},{sym:'CELO',id:'CELOUSDT'},{sym:'FLOW',id:'FLOWUSDT'},
+  {sym:'ETC',id:'ETCUSDT'},{sym:'XLM',id:'XLMUSDT'},{sym:'CFX',id:'CFXUSDT'},{sym:'ASTR',id:'ASTRUSDT'},
+  {sym:'GLMR',id:'GLMRUSDT'},{sym:'MOVR',id:'MOVRUSDT'},{sym:'KSM',id:'KSMUSDT'},{sym:'NEO',id:'NEOUSDT'},
+  {sym:'ONT',id:'ONTUSDT'},{sym:'WAVES',id:'WAVESUSDT'},{sym:'MATIC',id:'MATICUSDT'},{sym:'ARB',id:'ARBUSDT'},
+  {sym:'OP',id:'OPUSDT'},{sym:'METIS',id:'METISUSDT'},{sym:'MANTA',id:'MANTAUSDT'},{sym:'DYM',id:'DYMUSDT'},
+  {sym:'STRK',id:'STRKUSDT'},{sym:'ZK',id:'ZKUSDT'},{sym:'ALT',id:'ALTUSDT'},{sym:'CELR',id:'CELRUSDT'},
+  {sym:'UNI',id:'UNIUSDT'},{sym:'AAVE',id:'AAVEUSDT'},{sym:'MKR',id:'MKRUSDT'},{sym:'COMP',id:'COMPUSDT'},
+  {sym:'SNX',id:'SNXUSDT'},{sym:'CRV',id:'CRVUSDT'},{sym:'YFI',id:'YFIUSDT'},{sym:'BAL',id:'BALUSDT'},
+  {sym:'1INCH',id:'1INCHUSDT'},{sym:'SUSHI',id:'SUSHIUSDT'},{sym:'RUNE',id:'RUNEUSDT'},{sym:'DYDX',id:'DYDXUSDT'},
+  {sym:'GMX',id:'GMXUSDT'},{sym:'PENDLE',id:'PENDLEUSDT'},{sym:'RDNT',id:'RDNTUSDT'},{sym:'JUP',id:'JUPUSDT'},
+  {sym:'BAKE',id:'BAKEUSDT'},{sym:'BURGER',id:'BURGERUSDT'},{sym:'ALPACA',id:'ALPACAUSDT'},{sym:'BNT',id:'BNTUSDT'},
+  {sym:'OM',id:'OMUSDT'},{sym:'ZRX',id:'ZRXUSDT'},{sym:'CVX',id:'CVXUSDT'},{sym:'FLM',id:'FLMUSDT'},
+  {sym:'RSR',id:'RSRUSDT'},{sym:'SPELL',id:'SPELLUSDT'},{sym:'JST',id:'JSTUSDT'},{sym:'SUN',id:'SUNUSDT'},
+  {sym:'XVS',id:'XVSUSDT'},{sym:'FXS',id:'FXSUSDT'},{sym:'FORTH',id:'FORTHUSDT'},{sym:'BADGER',id:'BADGERUSDT'},
+  {sym:'WING',id:'WINGUSDT'},{sym:'DEXE',id:'DEXEUSDT'},{sym:'DOGE',id:'DOGEUSDT'},{sym:'SHIB',id:'SHIBUSDT'},
+  {sym:'PEPE',id:'PEPEUSDT'},{sym:'FLOKI',id:'FLOKIUSDT'},{sym:'BONK',id:'BONKUSDT'},{sym:'WIF',id:'WIFUSDT'},
+  {sym:'MEME',id:'MEMEUSDT'},{sym:'BOME',id:'BOMEUSDT'},{sym:'POPCAT',id:'POPCATUSDT'},{sym:'MEW',id:'MEWUSDT'},
+  {sym:'NEIRO',id:'NEIROUSDT'},{sym:'MOG',id:'MOGUSDT'},{sym:'TURBO',id:'TURBOUSDT'},{sym:'GOAT',id:'GOATUSDT'},
+  {sym:'SATS',id:'SATSUSDT'},{sym:'ILV',id:'ILVUSDT'},{sym:'AXS',id:'AXSUSDT'},{sym:'SAND',id:'SANDUSDT'},
+  {sym:'MANA',id:'MANAUSDT'},{sym:'ENJ',id:'ENJUSDT'},{sym:'GALA',id:'GALAUSDT'},{sym:'IMX',id:'IMXUSDT'},
+  {sym:'APE',id:'APEUSDT'},{sym:'MAGIC',id:'MAGICUSDT'},{sym:'GMT',id:'GMTUSDT'},{sym:'SLP',id:'SLPUSDT'},
+  {sym:'TLM',id:'TLMUSDT'},{sym:'HIGH',id:'HIGHUSDT'},{sym:'CHR',id:'CHRUSDT'},{sym:'MBL',id:'MBLUSDT'},
+  {sym:'NFP',id:'NFPUSDT'},{sym:'YGG',id:'YGGUSDT'},{sym:'ALICE',id:'ALICEUSDT'},{sym:'XAI',id:'XAIUSDT'},
+  {sym:'PIXEL',id:'PIXELUSDT'},{sym:'BEAMX',id:'BEAMXUSDT'},{sym:'FET',id:'FETUSDT'},{sym:'WLD',id:'WLDUSDT'},
+  {sym:'TAO',id:'TAOUSDT'},{sym:'AGIX',id:'AGIXUSDT'},{sym:'OCEAN',id:'OCEANUSDT'},{sym:'RENDER',id:'RENDERUSDT'},
+  {sym:'ARKM',id:'ARKMUSDT'},{sym:'NMR',id:'NMRUSDT'},{sym:'VANRY',id:'VANRYUSDT'},{sym:'GRT',id:'GRTUSDT'},
+  {sym:'FIL',id:'FILUSDT'},{sym:'STORJ',id:'STORJUSDT'},{sym:'EIGEN',id:'EIGENUSDT'},{sym:'W',id:'WUSDT'},
+  {sym:'PYTH',id:'PYTHUSDT'},{sym:'JTO',id:'JTOUSDT'},{sym:'AXL',id:'AXLUSDT'},{sym:'LPT',id:'LPTUSDT'},
+  {sym:'CTSI',id:'CTSIUSDT'},{sym:'ANT',id:'ANTUSDT'},{sym:'BAT',id:'BATUSDT'},{sym:'IOTA',id:'IOTAUSDT'},
+  {sym:'IOTX',id:'IOTXUSDT'},{sym:'QNT',id:'QNTUSDT'},{sym:'ENS',id:'ENSUSDT'},{sym:'ID',id:'IDUSDT'},
+  {sym:'NKN',id:'NKNUSDT'},{sym:'MASK',id:'MASKUSDT'},{sym:'RAD',id:'RADUSDT'},{sym:'BICO',id:'BICOUSDT'},
+  {sym:'SFP',id:'SFPUSDT'},{sym:'DIA',id:'DIAUSDT'},{sym:'FIDA',id:'FIDAUSDT'},{sym:'CVC',id:'CVCUSDT'},
+  {sym:'POWR',id:'POWRUSDT'},{sym:'REQ',id:'REQUSDT'},{sym:'AMB',id:'AMBUSDT'},{sym:'LOOM',id:'LOOMUSDT'},
+  {sym:'COS',id:'COSUSDT'},{sym:'MDT',id:'MDTUSDT'},{sym:'WOO',id:'WOOUSDT'},{sym:'PORTO',id:'PORTOUSDT'},
+  {sym:'LAZIO',id:'LAZIOUSDT'},{sym:'ALPINE',id:'ALPINEUSDT'},{sym:'CITY',id:'CITYUSDT'},{sym:'OG',id:'OGUSDT'},
+  {sym:'ZEC',id:'ZECUSDT'},{sym:'DASH',id:'DASHUSDT'},{sym:'ZEN',id:'ZENUSDT'},{sym:'ROSE',id:'ROSEUSDT'},
+  {sym:'PHA',id:'PHAUSDT'},{sym:'DUSK',id:'DUSKUSDT'},{sym:'OXT',id:'OXTUSDT'},{sym:'SCRT',id:'SCRTUSDT'},
+  {sym:'POLYX',id:'POLYXUSDT'},{sym:'ACH',id:'ACHUSDT'},{sym:'STG',id:'STGUSDT'},{sym:'PROM',id:'PROMUSDT'},
+  {sym:'BAND',id:'BANDUSDT'},{sym:'KEY',id:'KEYUSDT'},{sym:'LINA',id:'LINAUSDT'},{sym:'PUNDIX',id:'PUNDIXUSDT'},
+  {sym:'CHESS',id:'CHESSUSDT'},{sym:'ARPA',id:'ARPAUSDT'},{sym:'DODO',id:'DODOUSDT'},{sym:'POND',id:'PONDUSDT'},
+  {sym:'AUCTION',id:'AUCTIONUSDT'},{sym:'DF',id:'DFUSDT'},{sym:'FOR',id:'FORUSDT'},{sym:'PROS',id:'PROSUSDT'},
+  {sym:'PERP',id:'PERPUSDT'},{sym:'BEL',id:'BELUSDT'},{sym:'VITE',id:'VITEUSDT'},{sym:'TORN',id:'TORNUSDT'},
+  {sym:'SWAP',id:'SWAPUSDT'},{sym:'TRB',id:'TRBUSDT'},{sym:'POLS',id:'POLSUSDT'},{sym:'UFT',id:'UFTUSDT'}
+]
 
 let feedCountdown = 60;
 let feedTimer = null;
