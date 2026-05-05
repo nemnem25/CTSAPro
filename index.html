@@ -854,8 +854,8 @@ function computeSignals(klines, fg, btcKlines1D, klines4H, klines1D){
   const highs   = klines.map(k=>k.h);
   const lows    = klines.map(k=>k.l);
   const vols    = klines.map(k=>k.v);
-  // Candle [-2] sudah confirmed close — bukan [-1] yang masih berjalan
-  const price   = closes[closes.length-2];
+  // Candle [-1] untuk web app — real-time monitoring (scanner Telegram tetap [-2])
+  const price   = closes[closes.length-1];
 
   // ── INDICATORS ──────────────────────────────────────────────────────
   const rsi      = calcRSI(closes, 17);
@@ -1045,8 +1045,8 @@ function computeSignalShort(klines, btcKlines1D, klines4H, klines1D){
   const highs   = klines.map(k=>k.h);
   const lows    = klines.map(k=>k.l);
   const vols    = klines.map(k=>k.v);
-  // Candle [-2] sudah confirmed close — bukan [-1] yang masih berjalan
-  const price   = closes[closes.length-2];
+  // Candle [-1] untuk web app — real-time monitoring (scanner Telegram tetap [-2])
+  const price   = closes[closes.length-1];
 
   const rsi    = calcRSI(closes, 17);
   const rsiNow = rsi[rsi.length-1];
